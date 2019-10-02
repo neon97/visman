@@ -16,7 +16,7 @@ queries = config_parser.config(filename='db_config/database.ini', section='queri
 
 try:
     # connect to the PostgreSQL server
-    conn = psycopg2.connect(**params)
+    conn = psycopg2.connect(**params,autocommit=True)
     cur = conn.cursor()
 except  psycopg2.DatabaseError as error:
      jsonify(error)
@@ -73,7 +73,6 @@ def society_register():
         society_register_query=queries['society_register']
         query=society_register_query.format(str(regd_no),str(building_name),str(building_address),int(total_buildings),int(total_flats))
         cur.execute(query)
-        conn.commit()
         #first user details
         return jsonify("society registered succesfully")
     except psycopg2.DatabaseError as error:
@@ -118,7 +117,6 @@ def login():
     password=request.form['password']
     postgres_user_login_query=validate_query.format(username,password)
     cur.execute(postgres_user_login_query)
-    conn.commit()
     return jsonify(cur.fetchone())
 
 # visitor entry from staff
@@ -138,7 +136,6 @@ def visitor_entry():
         society_id=request.form['society_id']
         postgres_visitor_insert_query=insert_visitor.format(str(first_name),str(last_name),int(contact_number),str(entry_time),str(flat_info),int(staff_name),str(visit_reason),int(society_id))
         cur.execute(postgres_visitor_insert_query)
-        conn.commit()
         success=True
         return jsonify(success)
 
@@ -149,6 +146,20 @@ def visitor_entry():
         return str(errors)
     # middle_name ,contact_number ,flat_info
 
+@app.route('/update_exit',methods=['GET','POST'])
+def update_exit():
+    update_exit=queries['update_exit']
+    visitor_id=request.form['id']
+    exit_time=request.form['exit_time']
+    try:
+        update_query='''update visitor_management_schema.visitor_table set exit_time='{}' where id={}'''.format(exit_time,visitor_id)
+        cur.execute(update_query)
+        success=True
+    except: 
+        success=False
+    return jsonify(update_query)
+        
+
 # admin access
 @app.route('/dashboard_count',methods=['GET','POST'])
 def dashboard_data():
@@ -157,7 +168,6 @@ def dashboard_data():
     society_id=request.form['society_id']
     postgres_visitor_count=total_visitor_count.format(society_id)
     postgres_watchman_count=non_admin_user.format(society_id)
-    #postgres_visitor_count="""SELECT count(1) FROM visitor_management_schema.visitor_table;"""
     cur.execute(postgres_watchman_count)
     watchman_count=cur.fetchone()
     cur.execute(postgres_visitor_count)
@@ -212,4 +222,4 @@ def helloid():
     result=cur.fetchall()
     return jsonify(result)  
 
-
+app.run(debug=True)
