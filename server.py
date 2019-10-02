@@ -226,5 +226,4 @@ def helloid():
     result=cur.fetchall()
     return jsonify(result) 
 
-app.run() 
 
