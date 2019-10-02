@@ -148,7 +148,7 @@ def visitor_entry():
 
 @app.route('/update_exit',methods=['GET','POST'])
 def update_exit():
-    update_exit=queries['update_exit']
+    #update_exit=queries['update_exit']
     visitor_id=request.form['id']
     exit_time=request.form['exit_time']
     try:
@@ -157,7 +157,7 @@ def update_exit():
         success=True
     except: 
         success=False
-    return jsonify(update_query)
+    return jsonify(success)
         
 
 # admin access
@@ -222,4 +222,3 @@ def helloid():
     result=cur.fetchall()
     return jsonify(result)  
 
-app.run(debug=True)
