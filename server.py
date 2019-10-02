@@ -16,12 +16,12 @@ queries = config_parser.config(filename='db_config/database.ini', section='queri
 
 try:
     # connect to the PostgreSQL server
-    conn = psycopg2.connect(**params,autocommit=True)
+    conn = psycopg2.connect(**params)
     cur = conn.cursor()
 except  psycopg2.DatabaseError as error:
      jsonify(error)
-
-
+     
+     
 def replace(data):
     if(data is not None):
         return data
@@ -73,6 +73,7 @@ def society_register():
         society_register_query=queries['society_register']
         query=society_register_query.format(str(regd_no),str(building_name),str(building_address),int(total_buildings),int(total_flats))
         cur.execute(query)
+        conn.commit()
         #first user details
         return jsonify("society registered succesfully")
     except psycopg2.DatabaseError as error:
@@ -136,6 +137,7 @@ def visitor_entry():
         society_id=request.form['society_id']
         postgres_visitor_insert_query=insert_visitor.format(str(first_name),str(last_name),int(contact_number),str(entry_time),str(flat_info),int(staff_name),str(visit_reason),int(society_id))
         cur.execute(postgres_visitor_insert_query)
+        conn.commit()
         success=True
         return jsonify(success)
 
@@ -154,8 +156,9 @@ def update_exit():
     try:
         update_query='''update visitor_management_schema.visitor_table set exit_time='{}' where id={}'''.format(exit_time,visitor_id)
         cur.execute(update_query)
+        conn.commit()
         success=True
-    except: 
+    except:
         success=False
     return jsonify(success)
         
@@ -171,6 +174,7 @@ def dashboard_data():
     cur.execute(postgres_watchman_count)
     watchman_count=cur.fetchone()
     cur.execute(postgres_visitor_count)
+    
     visitor_count=cur.fetchone()
     return jsonify({'watchman_count':watchman_count[0],'visitor_count':visitor_count[0]})
 
@@ -220,5 +224,7 @@ def about():
 def helloid():
     cur.execute('select * from visitor_management.test;')
     result=cur.fetchall()
-    return jsonify(result)  
+    return jsonify(result) 
+
+app.run() 
 
