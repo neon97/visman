@@ -125,17 +125,17 @@ def login():
 def visitor_entry():
     insert_visitor=queries['insert_visitor']
     try:
+        photo=request.form['photo']
         first_name=request.form['first_name']
         contact_number=request.form['contact_number']
         entry_time=request.form['entry_time']
         #entry_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         flat_info=request.form['visiting_flat_no']
         last_name=replace(request.form['last_name'])
-        #middle_name=replace(request.form['middle_name'])
-        staff_name=request.form['staff_id']
+        staff_id=request.form['staff_id']
         visit_reason=request.form['visit_reason']
         society_id=request.form['society_id']
-        postgres_visitor_insert_query=insert_visitor.format(str(first_name),str(last_name),int(contact_number),str(entry_time),str(flat_info),int(staff_name),str(visit_reason),int(society_id))
+        postgres_visitor_insert_query=insert_visitor.format(str(first_name),str(last_name),int(contact_number),str(entry_time),str(flat_info),int(staff_id),str(visit_reason),int(society_id),str(photo))
         cur.execute(postgres_visitor_insert_query)
         conn.commit()
         success=True
@@ -225,5 +225,4 @@ def helloid():
     cur.execute('select * from visitor_management.test;')
     result=cur.fetchall()
     return jsonify(result) 
-
 
