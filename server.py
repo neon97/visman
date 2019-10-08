@@ -139,7 +139,7 @@ def visitor_entry():
         cur.execute(postgres_visitor_insert_query)
         conn.commit()
         success=True
-        return jsonify(success)
+        return (postgres_visitor_insert_query)
 
     except psycopg2.DatabaseError as error:
         errors={'visitor_entry':False,
@@ -226,3 +226,4 @@ def helloid():
     result=cur.fetchall()
     return jsonify(result) 
 
+app.run(debug=True)
