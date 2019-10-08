@@ -6,6 +6,9 @@ Created on Sat Aug  3 16:18:42 2019
 """
 import psycopg2,config_parser
 from flask import Flask , request,jsonify
+import pandas as pd
+import db_config.dbManager as dbm
+
 
 start_time=""
 end_time=""
@@ -33,33 +36,34 @@ def replace(data):
 def society_info():
     try:
         query=queries['suggest_id_name']
-        cur.execute(query)
-        result=cur.fetchall()
-        return jsonify(result)
+        
+        with dbm.dbManager() as manager:
+            result=manager.getDataFrame(query)
+        result_Data=result.to_json(orient='values')
+        return result_Data
     except psycopg2.DatabaseError as error:
         errors={'society info':False,
                  'error':(error)
                 }
         return str(errors)
         
-
     
-        
 @app.route('/get_id',methods=['GET','POST'])
 def get_id():
     try:
         regd_no=request.form['regd_no']
         query_society_id=queries['get_society_id']
         query=query_society_id.format(regd_no)
-        cur.execute(query)
-        conn.commit()
-        return jsonify(cur.fetchone())
+        
+        with dbm.dbManager() as manager:
+            result=manager.getDataFrame(query)
+        result_Data=result.to_json(orient='values')
+        return result_Data
     except psycopg2.DatabaseError as error:
         errors={'registeration':False,
                  'error':(error)
                 }
         return str(errors)
-
         
 @app.route('/society_register', methods=['GET','POST'])
 def society_register():
@@ -70,12 +74,13 @@ def society_register():
         building_address=request.form['society_address']
         total_buildings=request.form['total_buildings']
         total_flats=request.form['total_flats']
-        society_register_query=queries['society_register']
-        query=society_register_query.format(str(regd_no),str(building_name),str(building_address),int(total_buildings),int(total_flats))
-        cur.execute(query)
-        conn.commit()
+                
+        df=pd.DataFrame({'regd_no':regd_no,'building_name':building_name,'building_address':building_address,'total_buildings':total_buildings,'total_flats':total_flats},index=[0])     
+        
+        with dbm.dbManager() as manager:
+            manager.commit(df,'visitor_management_schema.society_table')
         #first user details
-        return jsonify("society registered succesfully")
+        return "Society registered successfully"
     except psycopg2.DatabaseError as error:
         errors={'society registeration':False,
                  'error':(error)
@@ -225,4 +230,3 @@ def helloid():
     cur.execute('select * from visitor_management.test;')
     result=cur.fetchall()
     return jsonify(result) 
-
