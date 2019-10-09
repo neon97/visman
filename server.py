@@ -5,7 +5,7 @@ Created on Sat Aug  3 16:18:42 2019
 @author: akshay72
 """
 import psycopg2,config_parser
-from flask import Flask , request,jsonify
+from flask import Flask , request,jsonify,redirect
 
 start_time=""
 end_time=""
@@ -28,6 +28,9 @@ def replace(data):
     data=None
     return data
 
+    
+def generate(first,last):
+    return first+last
 
 @app.route('/society_info',methods=['GET','POST'])
 def society_info():
@@ -43,8 +46,6 @@ def society_info():
         return str(errors)
         
 
-    
-        
 @app.route('/get_id',methods=['GET','POST'])
 def get_id():
     try:
@@ -59,6 +60,7 @@ def get_id():
                  'error':(error)
                 }
         return str(errors)
+
 
         
 @app.route('/society_register', methods=['GET','POST'])
@@ -82,8 +84,36 @@ def society_register():
                 }
         return str(errors)
     
-def generate(first,last):
-    return first+last
+    
+@app.route('/building_register',methods=['GET','POST'])
+def building_register():
+    
+        #building register
+        flat_details = queries['flat_details']  
+        wing = request.form['wing']
+        total_floors = request.form['total_floors']
+        flats_per_floor = request.form['flats_per_floor']
+        starting_flat_no = request.form['starting_flat_no']
+        
+        def building_register1(wing,total_floors, flats_per_floor , starting_flat_no):
+            
+            
+            for floor in range(total_floors):
+                flat_no = starting_flat_no
+            
+                for fn in range(flat_no , (flat_no + flats_per_floor)):
+                    query=flat_details.format(2,wing,fn)                    
+                    cur.execute(query)
+            
+                starting_flat_no+=100    
+                
+        building_register1(str(wing),int(total_floors), int(flats_per_floor) , int(starting_flat_no))
+        conn.commit()
+    
+        return "building info inserted succesfully"
+                    
+
+
 
 #staff Registeration (staff may be watchman or secretary)
 @app.route('/user/register', methods=['GET','POST'])
@@ -206,9 +236,13 @@ def hello_worlds():
 def hello_world():
     return "<div><b>Hello World! This is Mayur mia<b></div>"
 
+@app.route('/ok',methods=['GET','POST'])
+def ind():
+    return "ok"
+
 @app.route('/mia',methods=['GET','POST'])
 def hello():
-    return "Hello World! This is Akshay mia"
+    return redirect('/ok')
 
 @app.route('/raj',methods=['GET','POST'])
 def hellos():
@@ -225,3 +259,4 @@ def helloid():
     cur.execute('select * from visitor_management.test;')
     result=cur.fetchall()
     return jsonify(result) 
+
