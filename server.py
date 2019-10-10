@@ -5,7 +5,7 @@ Created on Sat Aug  3 16:18:42 2019
 @author: akshay72
 """
 import psycopg2,config_parser
-from flask import Flask , request,jsonify,redirect
+from flask import Flask , request,jsonify,url_for,redirect
 
 start_time=""
 end_time=""
@@ -53,7 +53,6 @@ def get_id():
         query_society_id=queries['get_society_id']
         query=query_society_id.format(regd_no)
         cur.execute(query)
-        conn.commit()
         return jsonify(cur.fetchone())
     except psycopg2.DatabaseError as error:
         errors={'registeration':False,
@@ -61,6 +60,17 @@ def get_id():
                 }
         return str(errors)
 
+#@app.route('/provide',methods=['GET','POST'])
+#@app.route("/provide/<parameters>")
+#def provide(parameters=None):
+#    if request.method == "POST":
+#        return redirect(url_for("provide", name=request.form.get("parameters")))
+#   
+#    if parameters:
+#        query_society_id=queries['get_society_id']
+#        query=query_society_id.format(parameters)
+#        cur.execute(query)
+#        return jsonify(cur.fetchone())
 
         
 @app.route('/society_register', methods=['GET','POST'])
@@ -77,7 +87,7 @@ def society_register():
         cur.execute(query)
         conn.commit()
         #first user details
-        return jsonify("society registered succesfully")
+        return "Society register successfully"
     except psycopg2.DatabaseError as error:
         errors={'society registeration':False,
                  'error':(error)
@@ -94,6 +104,7 @@ def building_register():
         total_floors = request.form['total_floors']
         flats_per_floor = request.form['flats_per_floor']
         starting_flat_no = request.form['starting_flat_no']
+        society_id = request.form['society_id']
         
         def building_register1(wing,total_floors, flats_per_floor , starting_flat_no):
             
@@ -102,7 +113,7 @@ def building_register():
                 flat_no = starting_flat_no
             
                 for fn in range(flat_no , (flat_no + flats_per_floor)):
-                    query=flat_details.format(2,wing,fn)                    
+                    query=flat_details.format(society_id,wing,fn)                    
                     cur.execute(query)
             
                 starting_flat_no+=100    
@@ -232,31 +243,32 @@ def hello_worlds():
     return "<div><b>Sorry!!<br/>only team has accesss to database<b><a href='/about'>About</a></div>"
     
 
-@app.route('/mayur',methods=['GET','POST'])
-def hello_world():
-    return "<div><b>Hello World! This is Mayur mia<b></div>"
 
-@app.route('/ok',methods=['GET','POST'])
-def ind():
-    return "ok"
 
-@app.route('/mia',methods=['GET','POST'])
-def hello():
-    return redirect('/ok')
-
-@app.route('/raj',methods=['GET','POST'])
-def hellos():
-    return "Hello World! This is Raj mia"
-
-@app.route('/about',methods=['GET','POST'])
-def about():
-    return jsonify({'Company':'Visitor Management',
-                    'Dev center':'Team Foundation',
-                    'version':'heroku test development'})
-
-@app.route('/id',methods=['GET','POST'])
-def helloid():
-    cur.execute('select * from visitor_management.test;')
-    result=cur.fetchall()
-    return jsonify(result) 
-
+#@app.route('/mayur',methods=['GET','POST'])
+#def hello_world():
+#    return "<div><b>Hello World! This is Mayur mia<b></div>"
+#
+#@app.route('/ok',methods=['GET','POST'])
+#def ind():
+#    return "ok"
+#
+#@app.route('/mia',methods=['GET','POST'])
+#def hello():
+#    return redirect('/ok')
+#
+#@app.route('/raj',methods=['GET','POST'])
+#def hellos():
+#    return "Hello World! This is Raj mia"
+#
+#@app.route('/about',methods=['GET','POST'])
+#def about():
+#    return jsonify({'Company':'Visitor Management',
+#                    'Dev center':'Team Foundation',
+#                    'version':'heroku test development'})
+#
+#@app.route('/id',methods=['GET','POST'])
+#def helloid():
+#    cur.execute('select * from visitor_management.test;')
+#    result=cur.fetchall()
+#    return jsonify(result) 
