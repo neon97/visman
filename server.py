@@ -17,14 +17,7 @@ app = Flask(__name__)
 params = config_parser.config(filename='db_config/database.ini', section='postgresql')
 queries = config_parser.config(filename='db_config/database.ini', section='queries')
 
-try:
-    # connect to the PostgreSQL server
-    conn = psycopg2.connect(**params)
-    cur = conn.cursor()
-except  psycopg2.DatabaseError as error:
-     jsonify(error)
-     
-     
+
 def replace(data):
     if(data is not None):
         return data
@@ -92,8 +85,8 @@ def generate(first,last):
 
 #staff Registeration (staff may be watchman or secretary)
 @app.route('/user/register', methods=['GET','POST'])
-def register():
-    create_user=queries['create_user']
+def user_register():
+#    create_user=queries['create_user']
     try:
         #username=request.form['username']
         email=request.form['email']
@@ -104,9 +97,13 @@ def register():
         society_id=request.form['society_id']
         isadmin=request.form['isadmin']
         username=generate(first_name,last_name)
-        postgres_insert_query=create_user.format(str(username),str(email),str(first_name),str(middle_name),str(last_name),str(password),str(society_id),str(isadmin))
-        cur.execute(postgres_insert_query)
-        conn.commit()
+        
+#        postgres_insert_query=create_user.format(str(username),str(email),str(first_name),str(middle_name),str(last_name),str(password),str(society_id),str(isadmin))
+        
+        df=pd.DataFrame({'username':str(username),'email':str(email),'first_name':str(first_name),'middle_name':str(middle_name),'last_name':str(last_name),'password':str(password),'society_id':str(society_id),'isadmin':str(isadmin)},index=[0])     
+
+        with dbm.dbManager() as manager:
+            manager.commit(df,'visitor_management_schema.user_table')
         return "User registered Succesfully"
     except psycopg2.DatabaseError as error:
         errors={'registeration':False,
@@ -122,13 +119,17 @@ def login():
     username=request.form['email']
     password=request.form['password']
     postgres_user_login_query=validate_query.format(username,password)
-    cur.execute(postgres_user_login_query)
-    return jsonify(cur.fetchone())
+    
+    with dbm.dbManager() as manager:
+            result=manager.getDataFrame(postgres_user_login_query)
+            result_Data=result.to_json(orient='values')
+
+    return result_Data
 
 # visitor entry from staff
 @app.route('/insertVisitor',methods=['GET','POST'])
 def visitor_entry():
-    insert_visitor=queries['insert_visitor']
+#    insert_visitor=queries['insert_visitor']
     try:
         photo=request.form['photo']
         first_name=request.form['first_name']
@@ -140,10 +141,15 @@ def visitor_entry():
         staff_id=request.form['staff_id']
         visit_reason=request.form['visit_reason']
         society_id=request.form['society_id']
-        postgres_visitor_insert_query=insert_visitor.format(str(first_name),str(last_name),int(contact_number),str(entry_time),str(flat_info),int(staff_id),str(visit_reason),int(society_id),str(photo))
-        cur.execute(postgres_visitor_insert_query)
-        conn.commit()
-        success=True
+        
+#        postgres_visitor_insert_query=insert_visitor.format(str(first_name),str(last_name),int(contact_number),str(entry_time),str(flat_info),int(staff_id),str(visit_reason),int(society_id),str(photo))
+        
+        df=pd.DataFrame({'first_name':str(first_name),'last_name':str(last_name),'contact_number':int(contact_number),'entry_time':str(entry_time),'flat_info':str(flat_info),'staff_id':int(staff_id),'visit_reason':str(visit_reason),'society_id':int(society_id),'photo':str(photo)},index=[0])     
+
+        with dbm.dbManager() as manager:
+            manager.commit(df,'visitor_management_schema.visitor_table')
+            success=True
+       
         return jsonify(success)
 
     except psycopg2.DatabaseError as error:
@@ -160,8 +166,9 @@ def update_exit():
     exit_time=request.form['exit_time']
     try:
         update_query='''update visitor_management_schema.visitor_table set exit_time='{}' where id={}'''.format(exit_time,visitor_id)
-        cur.execute(update_query)
-        conn.commit()
+        
+        with dbm.dbManager() as manager:
+            manager.updateDB(update_query)
         success=True
     except:
         success=False
@@ -176,12 +183,16 @@ def dashboard_data():
     society_id=request.form['society_id']
     postgres_visitor_count=total_visitor_count.format(society_id)
     postgres_watchman_count=non_admin_user.format(society_id)
-    cur.execute(postgres_watchman_count)
-    watchman_count=cur.fetchone()
-    cur.execute(postgres_visitor_count)
     
-    visitor_count=cur.fetchone()
-    return jsonify({'watchman_count':watchman_count[0],'visitor_count':visitor_count[0]})
+    with dbm.dbManager() as manager:
+        result=manager.getDataFrame(postgres_watchman_count)
+        result_Data=result.to_json(orient='values')
+        
+        result1=manager.getDataFrame(postgres_visitor_count)
+        result_Data1=result1.to_json(orient='values')
+
+        
+    return jsonify({'watchman_count':result_Data,'visitor_count':result_Data1})
 
 #admin access
 @app.route('/dashboard_watchman',methods=['GET','POST'])
@@ -189,19 +200,25 @@ def dashboard_watchman():
     admin_user=queries['non_admin_user']
     society_id=request.form['society_id']
     postgres_admin=admin_user.format(society_id)
-    cur.execute(postgres_admin)
-    user=cur.fetchall()
-    return jsonify({'user':user})
+    
+    with dbm.dbManager() as manager:
+        result=manager.getDataFrame(postgres_admin)
+        result_Data=result.to_json(orient='values')
+        
+    return result_Data
 
 @app.route('/dashboard_visitor',methods=['GET','POST'])
 def dashboard_visitor():
     all_visitor_details=queries['all_visitor_details']
     society_id=request.form['society_id']
     postgres_watchman=all_visitor_details.format(society_id)
-    cur.execute(postgres_watchman)
-    user=cur.fetchall()
-    return jsonify({'user':(user)})
     
+    with dbm.dbManager() as manager:
+        result=manager.getDataFrame(postgres_watchman)
+        result_Data=result.to_json(orient='values')
+    
+    return result_Data
+
 @app.route('/',methods=['GET','POST'])
 def hello_worlds():
     return "<div><b>Sorry!!<br/>only team has accesss to database<b><a href='/about'>About</a></div>"
@@ -227,6 +244,11 @@ def about():
 
 @app.route('/id',methods=['GET','POST'])
 def helloid():
-    cur.execute('select * from visitor_management.test;')
-    result=cur.fetchall()
-    return jsonify(result) 
+    with dbm.dbManager() as manager:
+        result=manager.getDataFrame('select * from visitor_management.test;')
+        result_Data=result.to_json(orient='values')
+#    cur.execute('select * from visitor_management.test;')
+    return result_Data
+
+
+app.run(debug=True)
