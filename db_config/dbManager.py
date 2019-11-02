@@ -10,11 +10,11 @@ import db_config.config as config
 
 
 class dbManager:
-    def __init__(self ):
+    def __init__(self):
         
         self._user = config.DATABASE_CONFIG['user']
-        self._host= config.DATABASE_CONFIG['host']
-        self._nameOfDB=None
+        self._host = config.DATABASE_CONFIG['host']
+        self._nameOfDB = None
         self._connection = None
         self._DFSQLmap = {}
         self._DFSQLmap['object'] = 'varchar(Max)'
@@ -28,33 +28,36 @@ class dbManager:
         self._nameOfDB=config.DATABASE_CONFIG['database']
         return self._nameOfDB
     
-    def getDataFrame(self,query):        
-        df = pd.read_sql(query, self._connection)   
+    def getDataFrame(self, query):
+        df = pd.read_sql(query, self._connection)
 
         return df
-    
-    def updateDB(self,query):
+
+    def callproc(self):
+        cur = self._connection.cursor()
+        cur.callproc
+
+
+    def updateDB(self, query):
         cur = self._connection.cursor()        
         cur.execute(query)
         cur.commit()
         
-    def truncateDB(self,tableName):
+    def truncateDB(self, tableName):
         print('Dropping table: ' + tableName)
-        if(self.__isTableExists(tableName) == True):
+        if self.__isTableExists(tableName):
             delQuery = "DROP TABLE " + tableName
             cur = self._connection.cursor()
             cur.execute(delQuery)
             cur.commit()
-        
-    
+
     def commit(self,df,tableName):
-        
         tableNames = self. __columnNamesOfSQLTable(tableName)  
         csr = self._connection.cursor()   
-        for  rw  in df.iterrows():
-            cols,vals = self.__getinsertValues(rw,df.columns)
+        for rw in df.iterrows():
+            cols, vals = self.__getinsertValues(rw, df.columns)
             
-            iquery = "insert into {}{} values {}".format(tableName,cols,vals.replace("Primary's","Primary''s"))            
+            iquery = "insert into {}{} values {}".format(tableName,cols,vals.replace("Primary's", "Primary''s"))
             try:
                 csr.execute(iquery)
                 self._connection.commit() 
@@ -64,18 +67,18 @@ class dbManager:
         
         return tableNames
     
-    def _connect(self) :
+    def _connect(self):
         if(self._connection != None):
             return
         
         # connect to the PostgreSQL server
-        self._nameOfDB=config.DATABASE_CONFIG['database']
+        self._nameOfDB = config.DATABASE_CONFIG['database']
         try:
         
-            self._connection = psycopg2.connect(user=self._user, 
-                                     host= self._host, 
-                                     database= self._nameOfDB,
-                                     password=config.DATABASE_CONFIG['password'])
+            self._connection = psycopg2.connect(user=self._user,
+                                     host =self._host,
+                                     database =self._nameOfDB,
+                                     password =config.DATABASE_CONFIG['password'])
             print('connected')
 
         except:
@@ -89,15 +92,14 @@ class dbManager:
          
          self._connection.close()
          self._connection = None
-    
-     
-    def __isTableExists(self,tableName):
+
+    def __isTableExists(self, tableName):
         cursor = self._connection.cursor()
         if cursor.tables(table=tableName, tableType='TABLE').fetchone():
             return True
         return False
 
-    def isTableExists(self,tableName):
+    def isTableExists(self, tableName):
         cursor = self._connection.cursor()
         if cursor.tables(table=tableName, tableType='TABLE').fetchone():
             return True
@@ -113,7 +115,7 @@ class dbManager:
          
     def __columnNamesOfSQLTable(self,tableName):
         cur = self._connection.cursor()
-        query = "select COLUMN_NAME from {}.INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = N'{}'".format(self._nameOfDB,tableName)
+        query = "select COLUMN_NAME from {}.INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = N'{}'".format(self._nameOfDB, tableName)
         cur.execute(query)
         rows = cur.fetchall()
         lstRowsInDbTable = []
@@ -121,11 +123,11 @@ class dbManager:
             lstRowsInDbTable.append(r[0]) 
         return lstRowsInDbTable
     
-    def __getSQLTableNameFromDF(self,tableName,df):
+    def __getSQLTableNameFromDF(self, tableName, df):
         
         params = ""     
-        for col,dtype in zip(df.columns,df.dtypes):
-            print(col,dtype)
+        for col, dtype in zip(df.columns,df.dtypes):
+            print(col, dtype)
             params = params + col + " " + self._DFSQLmap[str(dtype)] + ","             
         params = params[:-1]        
         #tbname = tableName + "(" + "ID INT IDENTITY(1,1) PRIMARY KEY," + params + ")"
@@ -133,7 +135,7 @@ class dbManager:
             
         return tbname
     
-    def __getinsertValues(self,row,columns):
+    def __getinsertValues(self, row, columns):
         colnStr = ""
         rowstr=""
         for coln in columns:
@@ -143,20 +145,13 @@ class dbManager:
         
         colnStr = "(" + colnStr[:-1] + ")"
         rowstr = "(" +  rowstr[:-1] + ")"
-        return colnStr,rowstr
-        
-     
+        return colnStr, rowstr
 
 
-if __name__=='__main__': 
-    
-
+if __name__ == '__main__':
     with dbManager() as manager:
-        data={'first_name':'apna','last_name':'apnae','contact_number':'21424152',
-           'entry_time':'"2011-10-02 23:42:15.560692"','flat_info':'205',
-           'society_id':'2','staff_id':'2','visit_reason':'apna game','photo':'asasf214f'}
-        df=pd.DataFrame(data,index=[0])
-        manager.commit(df,'visitor_management_schema.visitor_table')
-        
-        
-    
+        data = {'first_name': 'apna', 'last_name': 'apnae', 'contact_number': '21424152', 'entry_time': '"2011-10-02 23:42:15.560692"', 'flat_info': '205',
+                'society_id':'2', 'staff_id': '2', 'visit_reason':'apna game', 'photo': 'asasf214f'}
+        df = pd.DataFrame(data, index=[0])
+
+        manager.commit(df, 'visitor_management_schema.visitor_table')

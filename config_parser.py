@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Aug  3 16:20:54 2019
-
 @author: akshay72
 """
 
 from configparser import ConfigParser
- 
-def config(filename,section):
+
+
+def config(filename, section):
     # create a parser
     parser = ConfigParser()
     # read config file
     parser.read(filename)
- 
+
     # get section, default to postgresql
     db = {}
     if parser.has_section(section):
