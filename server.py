@@ -5,10 +5,14 @@ Created on Sat Aug  3 16:18:42 2019
 @author: akshay72
 """
 import psycopg2,config_parser
+<<<<<<< HEAD
 from flask import Flask , request,jsonify
 import pandas as pd
 import db_config.dbManager as dbm
 
+=======
+from flask import Flask , request,jsonify,url_for,redirect
+>>>>>>> master
 
 start_time=""
 end_time=""
@@ -31,6 +35,9 @@ def replace(data):
     data=None
     return data
 
+    
+def generate(first,last):
+    return first+last
 
 @app.route('/society_info',methods=['GET','POST'])
 def society_info():
@@ -47,23 +54,48 @@ def society_info():
                 }
         return str(errors)
         
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> master
 @app.route('/get_id',methods=['GET','POST'])
 def get_id():
     try:
         regd_no=request.form['regd_no']
         query_society_id=queries['get_society_id']
         query=query_society_id.format(regd_no)
+<<<<<<< HEAD
         
         with dbm.dbManager() as manager:
             result=manager.getDataFrame(query)
         result_Data=result.to_json(orient='values')
         return result_Data
+=======
+        cur.execute(query)
+        return jsonify(cur.fetchone())
+>>>>>>> master
     except psycopg2.DatabaseError as error:
         errors={'registeration':False,
                  'error':(error)
                 }
         return str(errors)
+<<<<<<< HEAD
+=======
+
+#@app.route('/provide',methods=['GET','POST'])
+#@app.route("/provide/<parameters>")
+#def provide(parameters=None):
+#    if request.method == "POST":
+#        return redirect(url_for("provide", name=request.form.get("parameters")))
+#   
+#    if parameters:
+#        query_society_id=queries['get_society_id']
+#        query=query_society_id.format(parameters)
+#        cur.execute(query)
+#        return jsonify(cur.fetchone())
+
+>>>>>>> master
         
 @app.route('/society_register', methods=['GET','POST'])
 def society_register():
@@ -80,15 +112,48 @@ def society_register():
         with dbm.dbManager() as manager:
             manager.commit(df,'visitor_management_schema.society_table')
         #first user details
+<<<<<<< HEAD
         return "Society registered successfully"
+=======
+        return "Society register successfully"
+>>>>>>> master
     except psycopg2.DatabaseError as error:
         errors={'society registeration':False,
                  'error':(error)
                 }
         return str(errors)
     
-def generate(first,last):
-    return first+last
+    
+@app.route('/building_register',methods=['GET','POST'])
+def building_register():
+    
+        #building register
+        flat_details = queries['flat_details']  
+        wing = request.form['wing']
+        total_floors = request.form['total_floors']
+        flats_per_floor = request.form['flats_per_floor']
+        starting_flat_no = request.form['starting_flat_no']
+        society_id = request.form['society_id']
+        
+        def building_register1(wing,total_floors, flats_per_floor , starting_flat_no):
+            
+            
+            for floor in range(total_floors):
+                flat_no = starting_flat_no
+            
+                for fn in range(flat_no , (flat_no + flats_per_floor)):
+                    query=flat_details.format(society_id,wing,fn)                    
+                    cur.execute(query)
+            
+                starting_flat_no+=100    
+                
+        building_register1(str(wing),int(total_floors), int(flats_per_floor) , int(starting_flat_no))
+        conn.commit()
+    
+        return "building info inserted succesfully"
+                    
+
+
 
 #staff Registeration (staff may be watchman or secretary)
 @app.route('/user/register', methods=['GET','POST'])
@@ -207,26 +272,40 @@ def hello_worlds():
     return "<div><b>Sorry!!<br/>only team has accesss to database<b><a href='/about'>About</a></div>"
     
 
-@app.route('/mayur',methods=['GET','POST'])
-def hello_world():
-    return "<div><b>Hello World! This is Mayur mia<b></div>"
 
-@app.route('/mia',methods=['GET','POST'])
-def hello():
-    return "Hello World! This is Akshay mia"
-
-@app.route('/raj',methods=['GET','POST'])
-def hellos():
-    return "Hello World! This is Raj mia"
-
-@app.route('/about',methods=['GET','POST'])
-def about():
-    return jsonify({'Company':'Visitor Management',
-                    'Dev center':'Team Foundation',
-                    'version':'heroku test development'})
-
+<<<<<<< HEAD
 @app.route('/id',methods=['GET','POST'])
 def helloid():
     cur.execute('select * from visitor_management.test;')
     result=cur.fetchall()
     return jsonify(result) 
+=======
+
+#@app.route('/mayur',methods=['GET','POST'])
+#def hello_world():
+#    return "<div><b>Hello World! This is Mayur mia<b></div>"
+#
+#@app.route('/ok',methods=['GET','POST'])
+#def ind():
+#    return "ok"
+#
+#@app.route('/mia',methods=['GET','POST'])
+#def hello():
+#    return redirect('/ok')
+#
+#@app.route('/raj',methods=['GET','POST'])
+#def hellos():
+#    return "Hello World! This is Raj mia"
+#
+#@app.route('/about',methods=['GET','POST'])
+#def about():
+#    return jsonify({'Company':'Visitor Management',
+#                    'Dev center':'Team Foundation',
+#                    'version':'heroku test development'})
+#
+#@app.route('/id',methods=['GET','POST'])
+#def helloid():
+#    cur.execute('select * from visitor_management.test;')
+#    result=cur.fetchall()
+#    return jsonify(result) 
+>>>>>>> master
