@@ -30,19 +30,20 @@ class dbManager:
     
     def getDataFrame(self, query):
         df = pd.read_sql(query, self._connection)
-
         return df
 
-    def callproc(self):
+    def callprocedure(self,args):
         cur = self._connection.cursor()
-        cur.callproc
-
-
+        cur.callproc('insertvisitor', args)
+        cur.commit()
+        return cur.fetchall()
+        
     def updateDB(self, query):
         cur = self._connection.cursor()        
         cur.execute(query)
         cur.commit()
         
+    
     def truncateDB(self, tableName):
         print('Dropping table: ' + tableName)
         if self.__isTableExists(tableName):

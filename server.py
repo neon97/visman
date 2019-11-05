@@ -232,32 +232,33 @@ def visitor_entry():
         society_id = request.form['society_id']
         
 #        postgres_visitor_insert_query=insert_visitor.format(str(first_name),str(last_name),int(contact_number),str(entry_time),str(flat_info),int(staff_id),str(visit_reason),int(society_id),str(photo))
+        	#first_name,last_name,contact_number,entry_time,flat_id,staff_id,visit_reason,society_id,photo) 
+#
+#        df = pd.DataFrame(
+#            {
+#                'first_name': str(first_name),
+#                'last_name': str(last_name),
+#                'contact_number': int(contact_number),
+#                'entry_time': str(entry_time),
+#                'flat_id': str(flat_id),
+#                'staff_id': int(staff_id),
+#                'visit_reason': str(visit_reason),
+#                'society_id': int(society_id),
+#                'photo': str(photo)
+#                           },
+#            index=[0]
+#        )
+        tuple_insert=['{}'.format(str(first_name)),'{}'.format(str(last_name)),'{}'.format(str(contact_number)),'{}'.format(str(entry_time)),int(flat_id),int(staff_id),'{}'.format(str(visit_reason)),int(society_id),'{}'.format(str(photo))]
         
-        df = pd.DataFrame(
-            {
-                'first_name': str(first_name),
-                'last_name': str(last_name),
-                'contact_number': int(contact_number),
-                'entry_time': str(entry_time),
-                'flat_id': str(flat_id),
-                'staff_id': int(staff_id),
-                'visit_reason': str(visit_reason),
-                'society_id': int(society_id),
-                'photo': str(photo)
-                           },
-            index=[0]
-        )
+        try:
+            with dbm.dbManager() as manager:
+                value=manager.callprocedure(tuple_insert)
 
-        with dbm.dbManager() as manager:
-
-            insert_Visitor_query = queries['insert_visitor']
-
-            query = insert_Visitor_query.format(first_name, last_name, contact_number, entry_time, flat_id, staff_id, visit_reason, society_id, photo)
-            #manager.(df,'visitor_management_schema.visitor_table')
-            visitorId = manager.getDataFrame(query)
-            success = True
-            print(visitorId.to_dict(orient='records'))
-        return jsonify(visitorId.to_dict(orient='records'))
+        except psycopg2.DatabaseError as error:
+            errors = {'visitor_entry': False,
+                      'error':(error)
+                      }
+        return str(errors)
 
     except psycopg2.DatabaseError as error:
         errors = {'visitor_entry': False,
@@ -362,4 +363,3 @@ def about():
                     'version': 'heroku test development'})
 
 
-app.run(debug=True)
