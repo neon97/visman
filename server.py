@@ -10,7 +10,10 @@ import psycopg2, config_parser
 from flask import Flask, request, jsonify
 import pandas as pd
 import db_config.dbManager as dbm
+import logging
+logging.basicConfig(level = logging.INFO)
 
+from datetime import datetime
 
 start_time = ""
 end_time = ""
@@ -216,56 +219,57 @@ def login():
 
 # visitor entry from staff
 @app.route('/insertVisitor', methods=['GET','POST'])
-def visitor_entry():
-#    insert_visitor=queries['insert_visitor']
+def visitor_entry_details():
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    contact_number = request.form['contact_number']
+    entry_time = request.form['entry_time']
+    # entry_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    flat_id = request.form['flat_id']
+    staff_id = request.form['staff_id']
+    visit_reason = request.form['visit_reason']
+    society_id = request.form['society_id']
+    photo = request.form['photo']
+
+    """
     try:
-        photo = request.form['photo']
-        first_name = request.form['first_name']
-        last_name = replace(request.form['last_name'])
-        contact_number = request.form['contact_number']
-        entry_time = request.form['entry_time']
-        #entry_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        flat_id = request.form['flat_id']
+        result = visitor_entry(firstname, lastname, cnumber, entrytime, flatid, staffid, visitreason, societyid, p)
+        return jsonify(result)
 
-        staff_id = request.form['staff_id']
-        visit_reason = request.form['visit_reason']
-        society_id = request.form['society_id']
-        
-#        postgres_visitor_insert_query=insert_visitor.format(str(first_name),str(last_name),int(contact_number),str(entry_time),str(flat_info),int(staff_id),str(visit_reason),int(society_id),str(photo))
-        	#first_name,last_name,contact_number,entry_time,flat_id,staff_id,visit_reason,society_id,photo) 
-#
-#        df = pd.DataFrame(
-#            {
-#                'first_name': str(first_name),
-#                'last_name': str(last_name),
-#                'contact_number': int(contact_number),
-#                'entry_time': str(entry_time),
-#                'flat_id': str(flat_id),
-#                'staff_id': int(staff_id),
-#                'visit_reason': str(visit_reason),
-#                'society_id': int(society_id),
-#                'photo': str(photo)
-#                           },
-#            index=[0]
-#        )
-        tuple_insert=['{}'.format(str(first_name)),'{}'.format(str(last_name)),'{}'.format(str(contact_number)),'{}'.format(str(entry_time)),int(flat_id),int(staff_id),'{}'.format(str(visit_reason)),int(society_id),'{}'.format(str(photo))]
-        
-        try:
-            with dbm.dbManager() as manager:
-                value=manager.callprocedure(tuple_insert)
-
-        except psycopg2.DatabaseError as error:
-            errors = {'visitor_entry': False,
-                      'error':(error)
-                      }
-        return str(errors)
 
     except psycopg2.DatabaseError as error:
         errors = {'visitor_entry': False,
-             'error':(error)
-              }
+                      'error': (error)
+                      }
         return str(errors)
-    # middle_name ,contact_number ,flat_info
+
+
+def visitor_entry(firstname, lastname,cnumber, entrytime, flatid, staffid, visitreason, societyid, p):
+    first_name = firstname
+    last_name = lastname
+    contact_number = cnumber
+    entry_time = entrytime
+    flat_id = flatid
+    staff_id = staffid
+    visit_reason = visitreason
+    society_id = societyid
+    photo = p
+"""
+    tuple_insert = ('{}'.format(first_name), '{}'.format(last_name), '{}'.format(contact_number),
+                    '{}'.format(entry_time),
+                    '{}'.format(flat_id), '{}'.format(staff_id), '{}'.format(visit_reason), '{}'.format(society_id),
+                    '{}'.format(photo))
+    try:
+        with dbm.dbManager() as manager:
+            #value = manager.commit(df, 'visitor_management_schema.visitor_table')
+            visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor',tuple_insert)
+            logging.info('Visitor details entered successfully')
+            return jsonify(visitor_id) #print(visitor_id)
+    except psycopg2.DatabaseError as error:
+        errors = {'visitor_entry': False,
+                      'error': (error)
+                      }
+        return str(errors)
 
 @app.route('/update_exit',methods=['GET','POST'])
 def update_exit():
@@ -353,7 +357,7 @@ def dashboard_visitor():
 
 @app.route('/', methods=['GET', 'POST'])
 def hello_worlds():
-    return "<div><b>Sorry!!<br/>only team has access to database<b><a href='/about'>About</a></div>"
+    return "<div><b>Sorry!!<br/>Only team has access to database<b><a href='/about'>About</a></div>"
     
 
 @app.route('/about', methods=['GET', 'POST'])
@@ -363,3 +367,4 @@ def about():
                     'version': 'heroku test development'})
 
 
+app.run()
