@@ -231,30 +231,6 @@ def visitor_entry_details():
     society_id = request.form['society_id']
     photo = request.form['photo']
 
-    """
-    try:
-        result = visitor_entry(firstname, lastname, cnumber, entrytime, flatid, staffid, visitreason, societyid, p)
-        return jsonify(result)
-
-
-    except psycopg2.DatabaseError as error:
-        errors = {'visitor_entry': False,
-                      'error': (error)
-                      }
-        return str(errors)
-
-
-def visitor_entry(firstname, lastname,cnumber, entrytime, flatid, staffid, visitreason, societyid, p):
-    first_name = firstname
-    last_name = lastname
-    contact_number = cnumber
-    entry_time = entrytime
-    flat_id = flatid
-    staff_id = staffid
-    visit_reason = visitreason
-    society_id = societyid
-    photo = p
-"""
     tuple_insert = ('{}'.format(first_name), '{}'.format(last_name), '{}'.format(contact_number),
                     '{}'.format(entry_time),
                     '{}'.format(flat_id), '{}'.format(staff_id), '{}'.format(visit_reason), '{}'.format(society_id),
@@ -264,7 +240,8 @@ def visitor_entry(firstname, lastname,cnumber, entrytime, flatid, staffid, visit
             #value = manager.commit(df, 'visitor_management_schema.visitor_table')
             visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor',tuple_insert)
             logging.info('Visitor details entered successfully')
-            return jsonify(visitor_id) #print(visitor_id)
+            return jsonify(visitor_id)
+
     except psycopg2.DatabaseError as error:
         errors = {'visitor_entry': False,
                       'error': (error)
@@ -367,4 +344,4 @@ def about():
                     'version': 'heroku test development'})
 
 
-app.run()
+#app.run()
