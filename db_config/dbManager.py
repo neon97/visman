@@ -41,8 +41,14 @@ class dbManager:
         logging.info('Running function : %s with args - %s', func, args)
         cur = self._connection.cursor()
         cur.callproc(func, args)
+
+        colnames = [desc[0] for desc in cur.description]
+        logging.info(' Columns on Function %s returned %s ', func, colnames)
+        value = cur.fetchall()
+        logging.info(' Columns on Function %s returned %s ', func, value)
         self._connection.commit()
-        return cur.fetchall()
+
+        return value
 
     def updateDB(self, query):
         cur = self._connection.cursor()
