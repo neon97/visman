@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov  8 08:54:46 2018
 
-@author: SESA472057
 """
 import psycopg2
 import pandas as pd
