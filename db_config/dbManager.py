@@ -52,8 +52,12 @@ class dbManager:
 
     def updateDB(self, query):
         cur = self._connection.cursor()
+        logging.info('Connection to database established')
+        logging.info('Executing query %s', query)
         cur.execute(query)
-        cur.commit()
+        self._connection.commit()
+        return True
+        logging.info('Update Commit done')
 
     def truncateDB(self, tableName):
         print('Dropping table: ' + tableName)

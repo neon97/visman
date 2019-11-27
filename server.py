@@ -34,6 +34,18 @@ def generate(first,last):
     return first+last
 
 
+@app.route('/', methods=['GET', 'POST'])
+def hello_worlds():
+    return "<div><b>Sorry!!<br/>Only team has access to database<b><a href='/about'>About</a></div>"
+
+
+@app.route('/about', methods=['GET', 'POST'])
+def about():
+    return jsonify({'Company': 'Visitor Management',
+                    'Dev center': 'Team Foundation',
+                    'version': 'heroku test development'})
+
+
 @app.route('/society_info', methods=['GET', 'POST'])
 def society_info():
     """ Gives the society id and society name for all registered society."""
@@ -127,7 +139,7 @@ def get_flat_list():
 
 
 @app.route('/add_flat', methods=['GET', 'POST'])
-def add_wing():
+def add_flat():
     """Add details of Flat if Flat not Present"""
     try:
         society_id = request.form['society_id']
@@ -167,21 +179,20 @@ def get_flat_id():
 @app.route('/user/register', methods=['GET','POST'])
 def user_register():
     """staff Registeration (staff may be watchman or secretary)"""
+    # username=request.form['username']
+    email = request.form['email']
+    first_name = request.form['first_name']
+    middle_name = request.form['middle_name']
+    last_name = request.form['last_name']
+    password = request.form['password']
+    society_id = request.form['society_id']
+    flat_id = request.form['flat_id']
+    isadmin = request.form['isadmin']
+    user_entity = request.form['user_entity']
+    username = request.form['email']
+
     try:
-        #username=request.form['username']
-        email = request.form['email']
-        first_name = request.form['first_name']
-        middle_name = request.form['middle_name']
-        last_name = request.form['last_name']
-        password = request.form['password']
-        society_id = request.form['society_id']
-        flat_id = request.form['flat_id']
-        isadmin = request.form['isadmin']
-        user_entity = request.form['user_entity']
-        username = request.form['email']
-        
-#        postgres_insert_query=create_user.format(str(username),str(email),str(first_name),str(middle_name),str(last_name),str(password),str(society_id),str(isadmin))
-        
+
         df = pd.DataFrame({'username': str(username),
                            'email': str(email),
                            'first_name': str(first_name),
@@ -220,7 +231,7 @@ def login():
 
 # visitor entry from staff
 @app.route('/insertVisitor', methods=['GET','POST'])
-def visitor_entry_details():
+def insertVisitor():
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     contact_number = request.form['contact_number']
@@ -281,68 +292,63 @@ def dashboard_count():
         errors = {'registeration': False, 'error': (error)}
         return str(errors)
 
-    """ Old Code
-    society_id = request.form['society_id']
-    non_admin_user = queries['non_admin_user_count']
-    total_visitor_count = queries['total_visitor_count']
-    visitor_and_watchman_cnt=queries['visitor_and_watchman_cnt']
-    query_visitor_and_watchman_cnt = visitor_and_watchman_cnt.format(society_id)
-    postgres_visitor_count = total_visitor_count.format(society_id)
-    postgres_watchman_count = non_admin_user.format(society_id)
-    
-
-    with dbm.dbManager() as manager:
-        result = manager.getDataFrame(postgres_watchman_count)
-        result_Data = result.to_json(orient='values')
-
-        result1 = manager.getDataFrame(postgres_visitor_count)
-        result_Data1 = result1.to_json(orient='values')
-    
-    return jsonify({'watchman_count': result_Data, 'visitor_count': result_Data1})
-    return jsonify({'watchman_count': result, 'visitor_count': result_Data1})
-    """
-
 
 
 #admin access
 @app.route('/dashboard_watchman', methods=['GET', 'POST'])
 def dashboard_watchman():
-    admin_user = queries['non_admin_user']
     society_id = request.form['society_id']
-    postgres_admin = admin_user.format(society_id)
+    query_society_staff = queries['society_staff_list']
+
+    query  = query_society_staff.format(society_id)
     
     with dbm.dbManager() as manager:
-        result = manager.getDataFrame(postgres_admin)
-        result_Data = result.to_json(orient='values')
+        result = manager.getDataFrame(query)
+        #result_Data = result.to_json(orient='values')
         
-    return result_Data
+    return jsonify(result.to_dict(orient='records'))
 
+
+@app.route('/dashboard_members', methods=['GET', 'POST'])
+def dashboard_members():
+    society_id = request.form['society_id']
+    query_society_staff = queries['society_members_list']
+
+    query = query_society_staff.format(society_id)
+
+    with dbm.dbManager() as manager:
+        result = manager.getDataFrame(query)
+
+    return jsonify(result.to_dict(orient='records'))
 
 @app.route('/dashboard_visitor', methods=['GET', 'POST'])
 def dashboard_visitor():
     society_id = request.form['society_id']
     all_visitor_details = queries['all_visitor_details3']
-    postgres_watchman = all_visitor_details.format(society_id)
+    query_visitor_list = all_visitor_details.format(society_id)
     
     with dbm.dbManager() as manager:
-        result = manager.getDataFrame(postgres_watchman)
+        result = manager.getDataFrame(query_visitor_list)
 
     return jsonify(result.to_dict(orient='records'))
 
 
+@app.route('/set_user_login_status', methods=['GET', 'POST'])
+def set_user_login_status():
+    user_id=request.form['user_id']
+    user_status=request.form['user_status']
+    logging.info('Setting User id: %s status set to %s', user_id, user_status)
+    query_approve_user = queries['user_status']
+    logging.info('query generated %s', query_approve_user)
+    set_approve_user_query = query_approve_user.format(user_status, user_id)
+    with dbm.dbManager() as manager:
+        result = manager.updateDB(set_approve_user_query)
+        logging.info('User id: %s status set to %s', user_id, user_status)
+        logging.info('result =  %s', result)
+        print(result)
+        return jsonify(bool(request))
 
 
 
-@app.route('/', methods=['GET', 'POST'])
-def hello_worlds():
-    return "<div><b>Sorry!!<br/>Only team has access to database<b><a href='/about'>About</a></div>"
-    
 
-@app.route('/about', methods=['GET', 'POST'])
-def about():
-    return jsonify({'Company': 'Visitor Management',
-                    'Dev center': 'Team Foundation',
-                    'version': 'heroku test development'})
-
-
-#app.run(debug=True)
+app.run(debug=True)
