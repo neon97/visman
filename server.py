@@ -250,7 +250,7 @@ def insertVisitor():
     try:
         with dbm.dbManager() as manager:
             #value = manager.commit(df, 'visitor_management_schema.visitor_table')
-            visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor',tuple_insert)
+            visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor', tuple_insert)
             logging.info('Visitor details entered successfully')
             return jsonify(visitor_id)
 
@@ -289,9 +289,8 @@ def dashboard_count():
 
         return jsonify(result.to_dict(orient='records'))
     except psycopg2.DatabaseError as error:
-        errors = {'registeration': False, 'error': (error)}
+        errors = {'registration': False, 'error': error}
         return str(errors)
-
 
 
 #admin access
@@ -300,12 +299,11 @@ def dashboard_watchman():
     society_id = request.form['society_id']
     query_society_staff = queries['society_staff_list']
 
-    query  = query_society_staff.format(society_id)
+    query = query_society_staff.format(society_id)
     
     with dbm.dbManager() as manager:
         result = manager.getDataFrame(query)
-        #result_Data = result.to_json(orient='values')
-        
+
     return jsonify(result.to_dict(orient='records'))
 
 
@@ -320,6 +318,7 @@ def dashboard_members():
         result = manager.getDataFrame(query)
 
     return jsonify(result.to_dict(orient='records'))
+
 
 @app.route('/dashboard_visitor', methods=['GET', 'POST'])
 def dashboard_visitor():
@@ -347,8 +346,6 @@ def set_user_login_status():
         logging.info('result =  %s', result)
         print(result)
         return jsonify(bool(request))
-
-
 
 
 #app.run(debug=True)
