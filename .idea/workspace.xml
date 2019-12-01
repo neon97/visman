@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d0383c78-4224-4451-b1d9-bd4b3e51fe84" name="Default Changelist" comment="">
+    <list default="true" id="d0383c78-4224-4451-b1d9-bd4b3e51fe84" name="Default Changelist" comment="CHANGED /set_user_login_status '/user/set_user_login_status'">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_config/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/db_config/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_config/database.ini" beforeDir="false" afterPath="$PROJECT_DIR$/db_config/database.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_config/dbManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/db_config/dbManager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,8 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="350" column="1" selection-start-line="350" selection-start-column="1" selection-end-line="350" selection-end-column="1" />
+            <state relative-caret-position="403">
+              <caret line="357" column="28" selection-start-line="357" selection-start-column="28" selection-end-line="357" selection-end-column="28" />
               <folding>
                 <element signature="e#145#175#0" expanded="true" />
               </folding>
@@ -37,8 +40,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/dbManager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1139">
-              <caret line="70" column="58" selection-start-line="70" selection-start-column="58" selection-end-line="70" selection-end-column="58" />
+            <state relative-caret-position="833">
+              <caret line="52" column="16" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="16" />
               <folding>
                 <element signature="e#89#104#0" expanded="true" />
               </folding>
@@ -49,8 +52,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="23" selection-start-column="23" selection-end-column="23" />
+            <state relative-caret-position="119">
+              <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -58,8 +61,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/database.ini">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1190">
-              <caret line="70" column="72" selection-start-line="70" selection-start-column="72" selection-end-line="70" selection-end-column="72" />
+            <state relative-caret-position="901">
+              <caret line="53" column="64" selection-start-line="53" selection-start-column="64" selection-end-line="53" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -75,15 +78,27 @@
       <find>frame</find>
       <find>insertV</find>
       <find>visitor_das</find>
-      <find>all_visitor_details3</find>
       <find>das</find>
-      <find>login</find>
-      <find>society_staff_list</find>
       <find>approve</find>
       <find>update</find>
-      <find>society_members_list</find>
-      <find>user_status</find>
       <find>update_exit</find>
+      <find>user_re</find>
+      <find>visitor_and_watchman_cnt</find>
+      <find>member</find>
+      <find>replace</find>
+      <find>get_wing_list</find>
+      <find>get_flat_list</find>
+      <find>login</find>
+      <find>get_flat_id</find>
+      <find>society_staff_list</find>
+      <find>all_visitor_details3</find>
+      <find>update_visitor_exit</find>
+      <find>non_admin_user_count</find>
+      <find>updateDB</find>
+      <find>total_visitor_count</find>
+      <find>user_status</find>
+      <find>dashboard_members</find>
+      <find>society_members_list</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -93,24 +108,22 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/db_config/config.py" />
-        <option value="$PROJECT_DIR$/db_config/database.ini" />
         <option value="$PROJECT_DIR$/db_config/dbManager.py" />
+        <option value="$PROJECT_DIR$/db_config/database.ini" />
         <option value="$PROJECT_DIR$/server.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="y" value="-10" />
-    <option name="width" value="980" />
-    <option name="height" value="1050" />
+    <option name="x" value="951" />
+    <option name="width" value="978" />
+    <option name="height" value="1039" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -127,6 +140,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -226,7 +240,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574831915349</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="app.run off">
+      <created>1574875110647</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1574875110647</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -238,7 +259,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33569404" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33569404" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39943343" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -274,10 +295,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Python/Lib/json/encoder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3400">
+          <caret line="200" selection-start-line="200" selection-end-line="200" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python/Lib/site-packages/flask/json/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1445">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python/Lib/json/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="237" selection-start-line="237" selection-end-line="237" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="350" column="1" selection-start-line="350" selection-start-column="1" selection-end-line="350" selection-end-column="1" />
+        <state relative-caret-position="403">
+          <caret line="357" column="28" selection-start-line="357" selection-start-column="28" selection-end-line="357" selection-end-column="28" />
           <folding>
             <element signature="e#145#175#0" expanded="true" />
           </folding>
@@ -293,8 +335,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db_config/dbManager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1139">
-          <caret line="70" column="58" selection-start-line="70" selection-start-column="58" selection-end-line="70" selection-end-column="58" />
+        <state relative-caret-position="833">
+          <caret line="52" column="16" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="16" />
           <folding>
             <element signature="e#89#104#0" expanded="true" />
           </folding>
@@ -303,15 +345,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db_config/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="23" selection-start-column="23" selection-end-column="23" />
+        <state relative-caret-position="119">
+          <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/db_config/database.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1190">
-          <caret line="70" column="72" selection-start-line="70" selection-start-column="72" selection-end-line="70" selection-end-column="72" />
+        <state relative-caret-position="901">
+          <caret line="53" column="64" selection-start-line="53" selection-start-column="64" selection-end-line="53" selection-end-column="64" />
         </state>
       </provider>
     </entry>

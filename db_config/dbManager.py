@@ -100,7 +100,7 @@ class dbManager:
                                                 password=config.DATABASE_CONFIG['password'],
                                                 port=self._port)
 
-            logging.info('Connection to %s : %s : %s  Successfull', self._user, self._nameOfDB, self._port)
+            logging.info('Connection to Database %s : %s : %s  Successfull', self._user, self._nameOfDB, self._port)
 
         except psycopg2.DatabaseError as error:
             errors = {'visitor_entry': False,

@@ -35,7 +35,7 @@ def generate(first,last):
 
 
 @app.route('/', methods=['GET', 'POST'])
-def hello_worlds():
+def hello_world():
     return "<div><b>Sorry!!<br/>Only team has access to database<b><a href='/about'>About</a></div>"
 
 
@@ -74,13 +74,16 @@ def society_register():
         total_buildings = request.form['total_buildings']
         total_flats = request.form['total_flats']
 
+
         df = pd.DataFrame({'regd_no': regd_no, 'society_name': society_name, 'society_address': society_address,
                            'total_buildings': total_buildings, 'total_flats': total_flats}, index=[0])
 
+        logging.info('Dataframe for New Society %s', df)
         with dbm.dbManager() as manager:
             manager.commit(df, 'visitor_management_schema.society_table')
-        # first user details
-        return "Society registered successfully"
+            logging.info('Society registered successfully')
+            return "Society registered successfully"
+
     except psycopg2.DatabaseError as error:
         errors = {'society registeration': False,
                   'error': (error)
@@ -88,8 +91,8 @@ def society_register():
         return str(errors)
 
 
-@app.route('/get_id', methods=['GET', 'POST'])
-def get_id():
+@app.route('/get_society_id', methods=['GET', 'POST'])
+def get_society_id():
     """ get the society id by passing the society registration."""
     try:
         regd_no = request.form['regd_no']
@@ -110,7 +113,7 @@ def get_wing_list():
     """get list of wings from a Society"""
     try:
         society_id = request.form['society_id']
-        society_wing_list = queries['get_society_wing_list']
+        society_wing_list = queries['get_wing_list']
         query = society_wing_list.format(society_id)
 
         with dbm.dbManager() as manager:
@@ -152,7 +155,6 @@ def add_flat():
             manager.commit(df, 'visitor_management_schema.flat_details')
             success = True
             return jsonify(success)
-            #return jsonify(q)
 
     except psycopg2.DatabaseError as error:
         errors = {'get_wing_list': False, 'error': (error)}
@@ -165,7 +167,7 @@ def get_flat_id():
     society_id = request.form['society_id']
     wing_name = request.form['wing_name']
     flat_no = request.form['flat_no']
-    query_flat_id = queries['get_flat_id_query']
+    query_flat_id = queries['get_flat_id']
 
     query = query_flat_id.format(society_id, wing_name, flat_no)
 
@@ -188,7 +190,7 @@ def user_register():
     society_id = request.form['society_id']
     flat_id = request.form['flat_id']
     isadmin = request.form['isadmin']
-    user_entity = request.form['user_entity']
+    user_status = request.form['user_status']
     username = request.form['email']
 
     try:
@@ -202,13 +204,13 @@ def user_register():
                            'society_id': str(society_id),
                            'isadmin': str(isadmin),
                            'flat_id': str(flat_id),
-                           'user_entity': str(user_entity)
+                           'user_entity': str(user_status)
                            },
                           index=[0])
 
         with dbm.dbManager() as manager:
             manager.commit(df, 'visitor_management_schema.user_table')
-        return "User registered Succesfully"
+            return "User registered Succesfully"
     except psycopg2.DatabaseError as error:
         errors = {'registeration': False, 'error': error}
         return str(errors)
@@ -217,17 +219,16 @@ def user_register():
 #staff Login
 @app.route('/user/login', methods=['GET', 'POST'])
 def login():
-    validate_query = queries['validate_user']
+    validate_query = queries['user_login']
     
     username = request.form['username']
     password = request.form['password']
-    postgres_user_login_query = validate_query.format(username,password)
+    user_login_query = validate_query.format(username, password)
     
     with dbm.dbManager() as manager:
-            result = manager.getDataFrame(postgres_user_login_query)
+            result = manager.getDataFrame(user_login_query)
+            return jsonify(result.to_dict(orient='records'))
 
-    return jsonify(result.to_dict(orient='records'))
-    
 
 # visitor entry from staff
 @app.route('/insertVisitor', methods=['GET','POST'])
@@ -249,7 +250,6 @@ def insertVisitor():
                     '{}'.format(photo))
     try:
         with dbm.dbManager() as manager:
-            #value = manager.commit(df, 'visitor_management_schema.visitor_table')
             visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor', tuple_insert)
             logging.info('Visitor details entered successfully')
             return jsonify(visitor_id)
@@ -260,28 +260,27 @@ def insertVisitor():
                       }
         return str(errors)
 
-@app.route('/update_exit',methods=['GET','POST'])
-def update_exit():
-    #update_exit=queries['update_exit']
-    visitor_id=request.form['id']
-    exit_time=request.form['exit_time']
+@app.route('/update_visitor_exit',methods=['GET','POST'])
+def update_visitor_exit():
+    update_visitor_exit = queries['update_visitor_exit']
+    visitor_id = request.form['id']
+    exit_time = request.form['exit_time']
     try:
-        update_query='''update visitor_management_schema.visitor_table set exit_time='{}' where id={}'''.format(exit_time,visitor_id)
+        update_query = update_visitor_exit.format(exit_time,visitor_id)
         
         with dbm.dbManager() as manager:
             manager.updateDB(update_query)
-        success=True
+            success = True
     except:
-        success=False
+        success = False
     return jsonify(success)
         
 
-# admin access
 @app.route('/dashboard_count', methods=['GET','POST'])
 def dashboard_count():
     try:
         society_id = request.form['society_id']
-        query_society_id = queries['visitor_and_watchman_cnt']
+        query_society_id = queries['admin_dashboard']
         query = query_society_id.format(society_id)
 
         with dbm.dbManager() as manager:
@@ -294,8 +293,8 @@ def dashboard_count():
 
 
 #admin access
-@app.route('/dashboard_watchman', methods=['GET', 'POST'])
-def dashboard_watchman():
+@app.route('/dashboard_staff', methods=['GET', 'POST'])
+def dashboard_staff():
     society_id = request.form['society_id']
     query_society_staff = queries['society_staff_list']
 
@@ -310,14 +309,16 @@ def dashboard_watchman():
 @app.route('/dashboard_members', methods=['GET', 'POST'])
 def dashboard_members():
     society_id = request.form['society_id']
+    user_status = request.form['user_status']
     query_society_staff = queries['society_members_list']
 
-    query = query_society_staff.format(society_id)
+    query = query_society_staff.format(user_status, society_id)
 
     with dbm.dbManager() as manager:
         result = manager.getDataFrame(query)
 
     return jsonify(result.to_dict(orient='records'))
+
 
 
 @app.route('/dashboard_visitor', methods=['GET', 'POST'])
@@ -328,24 +329,39 @@ def dashboard_visitor():
     
     with dbm.dbManager() as manager:
         result = manager.getDataFrame(query_visitor_list)
+        logging.info('Visitor details are %s', result)
+        #print(result)
+        #result['date2int'] = result.apply(date2int, axis=1)
+        #return jsonify(result.to_dict(orient='records'))
+        return result.to_json(orient='records')
 
-    return jsonify(result.to_dict(orient='records'))
 
-
-@app.route('/set_user_login_status', methods=['GET', 'POST'])
+@app.route('/user/set_user_login_status', methods=['GET', 'POST'])
 def set_user_login_status():
     user_id=request.form['user_id']
     user_status=request.form['user_status']
     logging.info('Setting User id: %s status set to %s', user_id, user_status)
-    query_approve_user = queries['user_status']
+    query_approve_user = queries['set_user_login_status']
     logging.info('query generated %s', query_approve_user)
     set_approve_user_query = query_approve_user.format(user_status, user_id)
     with dbm.dbManager() as manager:
         result = manager.updateDB(set_approve_user_query)
-        logging.info('User id: %s status set to %s', user_id, user_status)
-        logging.info('result =  %s', result)
-        print(result)
+        logging.info('User id: %s  login status set to %s', user_id, user_status)
+        return jsonify(bool(result))
+
+
+@app.route('/user/set_user_admin_status', methods=['GET', 'POST'])
+def set_user_admin_status():
+    user_id = request.form['user_id']
+    user_admin_status = request.form['user_admin_status']
+    logging.info('Setting User id: %s status set to %s', user_id, user_admin_status)
+    query_update_user_admin = queries['set_user_admin_status']
+
+    set_approve_user_query = query_update_user_admin.format(user_admin_status, user_id)
+    with dbm.dbManager() as manager:
+        result = manager.updateDB(set_approve_user_query)
+        logging.info('User id: %s  admin status set to %s', user_id, user_admin_status)
         return jsonify(bool(request))
 
 
-#app.run(debug=True)
+app.run(debug=True)
