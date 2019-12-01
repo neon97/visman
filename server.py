@@ -402,5 +402,4 @@ def set_user_admin_status():
         logging.info('User id: %s  admin status set to %s', user_id, user_admin_status)
         return jsonify(bool(request))
 
-
 #app.run(debug=True)
