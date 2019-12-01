@@ -216,6 +216,46 @@ def user_register():
         return str(errors)
 
 
+@app.route('/user/register/satff', methods=['GET','POST'])
+def user_register_staff():
+    """staff Registeration (staff may be watchman or secretary)"""
+    # username=request.form['username']
+    email = request.form['email']
+    first_name = request.form['first_name']
+    middle_name = request.form['middle_name']
+    last_name = request.form['last_name']
+    password = request.form['password']
+    society_id = request.form['society_id']
+    isadmin = request.form['isadmin']
+    user_status = request.form['user_status']
+    username = request.form['email']
+    identification_type = form.request['identification_type']
+    identification_no = form.request['identifcation_no']
+
+    try:
+
+        df = pd.DataFrame({'username': str(username),
+                           'email': str(email),
+                           'first_name': str(first_name),
+                           'middle_name': str(middle_name),
+                           'last_name': str(last_name),
+                           'password': str(password),
+                           'society_id': str(society_id),
+                           'isadmin': str(isadmin),
+                           'user_entity': str(user_status),
+                           'identification_type' : str(identification_type),
+                           'identification_no': str(identification_no),
+                           },
+                          index=[0])
+
+        with dbm.dbManager() as manager:
+            manager.commit(df, 'visitor_management_schema.user_table')
+            return "User registered Successfully"
+    except psycopg2.DatabaseError as error:
+        errors = {'registeration': False, 'error': error}
+        return str(errors)
+
+
 #staff Login
 @app.route('/user/login', methods=['GET', 'POST'])
 def login():
@@ -364,4 +404,4 @@ def set_user_admin_status():
         return jsonify(bool(request))
 
 
-#app.run(debug=True)
+app.run(debug=True)
