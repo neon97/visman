@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="405" column="1" selection-start-line="405" selection-start-column="1" selection-end-line="405" selection-end-column="1" />
+            <state relative-caret-position="130">
+              <caret line="365" column="55" selection-start-line="365" selection-start-column="35" selection-end-line="365" selection-end-column="55" />
               <folding>
                 <element signature="e#145#175#0" expanded="true" />
               </folding>
@@ -57,8 +57,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/database.ini">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="137">
-              <caret line="50" column="155" lean-forward="true" selection-start-line="50" selection-start-column="155" selection-end-line="50" selection-end-column="155" />
+            <state relative-caret-position="324">
+              <caret line="67" column="95" selection-start-line="67" selection-start-column="95" selection-end-line="67" selection-end-column="95" />
             </state>
           </provider>
         </entry>
@@ -67,7 +67,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>insertvi</find>
       <find>pd</find>
       <find>insert</find>
       <find>read_query</find>
@@ -87,7 +86,6 @@
       <find>login</find>
       <find>get_flat_id</find>
       <find>society_staff_list</find>
-      <find>all_visitor_details3</find>
       <find>update_visitor_exit</find>
       <find>non_admin_user_count</find>
       <find>updateDB</find>
@@ -96,6 +94,8 @@
       <find>dashboard_members</find>
       <find>__getinsertValues</find>
       <find>admin_dashboard</find>
+      <find>/user/register/staff</find>
+      <find>all_visitor_details3</find>
       <find>society_members_list</find>
     </findStrings>
   </component>
@@ -107,8 +107,8 @@
       <list>
         <option value="$PROJECT_DIR$/db_config/config.py" />
         <option value="$PROJECT_DIR$/db_config/dbManager.py" />
-        <option value="$PROJECT_DIR$/db_config/database.ini" />
         <option value="$PROJECT_DIR$/server.py" />
+        <option value="$PROJECT_DIR$/db_config/database.ini" />
       </list>
     </option>
   </component>
@@ -294,7 +294,21 @@
       <option name="project" value="LOCAL" />
       <updated>1575210818708</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="added staff registration api&#10;&quot;/user/registration/staff&quot;">
+      <created>1575211091015</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1575211091015</updated>
+    </task>
+    <task id="LOCAL-00016" summary="added staff registration api&#10;&quot;/user/registration/staff&quot;">
+      <created>1575213106566</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1575213106566</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -391,15 +405,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db_config/database.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="50" column="155" lean-forward="true" selection-start-line="50" selection-start-column="155" selection-end-line="50" selection-end-column="155" />
+        <state relative-caret-position="324">
+          <caret line="67" column="95" selection-start-line="67" selection-start-column="95" selection-end-line="67" selection-end-column="95" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="405" column="1" selection-start-line="405" selection-start-column="1" selection-end-line="405" selection-end-column="1" />
+        <state relative-caret-position="130">
+          <caret line="365" column="55" selection-start-line="365" selection-start-column="35" selection-end-line="365" selection-end-column="55" />
           <folding>
             <element signature="e#145#175#0" expanded="true" />
           </folding>
