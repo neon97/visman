@@ -216,10 +216,9 @@ def user_register():
         return str(errors)
 
 
-@app.route('/user/register/satff', methods=['GET','POST'])
+@app.route('/user/register/staff', methods=['GET','POST'])
 def user_register_staff():
     """staff Registration (staff may be like watchman or society accounts guy)"""
-    # username=request.form['username']
     email = request.form['email']
     first_name = request.form['first_name']
     middle_name = request.form['middle_name']
@@ -229,8 +228,8 @@ def user_register_staff():
     isadmin = request.form['isadmin']
     user_status = request.form['user_status']
     username = request.form['email']
-    identification_type = form.request['identification_type']
-    identification_no = form.request['identifcation_no']
+    identification_type = request.form['identification_type']
+    identification_no = request.form['identification_no']
 
     try:
 
@@ -243,8 +242,8 @@ def user_register_staff():
                            'society_id': str(society_id),
                            'isadmin': str(isadmin),
                            'user_entity': str(user_status),
-                           'identification_type' : str(identification_type),
-                           'identification_no': str(identification_no),
+                           'identification_type': str(identification_type),
+                           'identification_no': str(identification_no)
                            },
                           index=[0])
 
@@ -404,4 +403,4 @@ def set_user_admin_status():
         return jsonify(bool(request))
 
 
-#app.run(debug=True)
+app.run(debug=True)
