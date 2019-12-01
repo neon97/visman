@@ -320,7 +320,7 @@ def dashboard_count():
     try:
         society_id = request.form['society_id']
         query_society_id = queries['admin_dashboard']
-        query = query_society_id.format(society_id)
+        query = query_society_id.format(society_id,society_id)
 
         with dbm.dbManager() as manager:
             result = manager.getDataFrame(query)
