@@ -180,7 +180,7 @@ def get_flat_id():
 
 @app.route('/user/register', methods=['GET','POST'])
 def user_register():
-    """staff Registeration (staff may be watchman or secretary)"""
+    """Society Member Registration """
     # username=request.form['username']
     email = request.form['email']
     first_name = request.form['first_name']
@@ -218,7 +218,7 @@ def user_register():
 
 @app.route('/user/register/satff', methods=['GET','POST'])
 def user_register_staff():
-    """staff Registeration (staff may be watchman or secretary)"""
+    """staff Registration (staff may be like watchman or society accounts guy)"""
     # username=request.form['username']
     email = request.form['email']
     first_name = request.form['first_name']
@@ -404,4 +404,4 @@ def set_user_admin_status():
         return jsonify(bool(request))
 
 
-app.run(debug=True)
+#app.run(debug=True)

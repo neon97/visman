@@ -16,8 +16,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="252" column="48" selection-start-line="252" selection-start-column="48" selection-end-line="252" selection-end-column="48" />
+            <state relative-caret-position="254">
+              <caret line="221" column="19" lean-forward="true" selection-start-line="221" selection-start-column="19" selection-end-line="221" selection-end-column="19" />
               <folding>
                 <element signature="e#145#175#0" expanded="true" />
               </folding>
@@ -259,7 +259,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575205177852</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="added staff registration api&#10;&quot;/user/registration/staff&quot;">
+      <created>1575208022929</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1575208022929</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -289,7 +296,8 @@
     <MESSAGE value="added database port no to databse config" />
     <MESSAGE value="app.run off" />
     <MESSAGE value="CHANGED /set_user_login_status '/user/set_user_login_status'" />
-    <option name="LAST_COMMIT_MESSAGE" value="CHANGED /set_user_login_status '/user/set_user_login_status'" />
+    <MESSAGE value="added staff registration api&#10;&quot;/user/registration/staff&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="added staff registration api&#10;&quot;/user/registration/staff&quot;" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/psycopg2/__init__.py" />
@@ -362,8 +370,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="252" column="48" selection-start-line="252" selection-start-column="48" selection-end-line="252" selection-end-column="48" />
+        <state relative-caret-position="254">
+          <caret line="221" column="19" lean-forward="true" selection-start-line="221" selection-start-column="19" selection-end-line="221" selection-end-column="19" />
           <folding>
             <element signature="e#145#175#0" expanded="true" />
           </folding>
