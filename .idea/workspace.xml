@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0383c78-4224-4451-b1d9-bd4b3e51fe84" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/db_config/database.ini" beforeDir="false" afterPath="$PROJECT_DIR$/db_config/database.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -13,11 +13,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2889">
-              <caret line="405" selection-start-line="405" selection-end-line="405" />
+            <state relative-caret-position="38">
+              <caret line="243" column="71" selection-start-line="243" selection-start-column="71" selection-end-line="243" selection-end-column="71" />
               <folding>
                 <element signature="e#145#175#0" expanded="true" />
               </folding>
@@ -37,7 +37,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/dbManager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1762">
+            <state relative-caret-position="2669">
               <caret line="160" column="25" selection-start-line="160" selection-start-column="8" selection-end-line="160" selection-end-column="25" />
               <folding>
                 <element signature="e#89#104#0" expanded="true" />
@@ -50,12 +50,12 @@
         <entry file="file://$PROJECT_DIR$/db_config/config.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
-              <caret line="9" column="31" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="31" />
+              <caret line="9" column="26" lean-forward="true" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="31" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/database.ini">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="272">
@@ -96,8 +96,8 @@
       <find>__getinsertValues</find>
       <find>admin_dashboard</find>
       <find>/user/register/staff</find>
-      <find>society_members_list</find>
       <find>all_visitor_details3</find>
+      <find>society_members_list</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -108,21 +108,22 @@
       <list>
         <option value="$PROJECT_DIR$/db_config/config.py" />
         <option value="$PROJECT_DIR$/db_config/dbManager.py" />
-        <option value="$PROJECT_DIR$/server.py" />
         <option value="$PROJECT_DIR$/db_config/database.ini" />
+        <option value="$PROJECT_DIR$/server.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="951" />
-    <option name="width" value="978" />
-    <option name="height" value="1039" />
+    <option name="x" value="950" />
+    <option name="width" value="979" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -139,7 +140,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -344,7 +344,21 @@
       <option name="project" value="LOCAL" />
       <updated>1575216319310</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="changes visitor_management_schame.user_table.user_enity to user_status">
+      <created>1575219726193</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1575219726193</updated>
+    </task>
+    <task id="LOCAL-00023" summary="changes visitor_management_schame.user_table.user_enity to user_status">
+      <created>1575219872057</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1575219872057</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -376,7 +390,8 @@
     <MESSAGE value="CHANGED /set_user_login_status '/user/set_user_login_status'" />
     <MESSAGE value="added staff registration api&#10;&quot;/user/registration/staff&quot;" />
     <MESSAGE value="added visitor count in dashboard count api" />
-    <option name="LAST_COMMIT_MESSAGE" value="added visitor count in dashboard count api" />
+    <MESSAGE value="changes visitor_management_schame.user_table.user_enity to user_status" />
+    <option name="LAST_COMMIT_MESSAGE" value="changes visitor_management_schame.user_table.user_enity to user_status" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/psycopg2/__init__.py" />
@@ -423,29 +438,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db_config/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="31" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/db_config/dbManager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1762">
+        <state relative-caret-position="2669">
           <caret line="160" column="25" selection-start-line="160" selection-start-column="8" selection-end-line="160" selection-end-column="25" />
           <folding>
             <element signature="e#89#104#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2889">
-          <caret line="405" selection-start-line="405" selection-end-line="405" />
-          <folding>
-            <element signature="e#145#175#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -454,6 +452,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="16" column="72" selection-start-line="16" selection-start-column="61" selection-end-line="16" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_config/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="26" lean-forward="true" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="243" column="71" selection-start-line="243" selection-start-column="71" selection-end-line="243" selection-end-column="71" />
+          <folding>
+            <element signature="e#145#175#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

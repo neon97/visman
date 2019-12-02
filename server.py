@@ -11,7 +11,7 @@ from flask import Flask, request, jsonify
 import pandas as pd
 import db_config.dbManager as dbm
 import logging
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 from datetime import datetime
 
@@ -216,7 +216,7 @@ def user_register():
         return str(errors)
 
 
-@app.route('/user/register/staff', methods=['GET','POST'])
+@app.route('/user/register/staff', methods=['GET', 'POST'])
 def user_register_staff():
     """staff Registration (staff may be like watchman or society accounts guy)"""
     email = request.form['email']
@@ -230,26 +230,27 @@ def user_register_staff():
     username = request.form['email']
     identification_type = request.form['identification_type']
     identification_no = request.form['identification_no']
+    identification_no = request.form['identification_no']
+
+    df = pd.DataFrame({'username': str(username),
+                       'email': str(email),
+                       'first_name': str(first_name),
+                       'middle_name': str(middle_name),
+                       'last_name': str(last_name),
+                       'password': str(password),
+                       'society_id': str(society_id),
+                       'isadmin': str(isadmin),
+                       'user_entity': str(user_status),
+                       'identification_type': str(identification_type),
+                       'identification_no': str(identification_no)
+                       },
+                      index=[0])
 
     try:
 
-        df = pd.DataFrame({'username': str(username),
-                           'email': str(email),
-                           'first_name': str(first_name),
-                           'middle_name': str(middle_name),
-                           'last_name': str(last_name),
-                           'password': str(password),
-                           'society_id': str(society_id),
-                           'isadmin': str(isadmin),
-                           'user_entity': str(user_status),
-                           'identification_type': str(identification_type),
-                           'identification_no': str(identification_no)
-                           },
-                          index=[0])
-
         with dbm.dbManager() as manager:
             manager.commit(df, 'visitor_management_schema.user_table')
-            return "User registered Successfully"
+        return "User registered Successfully"
     except psycopg2.DatabaseError as error:
         errors = {'registeration': False, 'error': error}
         return str(errors)
@@ -400,7 +401,7 @@ def set_user_admin_status():
     with dbm.dbManager() as manager:
         result = manager.updateDB(set_approve_user_query)
         logging.info('User id: %s  admin status set to %s', user_id, user_admin_status)
-        return jsonify(bool(request))
+        return jsonify(bool(result))
 
 
-#app.run(debug=True)
+app.run(debug=True)
