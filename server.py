@@ -124,6 +124,22 @@ def get_wing_list():
         return str(errors)
 
 
+@app.route('/get_society_members_details', methods=['GET', 'POST'])
+def get_society_members_details():
+    """get list of wings from a Society"""
+    try:
+        society_id = request.form['society_id']
+        society_members_details = queries['get_society_members_details']
+        query = society_members_details.format(society_id)
+
+        with dbm.dbManager() as manager:
+            result = manager.getDataFrame(query)
+        return jsonify(result.to_dict(orient='records'))
+    except psycopg2.DatabaseError as error:
+        errors = {'get_wing_list': False, 'error': (error)}
+        return str(errors)
+
+
 @app.route('/get_flat_list', methods=['GET', 'POST'])
 def get_flat_list():
     try:
@@ -404,4 +420,4 @@ def set_user_admin_status():
         return jsonify(bool(result))
 
 
-#app.run()
+app.run()
