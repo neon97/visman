@@ -226,7 +226,7 @@ def user_register():
 
         with dbm.dbManager() as manager:
             manager.commit(df, 'visitor_management_schema.user_table')
-            return "User registered Succesfully"
+            return "User registered Successfully"
     except psycopg2.DatabaseError as error:
         errors = {'registeration': False, 'error': error}
         return str(errors)
@@ -268,7 +268,7 @@ def user_register_staff():
             manager.commit(df, 'visitor_management_schema.user_table')
         return "User registered Successfully"
     except psycopg2.DatabaseError as error:
-        errors = {'registeration': False, 'error': error}
+        errors = {'registration': False, 'error': error}
         return str(errors)
 
 
@@ -289,25 +289,55 @@ def login():
 # visitor entry from staff
 @app.route('/insertVisitor', methods=['GET','POST'])
 def insertVisitor():
+    logging.debug("Running insertVisitor:")
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     contact_number = request.form['contact_number']
     entry_time = request.form['entry_time']
     # entry_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    society_id = request.form['society_id']
     flat_id = request.form['flat_id']
     staff_id = request.form['staff_id']
     visit_reason = request.form['visit_reason']
-    society_id = request.form['society_id']
+    whom_to_visit = request.form['whom_to_visit']
     photo = request.form['photo']
+
+    df = pd.DataFrame({'first_name': str(first_name),
+                       'last_name': str(last_name),
+                       'contact_number': str(contact_number),
+                       'entry_time': str(entry_time),
+                       'flat_id': str(flat_id),
+                       'staff_id': str(staff_id),
+                       'visit_reason': str(visit_reason),
+                       'society_id': str(society_id),
+                       'whom_to_visit': str(whom_to_visit),
+                       'photo': str(photo)
+                       },
+                      index=[0])
 
     tuple_insert = ('{}'.format(first_name), '{}'.format(last_name), '{}'.format(contact_number),
                     '{}'.format(entry_time),
                     '{}'.format(flat_id), '{}'.format(staff_id), '{}'.format(visit_reason), '{}'.format(society_id),
-                    '{}'.format(photo))
+                    '{}'.format(photo), '{}'.format(whom_to_visit))
+
+    # query = """
+    #     SELECT id FROM visitor_management_schema.visitor_table
+    #         WHERE first_name = '{}'
+    #             AND last_name = '{}'
+    #             AND  contact_number = '{}'
+    #             AND entry_time = '{}'
+    #             AND flat_id = '{}'
+    #             AND staff_id = '{}'
+    #             AND society_id = '{}'
+    #             AND visit_reason = '{}'
+    #             AND whom_to_visit = '{}'
+    #     """.format(first_name, last_name, contact_number, entry_time, flat_id, staff_id, society_id,  visit_reason,
+    #                whom_to_visit)
     try:
         with dbm.dbManager() as manager:
             visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor', tuple_insert)
-            logging.info('Visitor details entered successfully')
+            #result = manager.getDataFrame(query)
+            logging.info('Visitor details entered successfully for id %s', visitor_id)
             return jsonify(visitor_id)
 
     except psycopg2.DatabaseError as error:
@@ -392,10 +422,23 @@ def dashboard_visitor():
         return result.to_json(orient='records')
 
 
+@app.route('/get_flat_visitor_details', methods=['GET', 'POST'])
+def get_flat_visitor_details():
+    society_id = request.form['society_id']
+    flat_id = request.form['flat_id']
+    all_visitor_details = queries['flat_visitor_details']
+    query_visitor_list = all_visitor_details.format(society_id, flat_id)
+
+    with dbm.dbManager() as manager:
+        result = manager.getDataFrame(query_visitor_list)
+        logging.info('Visitor details are %s', result)
+        return result.to_json(orient='records')
+
+
 @app.route('/user/set_user_login_status', methods=['GET', 'POST'])
 def set_user_login_status():
-    user_id=request.form['user_id']
-    user_status=request.form['user_status']
+    user_id = request.form['user_id']
+    user_status = request.form['user_status']
     logging.info('Setting User id: %s status set to %s', user_id, user_status)
     query_approve_user = queries['set_user_login_status']
     logging.info('query generated %s', query_approve_user)
