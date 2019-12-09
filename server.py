@@ -463,4 +463,4 @@ def set_user_admin_status():
         return jsonify(bool(result))
 
 
-#app.run()
+app.run()
