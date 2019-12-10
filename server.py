@@ -346,6 +346,7 @@ def insertVisitor():
                       }
         return str(errors)
 
+
 @app.route('/update_visitor_exit',methods=['GET','POST'])
 def update_visitor_exit():
     update_visitor_exit = queries['update_visitor_exit']
