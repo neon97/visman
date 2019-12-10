@@ -14,8 +14,8 @@ DATABASE_CONFIG = {
 }
 
 
-DATABASE_CONFIG_NOT = {
-    'user':'postgres',
+DATABASE_CONFIG_not = {
+    'user': 'postgres',
     'host': 'localhost',
     'database': 'visman',
     'password': 'changeme',
