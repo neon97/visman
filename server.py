@@ -407,7 +407,6 @@ def dashboard_members():
     return jsonify(result.to_dict(orient='records'))
 
 
-
 @app.route('/dashboard_visitor', methods=['GET', 'POST'])
 def dashboard_visitor():
     society_id = request.form['society_id']
@@ -442,8 +441,9 @@ def set_user_login_status():
     user_status = request.form['user_status']
     logging.info('Setting User id: %s status set to %s', user_id, user_status)
     query_approve_user = queries['set_user_login_status']
-    logging.info('query generated %s', query_approve_user)
+
     set_approve_user_query = query_approve_user.format(user_status, user_id)
+    logging.info('query generated %s', set_approve_user_query)
     with dbm.dbManager() as manager:
         result = manager.updateDB(set_approve_user_query)
         logging.info('User id: %s  login status set to %s', user_id, user_status)
@@ -464,4 +464,19 @@ def set_user_admin_status():
         return jsonify(bool(result))
 
 
-#app.run()
+@app.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
+def set_visitor_status():
+    logging.info("Called set_visitor_status")
+    visitor_id = request.form['visitor_id']
+    visitor_status = request.form['visitor_status']
+    logging.info('Setting Visitor id: %s status set to %s', visitor_id, visitor_status)
+    query_set_visitor_status = queries['set_visitor_status']
+
+    set_approve_user_query = query_set_visitor_status.format(visitor_status, visitor_id)
+    with dbm.dbManager() as manager:
+        result = manager.updateDB(set_approve_user_query)
+        logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
+        return jsonify(bool(result))
+
+
+app.run(debug=True)
