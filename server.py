@@ -416,9 +416,6 @@ def dashboard_visitor():
     with dbm.dbManager() as manager:
         result = manager.getDataFrame(query_visitor_list)
         logging.info('Visitor details are %s', result)
-        #print(result)
-        #result['date2int'] = result.apply(date2int, axis=1)
-        #return jsonify(result.to_dict(orient='records'))
         return result.to_json(orient='records')
 
 
