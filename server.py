@@ -469,7 +469,7 @@ def set_visitor_status():
     logging.info('Setting Visitor id: %s status set to %s', visitor_id, visitor_status)
     query_set_visitor_status = queries['set_visitor_status']
 
-    set_approve_user_query = query_set_visitor_status.format(visitor_status, visitor_id)
+    set_approve_user_query = query_set_visitor_status.format(int(visitor_status), str(visitor_id))
     with dbm.dbManager() as manager:
         result = manager.updateDB(set_approve_user_query)
         logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
