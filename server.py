@@ -284,7 +284,7 @@ def login():
     
     with dbm.dbManager() as manager:
             result = manager.getDataFrame(user_login_query)
-            return jsonify(result)
+            return jsonify(result.to_dict(orient='records'))
 
 
 @app.route('/get_login_details', methods=['GET', 'POST'])
@@ -501,4 +501,4 @@ def set_visitor_status():
         return jsonify(bool(result))
 
 
-#app.run(debug=True)
+app.run(debug=True)

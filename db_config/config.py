@@ -5,7 +5,7 @@ Created on Fri Nov  9 08:23:23 2018
 @author: SESA472057
 """
 
-DATABASE_CONFIG_nt = {
+DATABASE_CONFIG = {
     'host': 'ec2-54-227-251-33.compute-1.amazonaws.com',
     'database': 'd5267ba9erjt2u',
     'user': 'gawsmrxbzfvrmf',
@@ -14,7 +14,7 @@ DATABASE_CONFIG_nt = {
 }
 
 
-DATABASE_CONFIG = {
+DATABASE_CONFIG_nt = {
     'user': 'postgres',
     'host': 'localhost',
     'database': 'visman',
