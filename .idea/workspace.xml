@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d0383c78-4224-4451-b1d9-bd4b3e51fe84" name="Default Changelist" comment="">
+    <list default="true" id="d0383c78-4224-4451-b1d9-bd4b3e51fe84" name="Default Changelist" comment="added visitor_statur">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_config/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/db_config/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_config/database.ini" beforeDir="false" afterPath="$PROJECT_DIR$/db_config/database.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="624">
-              <caret line="478" column="1" selection-start-line="478" selection-start-column="1" selection-end-line="478" selection-end-column="1" />
+            <state relative-caret-position="203">
+              <caret line="303" column="21" selection-start-line="303" selection-start-column="4" selection-end-line="303" selection-end-column="21" />
               <folding>
                 <element signature="e#145#175#0" expanded="true" />
               </folding>
@@ -27,8 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/dbManager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-838">
-              <caret line="79" column="39" selection-start-line="79" selection-start-column="33" selection-end-line="79" selection-end-column="39" />
+            <state relative-caret-position="283">
+              <caret line="52" column="16" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="16" />
               <folding>
                 <element signature="e#89#104#0" expanded="true" />
               </folding>
@@ -39,8 +42,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="19" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
+            <state relative-caret-position="391">
+              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
             </state>
           </provider>
         </entry>
@@ -48,8 +51,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/database.ini">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1530">
-              <caret line="90" column="46" selection-start-line="90" selection-start-column="46" selection-end-line="90" selection-end-column="46" />
+            <state relative-caret-position="255">
+              <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -58,7 +61,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>update</find>
       <find>update_exit</find>
       <find>user_re</find>
       <find>visitor_and_watchman_cnt</find>
@@ -70,7 +72,6 @@
       <find>society_staff_list</find>
       <find>update_visitor_exit</find>
       <find>non_admin_user_count</find>
-      <find>updateDB</find>
       <find>total_visitor_count</find>
       <find>user_status</find>
       <find>dashboard_members</find>
@@ -88,6 +89,8 @@
       <find>set_user_login_status</find>
       <find>flat_visitor_details</find>
       <find>all_visitor_details3</find>
+      <find>updae</find>
+      <find>updateDB</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -98,8 +101,8 @@
       <list>
         <option value="$PROJECT_DIR$/db_config/dbManager.py" />
         <option value="$PROJECT_DIR$/db_config/config.py" />
-        <option value="$PROJECT_DIR$/db_config/database.ini" />
         <option value="$PROJECT_DIR$/server.py" />
+        <option value="$PROJECT_DIR$/db_config/database.ini" />
       </list>
     </option>
   </component>
@@ -113,6 +116,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -129,7 +133,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -509,8 +512,24 @@
       <option name="project" value="LOCAL" />
       <updated>1576328972726</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="added visitor_statur to visitor_dashboard">
+      <created>1576343982295</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1576343982296</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -521,14 +540,14 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.33569404" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33569404" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39943343" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3286119" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3296433" />
-      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3286119" />
+      <window_info anchor="bottom" id="Python Console" order="9" weight="0.3286119" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -599,32 +618,46 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db_config/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="19" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
+        <state relative-caret-position="391">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db_config/database.ini">
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1530">
-          <caret line="90" column="46" selection-start-line="90" selection-start-column="46" selection-end-line="90" selection-end-column="46" />
+        <state relative-caret-position="289">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/db_config/dbManager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-838">
-          <caret line="79" column="39" selection-start-line="79" selection-start-column="33" selection-end-line="79" selection-end-column="39" />
+        <state relative-caret-position="283">
+          <caret line="52" column="16" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="16" />
           <folding>
             <element signature="e#89#104#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Python/Lib/configparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="1090" selection-start-line="1090" selection-end-line="1090" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_config/database.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="478" column="1" selection-start-line="478" selection-start-column="1" selection-end-line="478" selection-end-column="1" />
+        <state relative-caret-position="203">
+          <caret line="303" column="21" selection-start-line="303" selection-start-column="4" selection-end-line="303" selection-end-column="21" />
           <folding>
             <element signature="e#145#175#0" expanded="true" />
           </folding>

@@ -234,7 +234,8 @@ def user_register():
 
 @app.route('/user/register/staff', methods=['GET', 'POST'])
 def user_register_staff():
-    """staff Registration (staff may be like watchman or society accounts guy)"""
+    """staff Registration (staff may be like watchman or society accounts guy)
+    """
     email = request.form['email']
     first_name = request.form['first_name']
     middle_name = request.form['middle_name']
@@ -286,6 +287,42 @@ def login():
             return jsonify(result.to_dict(orient='records'))
 
 
+@app.route('/get_login_details', methods=['GET', 'POST'])
+def get_login_details():
+    """
+        get the details of user by the user id.
+    """
+    user_id = request.form['user_id']
+    query = queries['user_login_details']
+    user_details_query = query.format(user_id)
+
+    with dbm.dbManager() as manager:
+        result = manager.getDataFrame(user_details_query)
+        return jsonify(result.to_dict(orient='records'))
+
+@app.route('/update_user_photo', methods=['GET','POST'])
+def update_user_photo():
+    """
+    update user photo
+    requires user id
+    """
+    user_id = request.form['user_id']
+    photo = request.form['photo']
+
+    query = queries['update_user_photo'].format(photo, user_id)
+
+    try:
+        with dbm.dbManager() as manager:
+            result = manager.updateDB(query)
+        success = True
+    except:
+        success = False
+
+    return jsonify(success)
+
+
+
+
 # visitor entry from staff
 @app.route('/insertVisitor', methods=['GET','POST'])
 def insertVisitor():
@@ -320,19 +357,7 @@ def insertVisitor():
                     '{}'.format(flat_id), '{}'.format(staff_id), '{}'.format(visit_reason), '{}'.format(society_id),
                     '{}'.format(photo), '{}'.format(whom_to_visit))
 
-    # query = """
-    #     SELECT id FROM visitor_management_schema.visitor_table
-    #         WHERE first_name = '{}'
-    #             AND last_name = '{}'
-    #             AND  contact_number = '{}'
-    #             AND entry_time = '{}'
-    #             AND flat_id = '{}'
-    #             AND staff_id = '{}'
-    #             AND society_id = '{}'
-    #             AND visit_reason = '{}'
-    #             AND whom_to_visit = '{}'
-    #     """.format(first_name, last_name, contact_number, entry_time, flat_id, staff_id, society_id,  visit_reason,
-    #                whom_to_visit)
+
     try:
         with dbm.dbManager() as manager:
             visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor', tuple_insert)
@@ -353,11 +378,11 @@ def update_visitor_exit():
     visitor_id = request.form['id']
     exit_time = request.form['exit_time']
     try:
-        update_query = update_visitor_exit.format(exit_time,visitor_id)
+        update_query = update_visitor_exit.format(exit_time, visitor_id)
         
         with dbm.dbManager() as manager:
             manager.updateDB(update_query)
-            success = True
+        success = True
     except:
         success = False
     return jsonify(success)
