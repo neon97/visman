@@ -284,7 +284,7 @@ def login():
     
     with dbm.dbManager() as manager:
             result = manager.getDataFrame(user_login_query)
-            return jsonify(result.to_dict(orient='records'))
+            return jsonify(result)
 
 
 @app.route('/get_login_details', methods=['GET', 'POST'])
