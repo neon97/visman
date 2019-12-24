@@ -510,5 +510,4 @@ def set_visitor_status():
         logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
         return jsonify(bool(result))
 
-
 #app.run(debug=True)
