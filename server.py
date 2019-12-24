@@ -11,6 +11,8 @@ from flask import Flask, request, jsonify
 import pandas as pd
 import db_config.dbManager as dbm
 import logging
+import random
+
 logging.basicConfig(level=logging.DEBUG)
 
 from datetime import datetime
@@ -32,6 +34,15 @@ def replace(data):
 
 def generate(first,last):
     return first+last
+
+def generate_otp(user_id, visitor_id):
+    OTP = random.randint(0, 9999);
+    created = datetime.now();
+    df = pd.DataFrame({'OTP': OTP, 'created': created, 'user_id': user_id,
+                       'visitor_id': visitor_id}, index=[0])
+    with dbm.dbManager() as manager:
+        manager.commit(db, 'visitor_management_schema.opt')
+        return OTP;
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -276,12 +287,13 @@ def user_register_staff():
 #staff Login
 @app.route('/user/login', methods=['GET', 'POST'])
 def login():
+    logging.info("Running Login")
     validate_query = queries['user_login']
     
     username = request.form['username']
     password = request.form['password']
     user_login_query = validate_query.format(username, password)
-    
+
     with dbm.dbManager() as manager:
             result = manager.getDataFrame(user_login_query)
             return jsonify(result.to_dict(orient='records'))
@@ -319,8 +331,6 @@ def update_user_photo():
         success = False
 
     return jsonify(success)
-
-
 
 
 # visitor entry from staff
@@ -501,4 +511,4 @@ def set_visitor_status():
         return jsonify(bool(result))
 
 
-#app.run(debug=True)
+app.run(debug=True)

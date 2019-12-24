@@ -86,6 +86,7 @@ class dbManager:
         return tableNames
 
     def _connect(self):
+        logging.info('Running _connect')
         logging.info('Initailizing db conection')
         if (self._connection != None):
             return
