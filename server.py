@@ -333,11 +333,6 @@ def update_user_photo():
     return jsonify(success)
 
 
-
-
-
-
-
 # visitor entry from staff
 @app.route('/insertVisitor', methods=['GET','POST'])
 def insertVisitor():
