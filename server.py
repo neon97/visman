@@ -352,14 +352,15 @@ def update_user_photo():
 @app.route('/insertVisitor', methods=['GET','POST'])
 def insertVisitor():
     logging.debug("Running insertVisitor:")
-    try:
-        verdict_visitor[key]=request.form[key]
-    except:
-        pass
+    for key in verdict_visitor:
+        try:
+            verdict_visitor[key]=request.form[key]
+        except:
+            pass
 
     '''tuple format to send args to proc'''
     tuple_insert = tuple(verdict_visitor.values())
-
+    logging.info("tuple_insert is : %s", tuple_insert)
     try:
         with dbm.dbManager() as manager:
             visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor', tuple_insert)
@@ -502,4 +503,4 @@ def set_visitor_status():
         logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
         return jsonify(bool(result))
 
-#app.run(debug=True)
+app.run(debug=True)
