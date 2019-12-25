@@ -353,6 +353,7 @@ def update_user_photo():
 def insertVisitor():
     logging.debug("Running insertVisitor:")
     for key in verdict_visitor:
+        logging.info("key is : %s", key)
         try:
             verdict_visitor[key]=request.form[key]
         except:
