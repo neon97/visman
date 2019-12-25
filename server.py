@@ -25,6 +25,18 @@ params = config_parser.config(filename='db_config/database.ini', section='postgr
 queries = config_parser.config(filename='db_config/database.ini', section='queries')
 
 
+"""Columns in visitor table appended in  indicates column set to be None instead of string null"""
+visitor_col = ['user_id', 'first_name', 'middle_name', 'last_name', 'contact_number', 'entry_time', 'people_count', 'society_id', 'flat_id',
+               'visit_reason', 'visitor_status', 'whom_to_visit', 'vehicle', 'photo']
+
+verdict_visitor = {}
+
+'''looping to check data type and prepare column value'''
+for each_column in visitor_col:
+    verdict_visitor[each_column] = None
+
+
+
 def replace(data):
     if data is not None:
         return data
@@ -333,40 +345,20 @@ def update_user_photo():
     return jsonify(success)
 
 
+
+
+
 # visitor entry from staff
 @app.route('/insertVisitor', methods=['GET','POST'])
 def insertVisitor():
     logging.debug("Running insertVisitor:")
-    first_name = request.form['first_name']
-    last_name = request.form['last_name']
-    contact_number = request.form['contact_number']
-    entry_time = request.form['entry_time']
-    # entry_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    society_id = request.form['society_id']
-    flat_id = request.form['flat_id']
-    staff_id = request.form['staff_id']
-    visit_reason = request.form['visit_reason']
-    whom_to_visit = request.form['whom_to_visit']
-    photo = request.form['photo']
+    try:
+        verdict_visitor[key]=request.form[key]
+    except:
+        pass
 
-    df = pd.DataFrame({'first_name': str(first_name),
-                       'last_name': str(last_name),
-                       'contact_number': str(contact_number),
-                       'entry_time': str(entry_time),
-                       'flat_id': str(flat_id),
-                       'staff_id': str(staff_id),
-                       'visit_reason': str(visit_reason),
-                       'society_id': str(society_id),
-                       'whom_to_visit': str(whom_to_visit),
-                       'photo': str(photo)
-                       },
-                      index=[0])
-
-    tuple_insert = ('{}'.format(first_name), '{}'.format(last_name), '{}'.format(contact_number),
-                    '{}'.format(entry_time),
-                    '{}'.format(flat_id), '{}'.format(staff_id), '{}'.format(visit_reason), '{}'.format(society_id),
-                    '{}'.format(photo), '{}'.format(whom_to_visit))
-
+    '''tuple format to send args to proc'''
+    tuple_insert = tuple(verdict_visitor.values())
 
     try:
         with dbm.dbManager() as manager:
@@ -377,8 +369,8 @@ def insertVisitor():
 
     except psycopg2.DatabaseError as error:
         errors = {'visitor_entry': False,
-                      'error': (error)
-                      }
+                  	'error': (error)
+                  	}
         return str(errors)
 
 
@@ -510,4 +502,4 @@ def set_visitor_status():
         logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
         return jsonify(bool(result))
 
-#app.run(debug=True)
+app.run(debug=True)

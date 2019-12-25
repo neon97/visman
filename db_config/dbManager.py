@@ -87,7 +87,7 @@ class dbManager:
 
     def _connect(self):
         logging.info('Running _connect')
-        logging.info('Initailizing db conection')
+        logging.info('Initailizing db connection')
         if (self._connection != None):
             return
 

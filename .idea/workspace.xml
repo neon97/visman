@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d0383c78-4224-4451-b1d9-bd4b3e51fe84" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_config/database.ini" beforeDir="false" afterPath="$PROJECT_DIR$/db_config/database.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_config/dbManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/db_config/dbManager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="611">
-              <caret line="367" lean-forward="true" selection-start-line="367" selection-end-line="367" />
+            <state relative-caret-position="255">
+              <caret line="29" column="83" selection-start-line="29" selection-start-column="78" selection-end-line="29" selection-end-column="83" />
               <folding>
                 <element signature="e#145#175#0" expanded="true" />
               </folding>
@@ -28,8 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/dbManager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
-              <caret line="69" column="36" lean-forward="true" selection-start-line="69" selection-start-column="36" selection-end-line="69" selection-end-column="36" />
+            <state relative-caret-position="-340">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
               <folding>
                 <element signature="e#89#104#0" expanded="true" />
               </folding>
@@ -49,8 +51,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_config/database.ini">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="137">
-              <caret line="102" column="35" selection-start-line="102" selection-start-column="35" selection-end-line="102" selection-end-column="35" />
+            <state relative-caret-position="103">
+              <caret line="112" column="67" selection-start-line="112" selection-start-column="67" selection-end-line="112" selection-end-column="67" />
             </state>
           </provider>
         </entry>
@@ -59,10 +61,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>replace</find>
-      <find>get_wing_list</find>
-      <find>login</find>
-      <find>get_flat_id</find>
       <find>society_staff_list</find>
       <find>update_visitor_exit</find>
       <find>non_admin_user_count</find>
@@ -80,15 +78,19 @@
       <find>/set_user_login_status</find>
       <find>set_user_login_status</find>
       <find>flat_visitor_details</find>
-      <find>all_visitor_details3</find>
       <find>updateDB</find>
       <find>updae</find>
-      <find>commit</find>
       <find>inse</find>
       <find>return</find>
       <find>logging</find>
       <find>member</find>
       <find>society_members_list</find>
+      <find>inser</find>
+      <find>commit</find>
+      <find>dashboard_vi</find>
+      <find>all_visitor_details3</find>
+      <find>insert</find>
+      <find>verdict_visitor</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -187,27 +189,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1570006917280</updated>
-    </task>
-    <task id="LOCAL-00004" summary="app.run off">
-      <created>1574493210457</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1574493210457</updated>
-    </task>
-    <task id="LOCAL-00005" summary="app.run off">
-      <created>1574831848135</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1574831848135</updated>
-    </task>
-    <task id="LOCAL-00006" summary="app.run off">
-      <created>1574831915349</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1574831915349</updated>
     </task>
     <task id="LOCAL-00007" summary="app.run off">
       <created>1574875110647</created>
@@ -531,7 +512,28 @@
       <option name="project" value="LOCAL" />
       <updated>1577207664391</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="left join to login query">
+      <created>1577207811876</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1577207811876</updated>
+    </task>
+    <task id="LOCAL-00054" summary="left join to login query">
+      <created>1577207961516</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1577207961517</updated>
+    </task>
+    <task id="LOCAL-00055" summary="left join to login query">
+      <created>1577207978270</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1577207978270</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TodoView">
@@ -582,7 +584,8 @@
     <MESSAGE value="Added LEFT join to query : society_members_list" />
     <MESSAGE value="added visitor_statur to visitor_dashboard" />
     <MESSAGE value="added update_user_photo and get_login_details" />
-    <option name="LAST_COMMIT_MESSAGE" value="added update_user_photo and get_login_details" />
+    <MESSAGE value="left join to login query" />
+    <option name="LAST_COMMIT_MESSAGE" value="left join to login query" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/psycopg2/__init__.py" />
@@ -652,8 +655,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db_config/dbManager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="69" column="36" lean-forward="true" selection-start-line="69" selection-start-column="36" selection-end-line="69" selection-end-column="36" />
+        <state relative-caret-position="-340">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="e#89#104#0" expanded="true" />
           </folding>
@@ -662,15 +665,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db_config/database.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="102" column="35" selection-start-line="102" selection-start-column="35" selection-end-line="102" selection-end-column="35" />
+        <state relative-caret-position="103">
+          <caret line="112" column="67" selection-start-line="112" selection-start-column="67" selection-end-line="112" selection-end-column="67" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="611">
-          <caret line="367" lean-forward="true" selection-start-line="367" selection-end-line="367" />
+        <state relative-caret-position="255">
+          <caret line="29" column="83" selection-start-line="29" selection-start-column="78" selection-end-line="29" selection-end-column="83" />
           <folding>
             <element signature="e#145#175#0" expanded="true" />
           </folding>
