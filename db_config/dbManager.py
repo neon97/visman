@@ -9,6 +9,11 @@ import pandas as pd
 import db_config.config as config
 import logging
 
+import os
+import psycopg2
+
+
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -95,11 +100,14 @@ class dbManager:
         self._nameOfDB = config.DATABASE_CONFIG['database']
         try:
 
-            self._connection = psycopg2.connect(user=self._user,
-                                                host=self._host,
-                                                database=self._nameOfDB,
-                                                password=config.DATABASE_CONFIG['password'],
-                                                port=self._port)
+            # self._connection = psycopg2.connect(user=self._user,
+            #                                     host=self._host,
+            #                                     database=self._nameOfDB,
+            #                                     password=config.DATABASE_CONFIG['password'],
+            #                                     port=self._port)
+
+            DATABASE_URL = os.environ['DATABASE_URL']
+            self._connection = psycopg2.connect(DATABASE_URL, sslmode='require')
 
             logging.info('Connection to Database %s : %s : %s  Successfull', self._user, self._nameOfDB, self._port)
 

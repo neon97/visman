@@ -232,24 +232,23 @@ def user_register():
     user_status = request.form['user_status']
     username = request.form['email']
 
+    df = pd.DataFrame({'username': str(username),
+                       'email': str(email),
+                       'first_name': str(first_name),
+                       'middle_name': str(middle_name),
+                       'last_name': str(last_name),
+                       'password': str(password),
+                       'society_id': str(society_id),
+                       'isadmin': str(isadmin),
+                       'flat_id': str(flat_id),
+                       'user_entity': str(user_status)
+                       },
+                      index=[0])
     try:
-
-        df = pd.DataFrame({'username': str(username),
-                           'email': str(email),
-                           'first_name': str(first_name),
-                           'middle_name': str(middle_name),
-                           'last_name': str(last_name),
-                           'password': str(password),
-                           'society_id': str(society_id),
-                           'isadmin': str(isadmin),
-                           'flat_id': str(flat_id),
-                           'user_entity': str(user_status)
-                           },
-                          index=[0])
-
         with dbm.dbManager() as manager:
             manager.commit(df, 'visitor_management_schema.user_table')
-            return "User registered Successfully"
+            user_id = manager.getDataFrame('select id from visitor_management_schema.user_table where email  = {}'.format(email))
+            return jsonify(user_id)
     except psycopg2.DatabaseError as error:
         errors = {'registeration': False, 'error': error}
         return str(errors)
@@ -504,4 +503,4 @@ def set_visitor_status():
         logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
         return jsonify(bool(result))
 
-#app.run(debug=True)
+app.run(debug=True)
