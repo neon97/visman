@@ -244,13 +244,15 @@ def user_register():
                        'user_entity': str(user_status)
                        },
                       index=[0])
+
+    query = queries['get_user_id'].format(email)
     try:
         with dbm.dbManager() as manager:
             manager.commit(df, 'visitor_management_schema.user_table')
-            user_id = manager.getDataFrame('select id from visitor_management_schema.user_table where email  = {}'.format(email))
-            return jsonify(user_id)
+            user_id = manager.getDataFrame(query)
+            return jsonify(user_id.to_dict(orient='records'))
     except psycopg2.DatabaseError as error:
-        errors = {'registeration': False, 'error': error}
+        errors = {'registration': False, 'error': error}
         return str(errors)
 
 
@@ -503,4 +505,4 @@ def set_visitor_status():
         logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
         return jsonify(bool(result))
 
-#app.run(debug=True)
+app.run(debug=True)

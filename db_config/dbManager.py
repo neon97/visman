@@ -16,6 +16,8 @@ import psycopg2
 
 logging.basicConfig(level=logging.INFO)
 
+DATABASE_URL = os.environ['DATABASE_URL']
+#DATABASE_URL = "postgres://azqkdeiqpezmzj:ee1246a50f9c0d67038106e0557c7eddd05bdd0fda2149d831354388f53d70a9@ec2-54-235-250-38.compute-1.amazonaws.com:5432/d3u39l3sta71kl"
 
 class dbManager:
     def __init__(self):
@@ -100,14 +102,11 @@ class dbManager:
         self._nameOfDB = config.DATABASE_CONFIG['database']
         try:
 
-            self._connection = psycopg2.connect(user=self._user,
-                                                host=self._host,
-                                                database=self._nameOfDB,
-                                                password=config.DATABASE_CONFIG['password'],
-                                                port=self._port)
-
-            #DATABASE_URL = os.environ['DATABASE_URL']
-            #DATABASE_URL = "postgres://azqkdeiqpezmzj:ee1246a50f9c0d67038106e0557c7eddd05bdd0fda2149d831354388f53d70a9@ec2-54-235-250-38.compute-1.amazonaws.com:5432/d3u39l3sta71kl"
+            # self._connection = psycopg2.connect(user=self._user,
+            #                                     host=self._host,
+            #                                     database=self._nameOfDB,
+            #                                     password=config.DATABASE_CONFIG['password'],
+            #                                     port=self._port)
             self._connection = psycopg2.connect(DATABASE_URL, sslmode='require')
 
             logging.info('Connection to Database %s : %s : %s  Successfull', self._user, self._nameOfDB, self._port)
@@ -147,8 +146,7 @@ class dbManager:
 
     def __columnNamesOfSQLTable(self, tableName):
         cur = self._connection.cursor()
-        query = "select COLUMN_NAME from {}.INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = N'{}'".format(self._nameOfDB,
-                                                                                                        tableName)
+        query = "select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = N'{}'".format(tableName)
         cur.execute(query)
         rows = cur.fetchall()
         lstRowsInDbTable = []
