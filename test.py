@@ -1,7 +1,5 @@
-from flask import request, jsonify, Flask
-import json
-
-from model.routes import *
+from flask import Flask
+from routes import *
 
 #if __name__ == '__main__':
 
