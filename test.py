@@ -1,7 +1,7 @@
 from flask import request, jsonify, Flask
 import json
 
-from routes import *
+from model.routes import *
 
 #if __name__ == '__main__':
 
