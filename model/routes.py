@@ -9,4 +9,4 @@ def about():
                     'version': 'heroku test development'})
 
 
-app.run()
+#app.run()
