@@ -16,16 +16,17 @@ import psycopg2
 
 logging.basicConfig(level=logging.INFO)
 
-DATABASE_URL = os.environ['DATABASE_URL']
-#DATABASE_URL = "postgres://azqkdeiqpezmzj:ee1246a50f9c0d67038106e0557c7eddd05bdd0fda2149d831354388f53d70a9@ec2-54-235-250-38.compute-1.amazonaws.com:5432/d3u39l3sta71kl"
+#DATABASE_URL = os.environ['DATABASE_URL']
+
 
 class dbManager:
     def __init__(self):
         logging.info("Initialing dbManager")
         self._user = config.DATABASE_CONFIG['user']
         self._host = config.DATABASE_CONFIG['host']
-        self._nameOfDB = None
+        self._nameOfDB = config.DATABASE_CONFIG['database']
         self._port = config.DATABASE_CONFIG['port']
+        self._url = config.DATABASE_CONFIG['url']
         self._connection = None
         self._DFSQLmap = {}
         self._DFSQLmap['object'] = 'varchar(Max)'
@@ -99,7 +100,7 @@ class dbManager:
             return
 
         # connect to the PostgreSQL server
-        self._nameOfDB = config.DATABASE_CONFIG['database']
+        #self._nameOfDB = config.DATABASE_CONFIG['database']
         try:
 
             # self._connection = psycopg2.connect(user=self._user,
@@ -107,7 +108,7 @@ class dbManager:
             #                                     database=self._nameOfDB,
             #                                     password=config.DATABASE_CONFIG['password'],
             #                                     port=self._port)
-            self._connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+            self._connection = psycopg2.connect(self._url, sslmode='require')
 
             logging.info('Connection to Database %s : %s : %s  Successfull', self._user, self._nameOfDB, self._port)
 

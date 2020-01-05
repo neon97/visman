@@ -12,7 +12,7 @@ import pandas as pd
 import db_config.dbManager as dbm
 import logging
 import random
-
+from test import app
 logging.basicConfig(level=logging.DEBUG)
 
 from datetime import datetime
@@ -20,14 +20,14 @@ from datetime import datetime
 start_time = ""
 end_time = ""
 
-app = Flask(__name__)
+#app = Flask(__name__)
 params = config_parser.config(filename='db_config/database.ini', section='postgresql')
 queries = config_parser.config(filename='db_config/database.ini', section='queries')
 
 
 """Columns in visitor table appended in  indicates column set to be None instead of string null"""
 visitor_col = ['user_id', 'first_name', 'middle_name', 'last_name', 'contact_number', 'entry_time', 'people_count', 'society_id', 'flat_id',
-               'visit_reason', 'visitor_status', 'whom_to_visit', 'vehicle', 'photo']
+               'visit_reason', 'visitor_status', 'whom_to_visit', 'vehicle', 'photo','otp']
 
 verdict_visitor = {}
 
@@ -48,7 +48,7 @@ def generate(first,last):
     return first+last
 
 def generate_otp(user_id, visitor_id):
-    OTP = random.randint(0, 9999);
+    OTP = random.randint(1000, 9999);
     created = datetime.now();
     df = pd.DataFrame({'OTP': OTP, 'created': created, 'user_id': user_id,
                        'visitor_id': visitor_id}, index=[0])
@@ -119,9 +119,10 @@ def get_society_id():
     """ get the society id by passing the society registration."""
     try:
         regd_no = request.form['regd_no']
+        #regd_no = request.form['regd_no']
         query_society_id = queries['get_society_id']
         query = query_society_id.format(regd_no)
-        
+
         with dbm.dbManager() as manager:
             result = manager.getDataFrame(query)
 
@@ -302,7 +303,7 @@ def user_register_staff():
 def login():
     logging.info("Running Login")
     validate_query = queries['user_login']
-    
+
     username = request.form['username']
     password = request.form['password']
     user_login_query = validate_query.format(username, password)
@@ -325,6 +326,7 @@ def get_login_details():
         result = manager.getDataFrame(user_details_query)
         return jsonify(result.to_dict(orient='records'))
 
+
 @app.route('/update_user_photo', methods=['GET','POST'])
 def update_user_photo():
     """
@@ -344,9 +346,6 @@ def update_user_photo():
         success = False
 
     return jsonify(success)
-
-
-
 
 
 # visitor entry from staff
@@ -384,14 +383,14 @@ def update_visitor_exit():
     exit_time = request.form['exit_time']
     try:
         update_query = update_visitor_exit.format(exit_time, visitor_id)
-        
+
         with dbm.dbManager() as manager:
             manager.updateDB(update_query)
         success = True
     except:
         success = False
     return jsonify(success)
-        
+
 
 @app.route('/dashboard_count', methods=['GET','POST'])
 def dashboard_count():
@@ -416,7 +415,7 @@ def dashboard_staff():
     query_society_staff = queries['society_staff_list']
 
     query = query_society_staff.format(society_id)
-    
+
     with dbm.dbManager() as manager:
         result = manager.getDataFrame(query)
 
@@ -442,7 +441,7 @@ def dashboard_visitor():
     society_id = request.form['society_id']
     all_visitor_details = queries['all_visitor_details3']
     query_visitor_list = all_visitor_details.format(society_id)
-    
+
     with dbm.dbManager() as manager:
         result = manager.getDataFrame(query_visitor_list)
         logging.info('Visitor details are %s', result)
@@ -505,4 +504,8 @@ def set_visitor_status():
         logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
         return jsonify(bool(result))
 
-#app.run(debug=True)
+
+# if __name__ == '__main__':
+#     get_society_id()
+
+app.run(debug=True)
