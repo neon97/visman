@@ -12,7 +12,6 @@ import pandas as pd
 import db_config.dbManager as dbm
 import logging
 import random
-from test import app
 logging.basicConfig(level=logging.DEBUG)
 
 from datetime import datetime
