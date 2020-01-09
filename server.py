@@ -20,7 +20,7 @@ from datetime import datetime
 start_time = ""
 end_time = ""
 
-#app = Flask(__name__)
+app = Flask(__name__)
 params = config_parser.config(filename='db_config/database.ini', section='postgresql')
 queries = config_parser.config(filename='db_config/database.ini', section='queries')
 
