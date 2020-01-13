@@ -6,12 +6,14 @@ Created on Sat Aug  3 16:18:42 2019
 
 Main file running the application.
 """
-import psycopg2, config_parser
+
 from flask import Flask, request, jsonify
 import pandas as pd
 import db_config.dbManager as dbm
 import logging
 import random
+import psycopg2, config_parser
+
 logging.basicConfig(level=logging.DEBUG)
 
 from datetime import datetime
@@ -52,7 +54,7 @@ def generate_otp(user_id, visitor_id):
     df = pd.DataFrame({'OTP': OTP, 'created': created, 'user_id': user_id,
                        'visitor_id': visitor_id}, index=[0])
     with dbm.dbManager() as manager:
-        manager.commit(db, 'visitor_management_schema.opt')
+        manager.commit(df, 'visitor_management_schema.opt')
         return OTP;
 
 
@@ -507,4 +509,4 @@ def set_visitor_status():
 # if __name__ == '__main__':
 #     get_society_id()
 
-#app.run(debug=True)
+app.run(debug=True)
