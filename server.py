@@ -509,4 +509,4 @@ def set_visitor_status():
 # if __name__ == '__main__':
 #     get_society_id()
 
-app.run(debug=True)
+#app.run(debug=True)
