@@ -3,8 +3,9 @@ import pandas as pd
 import db_config.dbManager as dbm
 import logging
 import psycopg2, config_parser
-
+#from utils import validate_user
 logging.basicConfig(level=logging.DEBUG)
+from vis_app.Models.User import User
 
 start_time = ""
 end_time = ""
@@ -121,19 +122,21 @@ def user_register_staff():
         return str(errors)
 
 
-#staff Login
 @user.route('/user/login', methods=['GET', 'POST'])
 def login():
     logging.info("Running Login")
-    validate_query = queries['user_login']
-
     username = request.form['username']
     password = request.form['password']
-    user_login_query = validate_query.format(username, password)
 
-    with dbm.dbManager() as manager:
-            result = manager.getDataFrame(user_login_query)
-            return jsonify(result.to_dict(orient='records'))
+    #validate_user(username, password)
+    user = User.select().where(User.username == username)
+    if user is not None:
+        #check_password(username,password)
+        u = user.get()
+        if u.password == password:
+                return User.serialize(user)
+    else:
+        return 'User does not exist'
 
 
 @user.route('/get_login_details', methods=['GET', 'POST'])

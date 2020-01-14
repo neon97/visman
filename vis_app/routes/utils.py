@@ -1,3 +1,18 @@
+from vis_app.Models.User import User
+
+def validate_user(username, password):
+    user = User.select().where(User.username == username)
+    if user is not None:
+        check_password(username,password)
+        if user.password == password:
+                return User.serialize(user)
+    else:
+        return 'User does not exist'
+
+def check_password(username, password):
+    pass
+
+
 
 
 def replace(data):
