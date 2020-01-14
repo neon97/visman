@@ -1,0 +1,10 @@
+from peewee import PostgresqlDatabase
+
+psql_db = PostgresqlDatabase(
+    'db_name',
+    user='username',
+    password='password',
+    host='localhost',
+)
+
+if __name__ = ''

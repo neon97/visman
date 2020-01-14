@@ -7,7 +7,7 @@ Created on Sat Aug  3 16:18:42 2019
 Main file running the application.
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 import pandas as pd
 import db_config.dbManager as dbm
 import logging
@@ -21,7 +21,7 @@ from datetime import datetime
 start_time = ""
 end_time = ""
 
-app = Flask(__name__)
+server = Blueprint('server', __name__)
 params = config_parser.config(filename='db_config/database.ini', section='postgresql')
 queries = config_parser.config(filename='db_config/database.ini', section='queries')
 
@@ -48,6 +48,7 @@ def replace(data):
 def generate(first,last):
     return first+last
 
+
 def generate_otp(user_id, visitor_id):
     OTP = random.randint(1000, 9999);
     created = datetime.now();
@@ -58,19 +59,19 @@ def generate_otp(user_id, visitor_id):
         return OTP;
 
 
-@app.route('/', methods=['GET', 'POST'])
+@server.route('/', methods=['GET', 'POST'])
 def hello_world():
     return "<div><b>Sorry!!<br/>Only team has access to database<b><a href='/about'>About</a></div>"
 
 
-@app.route('/about', methods=['GET', 'POST'])
+@server.route('/about', methods=['GET', 'POST'])
 def about():
     return jsonify({'Company': 'Visitor Management',
                     'Dev center': 'Team Foundation',
                     'version': 'heroku test development'})
 
 
-@app.route('/society_info', methods=['GET', 'POST'])
+@server.route('/society_info', methods=['GET', 'POST'])
 def society_info():
     """ Gives the society id and society name for all registered society."""
     try:
@@ -87,7 +88,7 @@ def society_info():
         return str(errors)
 
 
-@app.route('/society_register', methods=['GET', 'POST'])
+@server.route('/society_register', methods=['GET', 'POST'])
 def society_register():
     """Register society"""
     try:
@@ -115,7 +116,7 @@ def society_register():
         return str(errors)
 
 
-@app.route('/get_society_id', methods=['GET', 'POST'])
+@server.route('/get_society_id', methods=['GET', 'POST'])
 def get_society_id():
     """ get the society id by passing the society registration."""
     try:
@@ -133,7 +134,7 @@ def get_society_id():
         return str(errors)
 
 
-@app.route('/get_wing_list', methods=['GET', 'POST'])
+@server.route('/get_wing_list', methods=['GET', 'POST'])
 def get_wing_list():
     """get list of wings from a Society"""
     try:
@@ -149,7 +150,7 @@ def get_wing_list():
         return str(errors)
 
 
-@app.route('/get_society_members_details', methods=['GET', 'POST'])
+@server.route('/get_society_members_details', methods=['GET', 'POST'])
 def get_society_members_details():
     """get list of wings from a Society"""
     try:
@@ -165,7 +166,7 @@ def get_society_members_details():
         return str(errors)
 
 
-@app.route('/get_flat_list', methods=['GET', 'POST'])
+@server.route('/get_flat_list', methods=['GET', 'POST'])
 def get_flat_list():
     try:
         society_id = request.form['society_id']
@@ -182,7 +183,7 @@ def get_flat_list():
         return str(errors)
 
 
-@app.route('/add_flat', methods=['GET', 'POST'])
+@server.route('/add_flat', methods=['GET', 'POST'])
 def add_flat():
     """Add details of Flat if Flat not Present"""
     try:
@@ -202,7 +203,7 @@ def add_flat():
         return str(errors)
 
 
-@app.route('/get_flat_id', methods=['GET', 'POST'])
+@server.route('/get_flat_id', methods=['GET', 'POST'])
 def get_flat_id():
     """get flat id by giving the society and flat no and wing name"""
     society_id = request.form['society_id']
@@ -219,7 +220,7 @@ def get_flat_id():
 
 
 
-@app.route('/user/register', methods=['GET','POST'])
+@server.route('/user/register', methods=['GET','POST'])
 def user_register():
     """Society Member Registration """
     # username=request.form['username']
@@ -258,7 +259,7 @@ def user_register():
         return str(errors)
 
 
-@app.route('/user/register/staff', methods=['GET', 'POST'])
+@server.route('/user/register/staff', methods=['GET', 'POST'])
 def user_register_staff():
     """staff Registration (staff may be like watchman or society accounts guy)
     """
@@ -300,7 +301,7 @@ def user_register_staff():
 
 
 #staff Login
-@app.route('/user/login', methods=['GET', 'POST'])
+@server.route('/user/login', methods=['GET', 'POST'])
 def login():
     logging.info("Running Login")
     validate_query = queries['user_login']
@@ -314,7 +315,7 @@ def login():
             return jsonify(result.to_dict(orient='records'))
 
 
-@app.route('/get_login_details', methods=['GET', 'POST'])
+@server.route('/get_login_details', methods=['GET', 'POST'])
 def get_login_details():
     """
         get the details of user by the user id.
@@ -328,7 +329,7 @@ def get_login_details():
         return jsonify(result.to_dict(orient='records'))
 
 
-@app.route('/update_user_photo', methods=['GET','POST'])
+@server.route('/update_user_photo', methods=['GET','POST'])
 def update_user_photo():
     """
     update user photo
@@ -350,7 +351,7 @@ def update_user_photo():
 
 
 # visitor entry from staff
-@app.route('/insertVisitor', methods=['GET','POST'])
+@server.route('/insertVisitor', methods=['GET','POST'])
 def insertVisitor():
     logging.debug("Running insertVisitor:")
     for key in verdict_visitor:
@@ -377,7 +378,7 @@ def insertVisitor():
         return str(errors)
 
 
-@app.route('/update_visitor_exit',methods=['GET','POST'])
+@server.route('/update_visitor_exit',methods=['GET','POST'])
 def update_visitor_exit():
     update_visitor_exit = queries['update_visitor_exit']
     visitor_id = request.form['id']
@@ -393,7 +394,7 @@ def update_visitor_exit():
     return jsonify(success)
 
 
-@app.route('/dashboard_count', methods=['GET','POST'])
+@server.route('/dashboard_count', methods=['GET','POST'])
 def dashboard_count():
     try:
         society_id = request.form['society_id']
@@ -410,7 +411,7 @@ def dashboard_count():
 
 
 #admin access
-@app.route('/dashboard_staff', methods=['GET', 'POST'])
+@server.route('/dashboard_staff', methods=['GET', 'POST'])
 def dashboard_staff():
     society_id = request.form['society_id']
     query_society_staff = queries['society_staff_list']
@@ -423,7 +424,7 @@ def dashboard_staff():
     return jsonify(result.to_dict(orient='records'))
 
 
-@app.route('/dashboard_members', methods=['GET', 'POST'])
+@server.route('/dashboard_members', methods=['GET', 'POST'])
 def dashboard_members():
     society_id = request.form['society_id']
     user_status = request.form['user_status']
@@ -437,7 +438,7 @@ def dashboard_members():
     return jsonify(result.to_dict(orient='records'))
 
 
-@app.route('/dashboard_visitor', methods=['GET', 'POST'])
+@server.route('/dashboard_visitor', methods=['GET', 'POST'])
 def dashboard_visitor():
     society_id = request.form['society_id']
     all_visitor_details = queries['all_visitor_details3']
@@ -449,7 +450,7 @@ def dashboard_visitor():
         return result.to_json(orient='records')
 
 
-@app.route('/get_flat_visitor_details', methods=['GET', 'POST'])
+@server.route('/get_flat_visitor_details', methods=['GET', 'POST'])
 def get_flat_visitor_details():
     society_id = request.form['society_id']
     flat_id = request.form['flat_id']
@@ -462,7 +463,7 @@ def get_flat_visitor_details():
         return result.to_json(orient='records')
 
 
-@app.route('/user/set_user_login_status', methods=['GET', 'POST'])
+@server.route('/user/set_user_login_status', methods=['GET', 'POST'])
 def set_user_login_status():
     user_id = request.form['user_id']
     user_status = request.form['user_status']
@@ -477,7 +478,7 @@ def set_user_login_status():
         return jsonify(bool(result))
 
 
-@app.route('/user/set_user_admin_status', methods=['GET', 'POST'])
+@server.route('/user/set_user_admin_status', methods=['GET', 'POST'])
 def set_user_admin_status():
     user_id = request.form['user_id']
     user_admin_status = request.form['user_admin_status']
@@ -491,7 +492,7 @@ def set_user_admin_status():
         return jsonify(bool(result))
 
 
-@app.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
+@server.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
 def set_visitor_status():
     logging.info("Called set_visitor_status")
     visitor_id = request.form['visitor_id']
@@ -506,7 +507,4 @@ def set_visitor_status():
         return jsonify(bool(result))
 
 
-# if __name__ == '__main__':
-#     get_society_id()
 
-#app.run(debug=True)
