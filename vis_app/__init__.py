@@ -11,7 +11,9 @@ def create_app(config=None):
 def load_blueprints(app):
     from vis_app.server1.routes import s1
     from vis_app.server2.server import server
+    from vis_app.server2.user import user
 
     app.register_blueprint(s1)
     app.register_blueprint(server)
+    app.register_blueprint(user)
 

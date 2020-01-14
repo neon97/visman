@@ -1,6 +1,13 @@
-from peewee import Model
-#from vis_app import pg_db
-import  vis_app.pg_db as db
+#from peewee import Model, PostgresqlDatabase
+from peewee import *
+import db_config.config as config
+
+db = PostgresqlDatabase(config.DATABASE_CONFIG['database'],
+                        user=config.DATABASE_CONFIG['user'],
+                        password=config.DATABASE_CONFIG['password'],
+                        host=config.DATABASE_CONFIG['host'],
+                        port=config.DATABASE_CONFIG['port'])
+
 
 class BaseModel(Model):
     class Meta:
