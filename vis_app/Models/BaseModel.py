@@ -1,6 +1,9 @@
-#from peewee import Model, PostgresqlDatabase
-from peewee import *
+from peewee import Model, PostgresqlDatabase, IntegrityError, DoesNotExist
+#from peewee import *
+from playhouse.shortcuts import model_to_dict
 import db_config.config as config
+#from vis_app import db
+
 
 db = PostgresqlDatabase(config.DATABASE_CONFIG['database'],
                         user=config.DATABASE_CONFIG['user'],

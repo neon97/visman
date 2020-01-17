@@ -3,10 +3,14 @@ import pandas as pd
 import db_config.dbManager as dbm
 import logging
 import psycopg2, config_parser
+from peewee import IntegrityError, DoesNotExist
 #from utils import validate_user
 logging.basicConfig(level=logging.DEBUG)
 from vis_app.Models.User import User
+from flask_bcrypt import Bcrypt
+from vis_app.Models.BaseModel import db
 
+import json
 start_time = ""
 end_time = ""
 
@@ -14,16 +18,17 @@ user = Blueprint('user', __name__)
 params = config_parser.config(filename='db_config/database.ini', section='postgresql')
 queries = config_parser.config(filename='db_config/database.ini', section='queries')
 
+bcrypt = Bcrypt()
 
 """Columns in visitor table appended in  indicates column set to be None instead of string null"""
-visitor_col = ['user_id', 'first_name', 'middle_name', 'last_name', 'contact_number', 'entry_time', 'people_count', 'society_id', 'flat_id',
-               'visit_reason', 'visitor_status', 'whom_to_visit', 'vehicle', 'photo','otp']
+user_col = ['email', 'first_name', 'middle_name', 'last_name','password', 'contact_number', 'society_id', 
+            'flat_id','isadmin','user_entity','photo']
 
-verdict_visitor = {}
+# verdict_user = {}
 
-'''looping to check data type and prepare column value'''
-for each_column in visitor_col:
-    verdict_visitor[each_column] = None
+# '''looping to check data type and prepare column value'''
+# for each_column in user_col:
+#     verdict_user[each_column] = None
 
 
 @user.route('/get_society_members_details', methods=['GET', 'POST'])
@@ -32,7 +37,7 @@ def get_society_members_details():
     try:
         society_id = request.form['society_id']
         society_members_details = queries['get_society_members_details']
-        query = society_members_details.format(society_id)
+        query = society_members_details.userformat(society_id)
 
         with dbm.dbManager() as manager:
             result = manager.getDataFrame(query)
@@ -45,8 +50,9 @@ def get_society_members_details():
 @user.route('/user/register', methods=['GET','POST'])
 def user_register():
     """Society Member Registration """
-    # username=request.form['username']
+
     email = request.form['email']
+    username = email
     first_name = request.form['first_name']
     middle_name = request.form['middle_name']
     last_name = request.form['last_name']
@@ -54,31 +60,56 @@ def user_register():
     society_id = request.form['society_id']
     flat_id = request.form['flat_id']
     isadmin = request.form['isadmin']
-    user_status = request.form['user_status']
-    username = request.form['email']
+    user_entity = request.form['user_status']
 
-    df = pd.DataFrame({'username': str(username),
-                       'email': str(email),
-                       'first_name': str(first_name),
-                       'middle_name': str(middle_name),
-                       'last_name': str(last_name),
-                       'password': str(password),
-                       'society_id': str(society_id),
-                       'isadmin': str(isadmin),
-                       'flat_id': str(flat_id),
-                       'user_entity': str(user_status)
-                       },
-                      index=[0])
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    query = queries['get_user_id'].format(email)
-    try:
-        with dbm.dbManager() as manager:
-            manager.commit(df, 'visitor_management_schema.user_table')
-            user_id = manager.getDataFrame(query)
-            return jsonify(user_id.to_dict(orient='records'))
-    except psycopg2.DatabaseError as error:
-        errors = {'registration': False, 'error': error}
+    user = User()
+
+    user.username = email
+    user.email = email
+    user.first_name = first_name
+    user.middle_name = middle_name
+    user.last_name= last_name
+    user.password = hashed_password
+    user.society_id = society_id
+    user.flat_id = flat_id
+    user.isadmin = isadmin
+    user.user_entity = user_entity
+
+    try :
+        user.save()
+        return 'User created successfully'
+
+    except psycopg2.errors.UniqueViolation as e:
+            return 'User already exists.'          
+        
+    except Exception as e:
+        errors = {'User registration Failed , error is : ': e}
         return str(errors)
+
+
+
+    # user = User()
+    # for each_col in user_col:
+    #     #logging.info("key is : %s", each_col)
+    #     try:
+    #         #logging.info("value is %s", request.form[each_col])
+    #         user.each_col = request.form[each_col]
+    #         logging.info("key %s, value is %s", each_col,user.each_col)
+    #     except:
+    #         user.each_col = None
+
+    #     finally:
+    #         logging.info("in finally")
+    #         logging.info("key %s, value is %s", each_col,user.each_col)
+            
+    
+    #user.username = request.form['email']
+    #for att in user_col:
+    
+
+
 
 
 @user.route('/user/register/staff', methods=['GET', 'POST'])
@@ -93,34 +124,37 @@ def user_register_staff():
     society_id = request.form['society_id']
     isadmin = request.form['isadmin']
     user_status = request.form['user_status']
-    username = request.form['email']
     identification_type = request.form['identification_type']
     identification_no = request.form['identification_no']
     identification_no = request.form['identification_no']
 
-    df = pd.DataFrame({'username': str(username),
-                       'email': str(email),
-                       'first_name': str(first_name),
-                       'middle_name': str(middle_name),
-                       'last_name': str(last_name),
-                       'password': str(password),
-                       'society_id': str(society_id),
-                       'isadmin': str(isadmin),
-                       'user_entity': str(user_status),
-                       'identification_type': str(identification_type),
-                       'identification_no': str(identification_no)
-                       },
-                      index=[0])
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    try:
+    user = User()
 
-        with dbm.dbManager() as manager:
-            manager.commit(df, 'visitor_management_schema.user_table')
-        return "User registered Successfully"
-    except psycopg2.DatabaseError as error:
-        errors = {'registration': False, 'error': error}
+    user.username = email
+    user.email = email
+    user.first_name = first_name
+    user.middle_name = middle_name
+    user.last_name= last_name
+    user.password = hashed_password
+    user.society_id = society_id
+    user.isadmin = isadmin
+    user.user_entity = user_status
+    user.identification_type = identification_type
+    user.identification_no = identification_no
+                             
+
+    try :
+        user.save()
+        return 'User created successfully'
+
+    except psycopg2.errors.UniqueViolation as e:
+            return 'User not already exists.'          
+        
+    except Exception as e:
+        errors = {'User registration Failed , error is : ': e}
         return str(errors)
-
 
 @user.route('/user/login', methods=['GET', 'POST'])
 def login():
@@ -128,15 +162,24 @@ def login():
     username = request.form['username']
     password = request.form['password']
 
-    #validate_user(username, password)
-    user = User.select().where(User.username == username)
-    if user is not None:
-        #check_password(username,password)
-        u = user.get()
-        if u.password == password:
-                return User.serialize(user)
-    else:
+    try:
+        user = User.get(User.username == username)
+        logging.info('user is %s', user.username)
+            #return 'Login successfull'
+        if bcrypt.check_password_hash(user.password, password):
+            #user.password == password:
+
+             return 'Login successfull'
+        else:
+            return 'Login failed: Password does not mach'
+    
+    except User.DoesNotExist:
         return 'User does not exist'
+
+    except Exception as error :
+        errors = {'error': error}
+        return str(errors)
+    
 
 
 @user.route('/get_login_details', methods=['GET', 'POST'])
@@ -162,13 +205,13 @@ def update_user_photo():
     user_id = request.form['user_id']
     photo = request.form['photo']
 
-    query = queries['update_user_photo'].format(photo, user_id)
-
     try:
-        with dbm.dbManager() as manager:
-            result = manager.updateDB(query)
+        user = User.get(User.id == user_id)
+        user.photo = photo
+        use.save()
         success = True
-    except:
+    except Exception as error:
+        logging.debug(error)
         success = False
 
     return jsonify(success)
