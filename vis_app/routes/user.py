@@ -196,25 +196,7 @@ def get_login_details():
         return jsonify(result.to_dict(orient='records'))
 
 
-@user.route('/update_user_photo', methods=['GET','POST'])
-def update_user_photo():
-    """
-    update user photo
-    requires user id
-    """
-    user_id = request.form['user_id']
-    photo = request.form['photo']
 
-    try:
-        user = User.get(User.id == user_id)
-        user.photo = photo
-        use.save()
-        success = True
-    except Exception as error:
-        logging.debug(error)
-        success = False
-
-    return jsonify(success)
 
 
 #admin access
@@ -245,30 +227,60 @@ def dashboard_members():
     return jsonify(result.to_dict(orient='records'))
 
 
+
+@user.route('/user/set/photo', methods=['GET','POST'])
+@user.route('/update_user_photo', methods=['GET','POST'])
+def update_user_photo():
+    """
+    update user photo
+    requires user id
+    """
+    user_id = request.form['user_id']
+    photo = request.form['photo']
+
+    try:
+        user = User.get(User.id == user_id)
+        user.photo = photo
+        use.save()
+        success = True
+    except Exception as error:
+        logging.debug(error)
+        success = False
+
+    return jsonify(success)
+
+
+@user.route('/user/set/ogin_status', methods=['GET', 'POST'])
 @user.route('/user/set_user_login_status', methods=['GET', 'POST'])
 def set_user_login_status():
     user_id = request.form['user_id']
-    user_status = request.form['user_status']
-    logging.info('Setting User id: %s status set to %s', user_id, user_status)
-    query_approve_user = queries['set_user_login_status']
+    user_entity = request.form['user_status']
+    logging.info('Setting User id: %s status set to %s', user_id, user_entity)
+    try:
+        user = User.get(User.id == user_id)
+        user.user_entity = user_entity
+        use.save()
+        success = True
+    except Exception as error:
+        logging.debug(error)
+        success = False
 
-    set_approve_user_query = query_approve_user.format(user_status, user_id)
-    logging.info('query generated %s', set_approve_user_query)
-    with dbm.dbManager() as manager:
-        result = manager.updateDB(set_approve_user_query)
-        logging.info('User id: %s  login status set to %s', user_id, user_status)
-        return jsonify(bool(result))
+    return jsonify(success)
 
 
+@user.route('/user/set/admin_status', methods=['GET', 'POST'])
 @user.route('/user/set_user_admin_status', methods=['GET', 'POST'])
 def set_user_admin_status():
     user_id = request.form['user_id']
     user_admin_status = request.form['user_admin_status']
     logging.info('Setting User id: %s status set to %s', user_id, user_admin_status)
-    query_update_user_admin = queries['set_user_admin_status']
+    try:
+        user = User.get(User.id == user_id)
+        user.isadmin = user_admin_status
+        use.save()
+        success = True
+    except Exception as error:
+        logging.debug(error)
+        success = False
 
-    set_approve_user_query = query_update_user_admin.format(user_admin_status, user_id)
-    with dbm.dbManager() as manager:
-        result = manager.updateDB(set_approve_user_query)
-        logging.info('User id: %s  admin status set to %s', user_id, user_admin_status)
-        return jsonify(bool(result))
+    return jsonify(success)
