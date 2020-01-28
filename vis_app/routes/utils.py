@@ -1,5 +1,6 @@
 from vis_app.Models.User import User
 
+
 def validate_user(username, password):
     user = User.select().where(User.username == username)
     if user is not None:

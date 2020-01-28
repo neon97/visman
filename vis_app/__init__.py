@@ -26,10 +26,11 @@ def load_blueprints(app):
     from vis_app.routes.flat import flat
     from vis_app.routes.society import society
     from vis_app.routes.visitor import visitor
+    from vis_app.routes.dashboard import dashboard
 
     app.register_blueprint(server)
     app.register_blueprint(user)
     app.register_blueprint(society)
     app.register_blueprint(visitor)
     app.register_blueprint(flat)
-
+    app.register_blueprint(dashboard)

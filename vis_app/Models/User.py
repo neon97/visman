@@ -1,5 +1,7 @@
 from peewee import *
 from vis_app.Models.BaseModel import BaseModel
+from vis_app.Models.Society import Society
+from vis_app.Models.Flat import Flat
 
 
 class User(BaseModel):
@@ -7,17 +9,20 @@ class User(BaseModel):
         db_table = 'user_table'
 
     id = IdentityField()
+    username = CharField()
     first_name = CharField()
     middle_name = CharField()
     last_name = CharField()
-    username = CharField()
     email = CharField()
     password = CharField()
-    # society_id = ForeignKeyField(db_column = 'society_id', model=Society, to_field =id, null = False)
-    society_id = IntegerField()
-    flat_id = IntegerField()
+    society_id = ForeignKeyField(db_column = 'society_id', model=Society, to_field=id, null=False, deferrable=True)
+    ##society_id = IntegerField()
+    flat_id = ForeignKeyField(model=Flat, to_field=id, null=False, deferrable=True)
     isadmin = BooleanField()
     user_entity = IntegerField()
+    identification_type=CharField()
+    identification_no = CharField()
+    photo = TextField()
 
     EXCLUDE_FIELDS = [password]
 
@@ -25,18 +30,6 @@ class User(BaseModel):
         """Serialize this object to dict/json."""
         d = super(User, self).serialize()
         return d
-
-    # def get_user(att,value):
-    #     try:
-    #         if att == 'email':
-    #             return User.select().where(User.email == value).get()
-
-    #         if att == 'id':
-    #             return User.select().where(User.id == value).get()
-    #             #return BaseModel.get_object_or_404(User, id=value)
-
-    #     except User.DoesNotExist:
-    #         return 'User does not exist'
 
     def __str__(self):
         return "Id : {} User Name: {}, email: {} ".format(self.id, self.username, self.email)

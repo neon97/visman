@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint
+from vis_app.Models.Society import Society
 import pandas as pd
 import db_config.dbManager as dbm
 import logging
@@ -13,12 +14,6 @@ society = Blueprint('society', __name__)
 params = config_parser.config(filename='db_config/database.ini', section='postgresql')
 queries = config_parser.config(filename='db_config/database.ini', section='queries')
 
-
-"""Columns in visitor table appended in  indicates column set to be None instead of string null"""
-visitor_col = ['user_id', 'first_name', 'middle_name', 'last_name', 'contact_number', 'entry_time', 'people_count', 'society_id', 'flat_id',
-               'visit_reason', 'visitor_status', 'whom_to_visit', 'vehicle', 'photo','otp']
-
-verdict_visitor = {}
 
 '''looping to check data type and prepare column value'''
 for each_column in visitor_col:
@@ -36,21 +31,28 @@ def society_register():
         total_buildings = request.form['total_buildings']
         total_flats = request.form['total_flats']
 
+        society = Society()
+        society.regd_no = regd_no
+        society.society_name = society_name
+        society.society_address = society_address
+        society.total_buildings = total_buildings
+        society.total_flats = total_flats
 
-        df = pd.DataFrame({'regd_no': regd_no, 'society_name': society_name, 'society_address': society_address,
-                           'total_buildings': total_buildings, 'total_flats': total_flats}, index=[0])
+        society.save()
 
-        logging.info('Dataframe for New Society %s', df)
-        with dbm.dbManager() as manager:
-            manager.commit(df, 'visitor_management_schema.society_table')
-            logging.info('Society registered successfully')
-            return "Society registered successfully"
+        success = True
+        
+        logging.info('Society registered successfully')
+        
 
-    except psycopg2.DatabaseError as error:
+    except Exception as error:
         errors = {'society registeration': False,
                   'error': (error)
                   }
-        return str(errors)
+        logging.info(errors)
+        success = False
+
+    return jsonify(success)
 
 
 @society.route('/get_society_id', methods=['GET', 'POST'])

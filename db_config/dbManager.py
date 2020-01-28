@@ -116,7 +116,7 @@ class dbManager:
             errors = {'visitor_entry': False,
                       'error': (error)
                       }
-            logging.debug(error)
+            logging.debug(errors)
 
     def _disconnect(self):
         # print("Disconnect to DB")

@@ -20,5 +20,6 @@ DATABASE_CONFIG = {
     'host': 'localhost',
     'database': 'visman',
     'password': 'changeme',
-    'port': '5433'
+    'port': '5433',
+    'url': 'postgres://postgres:changeme@localhost:5433/visman'
 }

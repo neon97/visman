@@ -1,8 +1,13 @@
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, Blueprint, Response
+from peewee import * 
+import json
 import pandas as pd
 import db_config.dbManager as dbm
 import logging
 import psycopg2, config_parser
+from vis_app.Models.Visitor import Visitor
+from playhouse.shortcuts import model_to_dict
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -15,8 +20,8 @@ queries = config_parser.config(filename='db_config/database.ini', section='queri
 
 
 """Columns in visitor table appended in  indicates column set to be None instead of string null"""
-visitor_col = ['user_id', 'first_name', 'middle_name', 'last_name', 'contact_number', 'entry_time', 'people_count', 'society_id', 'flat_id',
-               'visit_reason', 'visitor_status', 'whom_to_visit', 'vehicle', 'photo','otp']
+visitor_col = ['userid', 'first_name', 'middle_name', 'last_name', 'contact_number', 'entry_time', 'people_count', 'society_id', 'flat_id',
+               'visit_reason', 'visitor_status', 'whom_to_visit', 'vehicle', 'photo']
 
 verdict_visitor = {}
 
@@ -30,7 +35,7 @@ for each_column in visitor_col:
 def insertVisitor():
     logging.debug("Running insertVisitor:")
     for key in verdict_visitor:
-        logging.info("key is : %s", key)
+        #logging.info("key is : %s", key)
         try:
             verdict_visitor[key]=request.form[key]
         except:
@@ -40,9 +45,9 @@ def insertVisitor():
     tuple_insert = tuple(verdict_visitor.values())
     logging.info("tuple_insert is : %s", tuple_insert)
     try:
+     
         with dbm.dbManager() as manager:
             visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor', tuple_insert)
-            #result = manager.getDataFrame(query)
             logging.info('Visitor details entered successfully for id %s', visitor_id)
             return jsonify(visitor_id)
 
@@ -55,30 +60,20 @@ def insertVisitor():
 
 @visitor.route('/update_visitor_exit',methods=['GET','POST'])
 def update_visitor_exit():
-    update_visitor_exit = queries['update_visitor_exit']
     visitor_id = request.form['id']
     exit_time = request.form['exit_time']
     try:
-        update_query = update_visitor_exit.format(exit_time, visitor_id)
-
-        with dbm.dbManager() as manager:
-            manager.updateDB(update_query)
+        visitor = Visitor.get(Visitor.id == visitor_id)
+        visitor.exit_time = exit_time
+        visitor.save()
         success = True
+
+    except Visitor.DoesNotExist:
+        return 'User does not exist'
     except:
         success = False
     return jsonify(success)
 
-
-@visitor.route('/dashboard_visitor', methods=['GET', 'POST'])
-def dashboard_visitor():
-    society_id = request.form['society_id']
-    all_visitor_details = queries['all_visitor_details3']
-    query_visitor_list = all_visitor_details.format(society_id)
-
-    with dbm.dbManager() as manager:
-        result = manager.getDataFrame(query_visitor_list)
-        logging.info('Visitor details are %s', result)
-        return result.to_json(orient='records')
 
 
 @visitor.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
@@ -87,11 +82,56 @@ def set_visitor_status():
     visitor_id = request.form['visitor_id']
     visitor_status = request.form['visitor_status']
     logging.info('Setting Visitor id: %s status set to %s', visitor_id, visitor_status)
-    query_set_visitor_status = queries['set_visitor_status']
 
-    set_approve_user_query = query_set_visitor_status.format(int(visitor_status), str(visitor_id))
-    with dbm.dbManager() as manager:
-        result = manager.updateDB(set_approve_user_query)
-        logging.info('Visitor id: %s  status set to %s', visitor_id, visitor_status)
-        return jsonify(bool(result))
+    try:
+        visitor = Visitor.get(Visitor.id == visitor_id)
+        visitor.visitor_status = visitor_status
+        visitor.save()
+        success = True
+
+    except Visitor.DoesNotExist:
+        return 'User does not exist'
+    except:
+        success = False
+    return jsonify(success)
+
+
+
+@visitor.route('/dashboard_visitor', methods=['GET', 'POST'])
+def dashboard_visitor():
+    society_id = request.form['society_id']
+    try:
+        visitors = Visitor.select().where(Visitor.society_id  == society_id).dicts()
+        if visitors.count() == 0 :
+            return "No visitors found"
+        else:
+            df = pd.DataFrame.from_dict(visitors) 
+            result = df.to_json(orient='records')
+            return Response(result,mimetype='application/json')
+
+    except Exception as error :
+        errors = {'error': error}
+        return str(errors)
+
+
+@visitor.route('/get_flat_visitor_details', methods=['GET', 'POST'])
+def get_flat_visitor_details():
+    society_id = request.form['society_id']
+    flat_id = request.form['flat_id']
+
+    try:
+        visitors = Visitor.select().where(Visitor.society_id == society_id, Visitor.flat_id == flat_id).dicts()
+        if visitors.count() == 0 :
+            return "No visitors found"
+        else:
+            df = pd.DataFrame.from_dict(visitors) 
+            result = df.to_json(orient='records')
+            return Response(result,mimetype='application/json')
+
+    except Exception as error :
+        errors = {'error': error}
+        logging.info(errors)
+        return str(errors)
+
+
 
