@@ -9,15 +9,15 @@ class User(BaseModel):
         db_table = 'user_table'
 
     id = IdentityField()
+    email = CharField()
     username = CharField()
     first_name = CharField()
     middle_name = CharField()
     last_name = CharField()
-    email = CharField()
     password = CharField()
-    society_id = ForeignKeyField(db_column = 'society_id', model=Society, to_field=id, null=False, deferrable=True)
+    society_id = ForeignKeyField(Society, null=False, deferrable=True)
     ##society_id = IntegerField()
-    flat_id = ForeignKeyField(model=Flat, to_field=id, null=False, deferrable=True)
+    flat_id = ForeignKeyField(Flat, null=False, deferrable=True)
     isadmin = BooleanField()
     user_entity = IntegerField()
     identification_type=CharField()

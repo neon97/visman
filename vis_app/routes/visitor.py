@@ -37,16 +37,19 @@ def insertVisitor():
     try:
         data = request.form
 
-        if id not in data:
-            visitor = Visitor(**data)
-            visitor.save()
-            return jsonify(visitor.id)
+        visitor = Visitor(**data)
+        visitor.save()
 
-        else:
-            visitor = Visitor(**data)
-            visitor.save()
+        # if id not in data:
+        #     visitor = Visitor(**data)
+        #     visitor.save()
+        #     return jsonify(visitor.id)
 
-            return jsonify(visitor.id)
+        # else:
+        #     visitor = Visitor(**data)
+        #     visitor.save()
+
+        return jsonify(visitor.id)
     
     except Exception as error:
         logging.info(error)

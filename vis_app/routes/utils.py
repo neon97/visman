@@ -1,4 +1,14 @@
 from vis_app.Models.User import User
+from flask import Response
+import pandas as pd
+
+def query_to_json(query):
+    if query.count() == 0 :
+            return "No results found"
+    else:
+        df = pd.DataFrame.from_dict(query) 
+        result = df.to_json(orient='records')
+        return Response(result,mimetype='application/json')
 
 
 def validate_user(username, password):

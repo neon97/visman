@@ -1,10 +1,9 @@
 from flask import Flask, request, jsonify, Blueprint
-import pandas as pd
 import db_config.dbManager as dbm
 import logging
 import psycopg2, config_parser
 from peewee import IntegrityError, DoesNotExist
-#from utils import validate_user
+from vis_app.routes.utils import query_to_json
 logging.basicConfig(level=logging.DEBUG)
 from vis_app.Models.User import User
 from vis_app.Models.Society import Society
@@ -14,7 +13,7 @@ from vis_app.Models.BaseModel import db
 from vis_app.Models.BaseModel import BaseModel
 import json
 from peewee import JOIN
-from flask import Response
+
 
 start_time = ""
 end_time = ""
@@ -40,39 +39,50 @@ user_col = ['email', 'first_name', 'middle_name', 'last_name','password', 'conta
 @user.route('/user/register', methods=['GET','POST'])
 def user_register():
     """Society Member Registration """
+    try:
 
-    email = request.form['email']
-    first_name = request.form['first_name']
-    middle_name = request.form['middle_name']
-    last_name = request.form['last_name']
-    password = request.form['password']
-    society_id = request.form['society_id']
-    flat_id = request.form['flat_id']
-    isadmin = request.form['isadmin']
-    user_entity = request.form['user_status']
+        data = request.form
 
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-    user = User()
-
-    user.username = email
-    user.email = email
-    user.first_name = first_name
-    user.middle_name = middle_name
-    user.last_name= last_name
-    user.password = hashed_password
-    user.society_id = society_id
-    user.flat_id = flat_id
-    user.isadmin = isadmin
-    user.user_entity = user_entity
-
-    try :
+        user = User(**data)
         user.save()
-        return 'User created successfully'
+        return jsonify(user.id)
+    
+    except Exception as error:
+        logging.info(error)
+        return str(error)
+
+    # email = request.form['email']
+    # first_name = request.form['first_name']
+    # middle_name = request.form['middle_name']
+    # last_name = request.form['last_name']
+    # password = request.form['password']
+    # society_id = request.form['society_id']
+    # flat_id = request.form['flat_id']
+    # isadmin = request.form['isadmin']
+    # user_entity = request.form['user_status']
+
+    # hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    # user = User()
+
+    # user.username = email
+    # user.email = email
+    # user.first_name = first_name
+    # user.middle_name = middle_name
+    # user.last_name= last_name
+    # user.password = hashed_password
+    # user.society_id = society_id
+    # user.flat_id = flat_id
+    # user.isadmin = isadmin
+    # user.user_entity = user_entity
+
+    # try :
+    #     user.save()
+    #     return 'User created successfully'
         
-    except Exception as e:
-        errors = {'User registration Failed , error is : ': e}
-        return str(errors)
+    # except Exception as e:
+    #     errors = {'User registration Failed , error is : ': e}
+    #     return str(errors)
 
 
 
@@ -154,9 +164,8 @@ def user_register_staff():
         user.user_entity = user_status
         user.identification_type = identification_type
         user.identification_no = identification_no
-                                
 
-   
+
         user.save()
         return 'User created successfully'
         
@@ -246,17 +255,21 @@ def get_login_details():
     
     try:
         query = User.select(
-        User.id,User.username, User.first_name,User.last_name
-        , User.society_id, User.isadmin, User.user_entity, User.photo
-        , Society.society_name
-        , Flat.flat_no, Flat.wing).join(Society,JOIN.LEFT_OUTER
-        ).join(Flat, JOIN.LEFT_OUTER).where(User.id==user_id).get() 
+            User.id,User.username, User.first_name,User.last_name
+            , User.society_id, User.isadmin, User.user_entity, User.photo
+            , Society.society_name, Flat.id
+            , Flat.flat_no, Flat.wing).join(Society,JOIN.LEFT_OUTER
+            ).join(Flat, JOIN.LEFT_OUTER, on=(User.flat_id == Flat.id)).where(User.id==user_id).dicts()
         
-        user = BaseModel.serialize(query)
-        return user
+        return query_to_json(query)
 
-    except User.DoesNotExist:
-        return 'User does not exist'
+
+        # if query.count() == 0 :
+        #     return "No user found"
+        # else:
+        #     df = pd.DataFrame.from_dict(query) 
+        #     result = df.to_json(orient='records')
+        #     return Response(result,mimetype='application/json')
 
     except Exception as error :
         errors = {'error': error}
