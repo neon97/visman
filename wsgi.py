@@ -7,4 +7,4 @@ app.config['SECRET_KEY'] = 'secret_key'
 #load_blueprints(app)
 
 #bcrypt = Bcrypt(app)
-#app.run(debug=True)
+app.run(debug=True)

@@ -34,28 +34,24 @@ for each_column in visitor_col:
 @visitor.route('/insertVisitor', methods=['GET','POST'])
 def insertVisitor():
     logging.debug("Running insertVisitor:")
-    for key in verdict_visitor:
-        #logging.info("key is : %s", key)
-        try:
-            verdict_visitor[key]=request.form[key]
-        except:
-            pass
 
-    '''tuple format to send args to proc'''
-    tuple_insert = tuple(verdict_visitor.values())
-    logging.info("tuple_insert is : %s", tuple_insert)
     try:
-     
-        with dbm.dbManager() as manager:
-            visitor_id = manager.callprocedure('visitor_management_schema.insertvisitor', tuple_insert)
-            logging.info('Visitor details entered successfully for id %s', visitor_id)
-            return jsonify(visitor_id)
+        data = request.form
 
-    except psycopg2.DatabaseError as error:
-        errors = {'visitor_entry': False,
-                  	'error': (error)
-                  	}
-        return str(errors)
+        if id not in data:
+            visitor = Visitor(**data)
+            visitor.save()
+            return jsonify(visitor.id)
+
+        else:
+            visitor = Visitor(**data)
+            visitor.save()
+
+            return jsonify(visitor.id)
+    
+    except Exception as error:
+        logging.info(error)
+        return str(error)
 
 
 @visitor.route('/update_visitor_exit',methods=['GET','POST'])
