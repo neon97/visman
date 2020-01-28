@@ -159,9 +159,6 @@ def user_register_staff():
    
         user.save()
         return 'User created successfully'
-
-    except psycopg2.errors.UniqueViolation as e:
-            return 'User already exists.'          
         
     except Exception as e:
         errors = {'User registration Failed , error is : ': e}
