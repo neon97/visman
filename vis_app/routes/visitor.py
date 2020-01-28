@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, Blueprint, Response
-from peewee import * 
 import json
 import pandas as pd
 import db_config.dbManager as dbm
