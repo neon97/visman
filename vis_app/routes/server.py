@@ -7,7 +7,7 @@ Created on Sat Aug  3 16:18:42 2019
 Main file running the application.
 """
 
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, Blueprint, render_template
 import pandas as pd
 import db_config.dbManager as dbm
 import logging
@@ -23,7 +23,7 @@ server = Blueprint('server', __name__)
 
 @server.route('/', methods=['GET', 'POST'])
 def hello_world():
-    return "<div><b>Sorry!!<br/>Only team has access to database<b><a href='/about'>About</a></div>"
+    return render_template('about.html', title='Register')
 
 
 @server.route('/about', methods=['GET', 'POST'])
