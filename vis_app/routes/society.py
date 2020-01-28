@@ -15,10 +15,6 @@ params = config_parser.config(filename='db_config/database.ini', section='postgr
 queries = config_parser.config(filename='db_config/database.ini', section='queries')
 
 
-'''looping to check data type and prepare column value'''
-for each_column in visitor_col:
-    verdict_visitor[each_column] = None
-
 
 @society.route('/society_register', methods=['GET', 'POST'])
 def society_register():
