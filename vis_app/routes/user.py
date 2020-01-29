@@ -35,74 +35,15 @@ user_col = ['email', 'first_name', 'middle_name', 'last_name','password', 'conta
 #     verdict_user[each_column] = None
 
 
-
+@user.route('/user/register/staff', methods=['GET', 'POST'])
 @user.route('/user/register', methods=['GET','POST'])
 def user_register():
     """Society Member Registration """
-    try:
-
-        data = request.form
-
-        user = User(**data)
-        user.save()
-        return jsonify(user.id)
-    
-    except Exception as error:
-        logging.info(error)
-        return str(error)
-
-    # email = request.form['email']
-    # first_name = request.form['first_name']
-    # middle_name = request.form['middle_name']
-    # last_name = request.form['last_name']
-    # password = request.form['password']
-    # society_id = request.form['society_id']
-    # flat_id = request.form['flat_id']
-    # isadmin = request.form['isadmin']
-    # user_entity = request.form['user_status']
+    data = request.form
+    return create_user(data)
 
     # hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    # user = User()
-
-    # user.username = email
-    # user.email = email
-    # user.first_name = first_name
-    # user.middle_name = middle_name
-    # user.last_name= last_name
-    # user.password = hashed_password
-    # user.society_id = society_id
-    # user.flat_id = flat_id
-    # user.isadmin = isadmin
-    # user.user_entity = user_entity
-
-    # try :
-    #     user.save()
-    #     return 'User created successfully'
-        
-    # except Exception as e:
-    #     errors = {'User registration Failed , error is : ': e}
-    #     return str(errors)
-
-
-
-    # user = User()
-    # for each_col in user_col:
-    #     #logging.info("key is : %s", each_col)
-    #     try:
-    #         #logging.info("value is %s", request.form[each_col])
-    #         user.each_col = request.form[each_col]
-    #         logging.info("key %s, value is %s", each_col,user.each_col)
-    #     except:
-    #         user.each_col = None
-
-    #     finally:
-    #         logging.info("in finally")
-    #         logging.info("key %s, value is %s", each_col,user.each_col)
-            
-    
-    #user.username = request.form['email']
-    #for att in user_col:
     
 
 @user.route('/user/login', methods=['GET', 'POST'])
@@ -131,7 +72,7 @@ def login():
 
 
 
-@user.route('/user/register/staff', methods=['GET', 'POST'])
+
 def user_register_staff():
     """staff Registration (staff may be like watchman or society accounts guy)
     """
@@ -281,14 +222,8 @@ def get_login_details():
 def dashboard_staff():
     society_id = request.form['society_id']
     try:
-
-        data = list(User.select().where(User.society_id==society_id, User.user_entity == 1 ).dicts()) 
-
-        result = Response(json.dumps(data), mimetype='application/json')
-        return result
-
-    except User.DoesNotExist:
-        return 'User does not exist'
+        query = list(User.select().where(User.society_id==society_id, User.user_entity == 1 ).dicts()) 
+        return query_to_json(query)
 
     except Exception as error :
         errors = {'error': error}
@@ -301,17 +236,13 @@ def dashboard_members():
     user_status = request.form['user_status']
     
     try:
-        users = list(User.select(
+        query = list(User.select(
             User.id, User.first_name, User.middle_name, User.last_name
             , User.email, User.user_entity, User.isadmin
             , Flat.id, Flat.flat_no, Flat.wing
         ).join(Flat).where(User.society_id==society_id, User.user_entity == user_status).dicts()) 
 
-        result = Response(json.dumps(users), mimetype='application/json')
-        return result
-
-    except User.DoesNotExist:
-        return 'No users Found'
+        return query_to_json(query)
 
     except Exception as error :
         errors = {'error': error}
@@ -324,18 +255,32 @@ def get_society_members_details():
     try:
         society_id = request.form['society_id']
                 
-        users = list(User.select(User.first_name, User.last_name, Flat.id
+        query = list(User.select(User.first_name, User.last_name, Flat.id
         ,Flat.flat_no,Flat.wing
         ).join(Flat).where(User.user_entity == 1, User.society_id == society_id).dicts())
 
 
-        result = Response(json.dumps(users), mimetype='application/json')
-        return result
-
-    except User.DoesNotExist:
-        return 'No users Found'
+        return query_to_json(query)
 
     except Exception as error :
         errors = {'error': error}
         return str(errors)
 
+
+def create_user(data):
+     user = User()
+    try:
+
+        
+
+        print(data)
+
+        #user = User(**data)
+        user.create(**data)
+        #user.save()
+        return jsonify(user.id)
+    
+    except Exception as error:
+        
+        logging.info(error)
+        return str(error)
