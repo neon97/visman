@@ -268,12 +268,9 @@ def get_society_members_details():
 
 
 def create_user(data):
-    user = User()
+    user = User(**data)
     try:
-
-        #user = User(**data)
-        user.create(**data)
-        #user.save()
+        user.save()
         return jsonify(user.id)
     
     except Exception as error:
