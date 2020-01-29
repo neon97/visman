@@ -268,12 +268,8 @@ def get_society_members_details():
 
 
 def create_user(data):
-     user = User()
+    user = User()
     try:
-
-        
-
-        print(data)
 
         #user = User(**data)
         user.create(**data)
