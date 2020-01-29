@@ -29,7 +29,6 @@ class BaseModel(Model):
 
     def get_object_or_none(model, **kwargs):
         """Retrieve a single object or return None."""
-
         try:
             return model.get(**kwargs)
         except model.DoesNotExist:

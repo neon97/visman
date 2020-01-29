@@ -5,7 +5,10 @@ import db_config.dbManager as dbm
 import logging
 import psycopg2, config_parser
 from vis_app.Models.Visitor import Visitor
+from vis_app.Models.BaseModel import BaseModel
 from playhouse.shortcuts import model_to_dict
+from vis_app.routes.utils import query_to_json1
+from vis_app.routes.utils import query_to_json
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -30,25 +33,51 @@ for each_column in visitor_col:
 
 
 # visitor entry from staff
+@visitor.route('/update_visitor_exit',methods=['GET','POST'])
+@visitor.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
 @visitor.route('/insertVisitor', methods=['GET','POST'])
-def insertVisitor():
-    logging.debug("Running insertVisitor:")
-
+def create_or_update_visitor():
+    logging.debug("Running def create_or_update_visitor:")
     try:
         data = request.form
+        return create_or_update(data)
+    except Exception as error:
+        return str(error)
 
+
+@visitor.route('/dashboard_visitor', methods=['GET', 'POST'])
+def dashboard_visitor():
+    society_id = request.form['society_id']
+    try:
+        # query = Visitor.select().where(Visitor.society_id  == society_id).dicts()
+        # 
+        query = Visitor.select().where(Visitor.society_id  == society_id)
+        return query_to_json(query)
+    except Exception as error :
+        logging.info(error)
+        return str(error)
+
+
+@visitor.route('/get_flat_visitor_details', methods=['GET', 'POST'])
+def get_flat_visitor_details():
+    society_id = request.form['society_id']
+    flat_id = request.form['flat_id']
+
+    try:
+        query = Visitor.select().where(Visitor.society_id == society_id, Visitor.flat_id == flat_id)
+        return query_to_json(query)
+
+    except Exception as error :
+        errors = {'error': error}
+        logging.info(errors)
+        return str(errors)
+
+
+def create_or_update(data):
+    try:
+        logging.info("With data: %s", data)
         visitor = Visitor(**data)
         visitor.save()
-
-        # if id not in data:
-        #     visitor = Visitor(**data)
-        #     visitor.save()
-        #     return jsonify(visitor.id)
-
-        # else:
-        #     visitor = Visitor(**data)
-        #     visitor.save()
-
         return jsonify(visitor.id)
     
     except Exception as error:
@@ -56,7 +85,6 @@ def insertVisitor():
         return str(error)
 
 
-@visitor.route('/update_visitor_exit',methods=['GET','POST'])
 def update_visitor_exit():
     visitor_id = request.form['id']
     exit_time = request.form['exit_time']
@@ -73,8 +101,6 @@ def update_visitor_exit():
     return jsonify(success)
 
 
-
-@visitor.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
 def set_visitor_status():
     logging.info("Called set_visitor_status")
     visitor_id = request.form['visitor_id']
@@ -92,44 +118,5 @@ def set_visitor_status():
     except:
         success = False
     return jsonify(success)
-
-
-
-@visitor.route('/dashboard_visitor', methods=['GET', 'POST'])
-def dashboard_visitor():
-    society_id = request.form['society_id']
-    try:
-        visitors = Visitor.select().where(Visitor.society_id  == society_id).dicts()
-        if visitors.count() == 0 :
-            return "No visitors found"
-        else:
-            df = pd.DataFrame.from_dict(visitors) 
-            result = df.to_json(orient='records')
-            return Response(result,mimetype='application/json')
-
-    except Exception as error :
-        errors = {'error': error}
-        return str(errors)
-
-
-@visitor.route('/get_flat_visitor_details', methods=['GET', 'POST'])
-def get_flat_visitor_details():
-    society_id = request.form['society_id']
-    flat_id = request.form['flat_id']
-
-    try:
-        visitors = Visitor.select().where(Visitor.society_id == society_id, Visitor.flat_id == flat_id).dicts()
-        if visitors.count() == 0 :
-            return "No visitors found"
-        else:
-            df = pd.DataFrame.from_dict(visitors) 
-            result = df.to_json(orient='records')
-            return Response(result,mimetype='application/json')
-
-    except Exception as error :
-        errors = {'error': error}
-        logging.info(errors)
-        return str(errors)
-
 
 

@@ -1,27 +1,22 @@
 from vis_app.Models.User import User
-from flask import Response
+from flask import Response,jsonify
 import pandas as pd
+from vis_app.Models.BaseModel import BaseModel
 
 def query_to_json(query):
     if query.count() == 0 :
             return "No results found"
     else:
-        df = pd.DataFrame.from_dict(query) 
+        df = pd.DataFrame.from_dict(query.dicts()) 
         result = df.to_json(orient='records')
         return Response(result,mimetype='application/json')
 
-
-def validate_user(username, password):
-    user = User.select().where(User.username == username)
-    if user is not None:
-        check_password(username,password)
-        if user.password == password:
-                return User.serialize(user)
-    else:
-        return 'User does not exist'
-
-def check_password(username, password):
-    pass
+def query_to_json1(query):
+    list = []
+    for data in query:
+        list.append(BaseModel.serialize(data))
+    return jsonify(list)
+        
 
 
 
