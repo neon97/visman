@@ -1,4 +1,4 @@
-from peewee import *
+from peewee import IdentityField, IntegerField, CharField, ForeignKeyField
 from vis_app.Models.BaseModel import BaseModel
 from vis_app.Models.Society import Society
 
