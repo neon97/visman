@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, Blueprint
 import db_config.dbManager as dbm
 import logging
 import psycopg2, config_parser
-from peewee import IntegrityError, DoesNotExist
+from peewee import IntegrityError, DoesNotExist, fn
 from vis_app.routes.utils import query_to_json
 from vis_app.routes.utils import query_to_json1
 logging.basicConfig(level=logging.DEBUG)
@@ -103,7 +103,7 @@ def get_login_details():
 def dashboard_staff():
     society_id = request.form['society_id']
     try:
-        query1 = User.select().where(User.society_id==society_id, User.user_entity == 1)
+        query1 = User.select().where(User.society_id==society_id, User.user_entity == 2)
         return query_to_json(query1)
 
     except Exception as error :
@@ -138,8 +138,8 @@ def get_society_members_details():
     try:
         society_id = request.form['society_id']
                 
-        query = User.select(
-                                User.first_name, User.last_name, Flat.id
+        query = User.select( User.first_name.concat(" ").concat(User.last_name).alias('member')
+                                , Flat.id
                                 ,Flat.flat_no,Flat.wing
                             ).join(Flat).where(
                                 User.user_entity == 1, User.society_id == society_id
@@ -180,7 +180,7 @@ def get_user(id):
     try:
         query = User.select(
                         User.id,User.username, User.first_name,User.last_name, User.flat_id
-                        , User.society_id, User.isadmin, User.user_entity, User.photo
+                        , User.society_id, User.isadmin, User.user_entity.alias('user_status'), User.photo
                         , Society.society_name, Flat.id
                         , Flat.flat_no, Flat.wing).join(Society,JOIN.LEFT_OUTER
                         ).join(Flat, JOIN.LEFT_OUTER, on=(User.flat_id == Flat.id)

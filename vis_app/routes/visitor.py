@@ -5,6 +5,8 @@ import db_config.dbManager as dbm
 import logging
 import psycopg2, config_parser
 from vis_app.Models.Visitor import Visitor
+from vis_app.Models.User import User
+from vis_app.Models.Flat import Flat
 from vis_app.Models.BaseModel import BaseModel
 from playhouse.shortcuts import model_to_dict
 from vis_app.routes.utils import query_to_json1
@@ -51,7 +53,16 @@ def dashboard_visitor():
     try:
         # query = Visitor.select().where(Visitor.society_id  == society_id).dicts()
         # 
-        query = Visitor.select().where(Visitor.society_id  == society_id)
+        query = Visitor.select(
+            Visitor.id.alias('visitor_id'), Visitor.first_name.alias('visitor_first_name'),Visitor.last_name.alias('visitor_last_name')
+            ,Visitor.contact_number.alias('visitor_contact_number'), Visitor.user_id, Visitor.visit_reason
+            ,Visitor.photo.alias('visitor_photo'),Visitor.visit_reason, Visitor.visitor_status
+            ,Visitor.entry_time, Visitor.exit_time,
+            User.first_name.alias('staff_first_name'), User.last_name.alias('staff_last_name'), 
+            Flat.flat_no, Flat.wing
+        ).join(User,
+        on=(Visitor.user_id == User.id)).join(Flat,
+        on=(Visitor.flat_id == Flat.id)).where(Visitor.society_id  == society_id)
         return query_to_json(query)
     except Exception as error :
         logging.info(error)
