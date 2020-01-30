@@ -46,6 +46,7 @@ user_col = ['email', 'first_name', 'middle_name', 'last_name','password', 'conta
 def user_register():
     """Society Member Registration """
     data = request.form
+    logging.info("Got the data %s", data)
     return create_or_update(data)
 
     # hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -60,10 +61,21 @@ def login():
 
     try:
         user = User.select().where(User.username == username).get()
+        logging.info("username id %s", user.username)
+        logging.info("user id id %s", user.id)    
+        logging.info("user password is %s", user.password)
         if user.password == password:
-            logging.info("username id %s", user.username)
-            logging.info("user id id %s", user.id)    
-            return get_user(user.id)
+            
+            query = User.select(User.id, User.username, User.first_name, 
+                User.last_name, User.photo, User.user_entity, User.society_id,
+                User.flat_id, Flat.flat_no, Flat.wing,
+                Society.society_name).join(
+                    Flat, JOIN.LEFT_OUTER
+                    ).join(
+                        Society, JOIN.LEFT_OUTER
+                        ).where(User.id == user.id)
+                
+            return query_to_json(query)
 
         else:
             return 'Login failed: Password does not mach'
@@ -107,12 +119,13 @@ def dashboard_members():
     try:
         query = User.select(
             User.id, User.first_name, User.middle_name, User.last_name
-            , User.email, User.user_entity, User.isadmin
-            , Flat.id, Flat.flat_no, Flat.wing
+            , User.email, User.user_entity, User.isadmin, User.flat_id
+             , Flat.flat_no, Flat.wing
         ).join(Flat, JOIN.LEFT_OUTER).where(User.society_id==society_id, User.user_entity == user_status) 
 
-
-        return query_to_json(query)
+        result = query_to_json(query) 
+        
+        return result
 
     except Exception as error :
         errors = {'error': error}
@@ -144,9 +157,18 @@ def get_society_members_details():
 def create_or_update(data):
     try:
         user = User(**data)
-        user.username = user.email
+        if 'id' in data:
+            logging.info("Running update on user :%s", user)
+        else:
+            logging.info("Creating user : %s", user)
+            user.username = user.email
+            logging.info("Settting username to user email :%s", user.email)
+
         user.save()
-        return jsonify(user.id)
+        logging.info("User saved.")
+
+        user = User.select(User.id).where(User.id == user.id)
+        return query_to_json(user)
     
     except Exception as error:
 

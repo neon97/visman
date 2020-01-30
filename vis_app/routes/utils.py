@@ -2,13 +2,16 @@ from vis_app.Models.User import User
 from flask import Response,jsonify
 import pandas as pd
 from vis_app.Models.BaseModel import BaseModel
+import logging
 
 def query_to_json(query):
+
     if query.count() == 0 :
             return "No results found"
     else:
         df = pd.DataFrame.from_dict(query.dicts()) 
         result = df.to_json(orient='records')
+        logging.info("returining result : %s" , result)
         return Response(result,mimetype='application/json')
 
 def query_to_json1(query):
