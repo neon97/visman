@@ -12,6 +12,7 @@ class dbManager:
         
         self._user = config.DATABASE_CONFIG['user']
         self._host = config.DATABASE_CONFIG['host']
+        self._url = config.DATABASE_CONFIG['url']
         self._nameOfDB = None
         self._connection = None
         self._DFSQLmap = {}
@@ -74,10 +75,11 @@ class dbManager:
         self._nameOfDB = config.DATABASE_CONFIG['database']
         try:
         
-            self._connection = psycopg2.connect(user=self._user,
-                                     host =self._host,
-                                     database =self._nameOfDB,
-                                     password =config.DATABASE_CONFIG['password'])
+            #self._connection = psycopg2.connect(user=self._user,
+              #                       host =self._host,
+              #                       database =self._nameOfDB,
+             #                        password =config.DATABASE_CONFIG['password'])
+            self._connection = psycopg2.connecct(self._url,sslmode='require')
             print('connected')
 
         except:
