@@ -67,7 +67,7 @@ def login():
         if user.password == password:
             
             query = User.select(User.id, User.username, User.first_name, 
-                User.last_name, User.photo, User.user_entity, User.society_id,
+                User.last_name, User.photo, User.user_entity, User.society_id, User.isadmin
                 User.flat_id, Flat.flat_no, Flat.wing,
                 Society.society_name).join(
                     Flat, JOIN.LEFT_OUTER
