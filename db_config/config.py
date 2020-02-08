@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Nov  9 08:23:23 2018
 
-@author: SESA472057
-"""
 
 DATABASE_CONFIG_local = {
     'database': 'd5267ba9erjt2u',

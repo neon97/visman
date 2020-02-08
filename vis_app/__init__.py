@@ -5,13 +5,13 @@ from flask_bcrypt import Bcrypt
 
 from flask_bcrypt import Bcrypt
 
+
 def create_app(config=None):
     """Create and return app."""
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'secret_key'
     load_blueprints(app)
 
-    
     # db = PostgresqlDatabase(config.DATABASE_CONFIG['database'],
     #                     user=config.DATABASE_CONFIG['user'],
     #                     password=config.DATABASE_CONFIG['password'],

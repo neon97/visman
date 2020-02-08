@@ -3,7 +3,8 @@ import json
 import pandas as pd
 import db_config.dbManager as dbm
 import logging
-import psycopg2, config_parser
+import psycopg2
+import config_parser
 from vis_app.Models.Visitor import Visitor
 from vis_app.Models.User import User
 from vis_app.Models.Flat import Flat
@@ -11,6 +12,7 @@ from vis_app.Models.BaseModel import BaseModel
 from playhouse.shortcuts import model_to_dict
 from vis_app.routes.utils import query_to_json1
 from vis_app.routes.utils import query_to_json
+from .user import login_required
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -19,8 +21,10 @@ start_time = ""
 end_time = ""
 
 visitor = Blueprint('visitor', __name__)
-params = config_parser.config(filename='db_config/database.ini', section='postgresql')
-queries = config_parser.config(filename='db_config/database.ini', section='queries')
+params = config_parser.config(
+    filename='db_config/database.ini', section='postgresql')
+queries = config_parser.config(
+    filename='db_config/database.ini', section='queries')
 
 
 """Columns in visitor table appended in  indicates column set to be None instead of string null"""
@@ -35,9 +39,10 @@ for each_column in visitor_col:
 
 
 # visitor entry from staff
-@visitor.route('/update_visitor_exit',methods=['GET','POST'])
+@visitor.route('/update_visitor_exit', methods=['GET', 'POST'])
 @visitor.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
-@visitor.route('/insertVisitor', methods=['GET','POST'])
+@visitor.route('/insertVisitor', methods=['GET', 'POST'])
+@login_required
 def create_or_update_visitor():
     logging.debug("Running def create_or_update_visitor:")
     try:
@@ -48,37 +53,39 @@ def create_or_update_visitor():
 
 
 @visitor.route('/dashboard_visitor', methods=['GET', 'POST'])
+@login_required
 def dashboard_visitor():
     society_id = request.form['society_id']
     try:
         # query = Visitor.select().where(Visitor.society_id  == society_id).dicts()
-        # 
+        #
         query = Visitor.select(
-            Visitor.id.alias('visitor_id'), Visitor.first_name.alias('visitor_first_name'),Visitor.last_name.alias('visitor_last_name')
-            ,Visitor.contact_number.alias('visitor_contact_number'), Visitor.user_id, Visitor.visit_reason
-            ,Visitor.photo.alias('visitor_photo'),Visitor.visit_reason, Visitor.visitor_status
-            ,Visitor.entry_time, Visitor.exit_time,
-            User.first_name.alias('staff_first_name'), User.last_name.alias('staff_last_name'), 
+            Visitor.id.alias('visitor_id'), Visitor.first_name.alias('visitor_first_name'), Visitor.last_name.alias('visitor_last_name'), Visitor.contact_number.alias(
+                'visitor_contact_number'), Visitor.user_id, Visitor.visit_reason, Visitor.photo.alias('visitor_photo'), Visitor.visit_reason, Visitor.visitor_status, Visitor.entry_time, Visitor.exit_time,
+            User.first_name.alias('staff_first_name'), User.last_name.alias(
+                'staff_last_name'),
             Flat.flat_no, Flat.wing
         ).join(User,
-        on=(Visitor.user_id == User.id)).join(Flat,
-        on=(Visitor.flat_id == Flat.id)).where(Visitor.society_id  == society_id)
+               on=(Visitor.user_id == User.id)).join(Flat,
+                                                     on=(Visitor.flat_id == Flat.id)).where(Visitor.society_id == society_id)
         return query_to_json(query)
-    except Exception as error :
+    except Exception as error:
         logging.info(error)
         return str(error)
 
 
 @visitor.route('/get_flat_visitor_details', methods=['GET', 'POST'])
+@login_required
 def get_flat_visitor_details():
     society_id = request.form['society_id']
     flat_id = request.form['flat_id']
 
     try:
-        query = Visitor.select().where(Visitor.society_id == society_id, Visitor.flat_id == flat_id)
+        query = Visitor.select().where(Visitor.society_id ==
+                                       society_id, Visitor.flat_id == flat_id)
         return query_to_json(query)
 
-    except Exception as error :
+    except Exception as error:
         errors = {'error': error}
         logging.info(errors)
         return str(errors)
@@ -90,13 +97,14 @@ def create_or_update(data):
         visitor = Visitor(**data)
         visitor.save()
         return jsonify(visitor.id)
-    
+
     except Exception as error:
         logging.info(error)
         return str(error)
 
 
 def update_visitor_exit():
+
     visitor_id = request.form['id']
     exit_time = request.form['exit_time']
     try:
@@ -116,7 +124,8 @@ def set_visitor_status():
     logging.info("Called set_visitor_status")
     visitor_id = request.form['visitor_id']
     visitor_status = request.form['visitor_status']
-    logging.info('Setting Visitor id: %s status set to %s', visitor_id, visitor_status)
+    logging.info('Setting Visitor id: %s status set to %s',
+                 visitor_id, visitor_status)
 
     try:
         visitor = Visitor.get(Visitor.id == visitor_id)
@@ -129,5 +138,3 @@ def set_visitor_status():
     except:
         success = False
     return jsonify(success)
-
-
