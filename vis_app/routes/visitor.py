@@ -6,6 +6,7 @@ import logging
 import psycopg2
 import config_parser
 from vis_app.Models.Visitor import Visitor
+from vis_app.Models.Flat import Flat
 from vis_app.Models.User import User
 from vis_app.Models.Flat import Flat
 from vis_app.Models.BaseModel import BaseModel
@@ -81,8 +82,17 @@ def get_flat_visitor_details():
     flat_id = request.form['flat_id']
 
     try:
-        query = Visitor.select().where(Visitor.society_id ==
-                                       society_id, Visitor.flat_id == flat_id)
+        query = Visitor.select(Visitor.id.alias('visitor_id'),
+        Visitor.first_name.alias('visitor_first_name'),
+        Visitor.middle_name.alias('visitor_middle_name'),
+        Visitor.last_name.alias('visitor_last_name'),
+        Visitor.contact_number.alias('visitor_contact_number'),
+        Visitor.photo.alias('visitor_photo'),
+        Visitor.visit_reason,Visitor.society_id, Visitor.visitor_status, Visitor.user_id,
+        Visitor.entry_time, Visitor.exit_time, Visitor.flat_id, Visitor.whom_to_visit,
+        Visitor.people_count, Visitor.vehicle,
+        Flat.wing, Flat.flat_no
+        ).join(Flat).where(Visitor.society_id == society_id, Visitor.flat_id == flat_id)
         return query_to_json(query)
 
     except Exception as error:

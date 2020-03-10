@@ -166,7 +166,8 @@ def get_society_members_details():
     try:
         society_id = request.form['society_id']
 
-        query = User.select(User.first_name.concat(" ").concat(User.last_name).alias('member'), Flat.id, Flat.flat_no, Flat.wing
+        query = User.select(User.first_name.concat(" ").concat(User.last_name).alias('member'),
+        Flat.id, Flat.flat_no, Flat.wing
                             ).join(Flat).where(
             User.user_entity == 1, User.society_id == society_id
         )
@@ -212,7 +213,7 @@ def create_or_update(data):
 def get_user(id):
     try:
         query = User.select(
-            User.id, User.username, User.first_name, User.last_name, User.flat_id, User.society_id, User.isadmin, User.user_entity.alias('user_status'), User.photo, Society.society_name, Flat.id, Flat.flat_no, Flat.wing).join(Society, JOIN.LEFT_OUTER
+            User.id, User.username, User.first_name, User.last_name, User.flat_id, User.society_id, User.isadmin, User.user_entity, User.photo, Society.society_name, Flat.id, Flat.flat_no, Flat.wing).join(Society, JOIN.LEFT_OUTER
                                                                                                                                                                                                                                   ).join(Flat, JOIN.LEFT_OUTER, on=(User.flat_id == Flat.id)
                                                                                                                                                                                                                                          ).where(User.id == id)
 

@@ -21,7 +21,7 @@ class Visitor(BaseModel):
     visit_reason = CharField()
     photo = TextField()
     flat_id = ForeignKeyField(Flat,  null=False,deferrable=True)
-    whom_to_visit = ForeignKeyField(User, null=False, deferrable=True)
+    #whom_to_visit = ForeignKeyField(User, null=False, deferrable=True)
     whom_to_visit = IntegerField()
     visitor_status = IntegerField()
     vehicle = CharField()
