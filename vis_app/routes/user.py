@@ -116,7 +116,7 @@ def logout():
 
 @user.route('/user/get/id', methods=['GET', 'POST'])
 @user.route('/get_login_details', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def get_login_details():
     """
         get the details of user by the user id.
@@ -127,7 +127,7 @@ def get_login_details():
 
 # admin access
 @user.route('/dashboard_staff', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def dashboard_staff():
     society_id = request.form['society_id']
     try:
@@ -140,7 +140,7 @@ def dashboard_staff():
 
 
 @user.route('/dashboard_members', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def dashboard_members():
     society_id = request.form['society_id']
     user_status = request.form['user_status']
@@ -160,7 +160,7 @@ def dashboard_members():
 
 
 @user.route('/get_society_members_details', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def get_society_members_details():
     """get list of wings from a Society"""
     try:
