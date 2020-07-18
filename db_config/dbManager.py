@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov  8 08:54:46 2018
 
-@author: SESA472057
 """
 import psycopg2
 import pandas as pd
@@ -24,9 +22,11 @@ class dbManager:
         logging.info("Initialing dbManager")
         self._user = config.DATABASE_CONFIG['user']
         self._host = config.DATABASE_CONFIG['host']
+
         self._nameOfDB = config.DATABASE_CONFIG['database']
         self._port = config.DATABASE_CONFIG['port']
         self._url = config.DATABASE_CONFIG['url']
+
         self._connection = None
         self._DFSQLmap = {}
         self._DFSQLmap['object'] = 'varchar(Max)'
@@ -102,6 +102,7 @@ class dbManager:
         # connect to the PostgreSQL server
         #self._nameOfDB = config.DATABASE_CONFIG['database']
         try:
+
 
             # self._connection = psycopg2.connect(user=self._user,
             #                                     host=self._host,
