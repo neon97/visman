@@ -43,7 +43,7 @@ for each_column in visitor_col:
 @visitor.route('/update_visitor_exit', methods=['GET', 'POST'])
 @visitor.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
 @visitor.route('/insertVisitor', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def create_or_update_visitor():
     logging.debug("Running def create_or_update_visitor:")
     try:
@@ -54,7 +54,7 @@ def create_or_update_visitor():
 
 
 @visitor.route('/dashboard_visitor', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def dashboard_visitor():
     society_id = request.form['society_id']
     try:
@@ -76,7 +76,7 @@ def dashboard_visitor():
 
 
 @visitor.route('/get_flat_visitor_details', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def get_flat_visitor_details():
     society_id = request.form['society_id']
     flat_id = request.form['flat_id']

@@ -24,7 +24,7 @@ queries = config_parser.config(
 
 
 @flat.route('/add_flat', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def add_flat():
     """Add details of Flat if Flat not Present"""
     try:
@@ -36,7 +36,7 @@ def add_flat():
 
 
 @flat.route('/get_flat_id', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def get_flat_id():
     """get flat id by giving the society and flat no and wing name"""
 
@@ -56,7 +56,7 @@ def get_flat_id():
 
 
 @flat.route('/get_wing_list', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def get_wing_list():
     """get list of wings from a Society"""
     try:
@@ -73,7 +73,7 @@ def get_wing_list():
 
 
 @flat.route('/get_flat_list', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def get_flat_list():
     try:
         society_id = request.form['society_id']

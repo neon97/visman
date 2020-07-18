@@ -21,7 +21,7 @@ queries = config_parser.config(
 
 
 @society.route('/society_register', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def society_register():
     """Register society"""
     data = request.form
@@ -29,7 +29,7 @@ def society_register():
 
 
 @society.route('/get_society_id', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def get_society_id():
     """ get the society id by passing the society registration."""
     try:
@@ -44,7 +44,7 @@ def get_society_id():
 
 
 @society.route('/society_info', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def society_info():
     """ Gives the society id and society name for all registered society."""
     try:
