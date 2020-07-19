@@ -30,23 +30,14 @@ queries = config_parser.config(
 
 bcrypt = Bcrypt()
 
-"""Columns in visitor table appended in  indicates column set to be None instead of string null"""
-user_col = ['email', 'first_name', 'middle_name', 'last_name', 'password', 'contact_number', 'society_id',
-            'flat_id', 'isadmin', 'user_entity', 'photo']
-
-# verdict_user = {}
-
-# '''looping to check data type and prepare column value'''
-# for each_column in user_col:
-#     verdict_user[each_column] = None
 
 
-@user.route('/user/set/photo', methods=['GET', 'POST'])
 @user.route('/user/set/login_status', methods=['GET', 'POST'])
+@user.route('/user/set_user_login_status', methods=['GET', 'POST'])  # to be deprecated
 @user.route('/user/set/admin_status', methods=['GET', 'POST'])
-@user.route('/user/set_user_admin_status', methods=['GET', 'POST'])
-@user.route('/user/set_user_login_status', methods=['GET', 'POST'])
-@user.route('/update_user_photo', methods=['GET', 'POST'])
+@user.route('/user/set_user_admin_status', methods=['GET', 'POST']) # to be deprecated 
+@user.route('/user/set/photo', methods=['GET', 'POST'])
+@user.route('/update_user_photo', methods=['GET', 'POST']) # to be deprecated 
 @user.route('/user/register/staff', methods=['GET', 'POST'])
 @user.route('/user/register', methods=['GET', 'POST'])
 def user_register():
@@ -180,23 +171,29 @@ def get_society_members_details():
 
 
 def create_or_update(data):
-    try:
-        user = User(**data)
-        if 'id' in data:
-            logging.info("Running update on user :%s", user)
-        else:
-            # logging.info("Creating user : %s", user)
-            user.username = user.email
-            logging.info("Settting username to user email :%s", user.username)
+    user = User(**data)
+    if 'id' in data:
+        logging.info("Running update on user :%s", user.id)
+        try:
+            logging.info("Getting User for id : %s", user.id)
+            User.get(id =user.id)
+            user.save()
+            return "Update Successfull"
+        except User.DoesNotExist:
+            return "User not found for id :{}".format(user.id)
+
+        except Exception as error:
+                return error
+    else:
+        logging.info("Creating user : %s", user)
+        user.username = user.email
+        logging.info("Settting username to user email :%s", user.username)    
         try:
             user = User.get(email=user.username)
             return "Email already used"
-
         except User.DoesNotExist:
-
-            logging.info('in except____')
+            logging.info('in except__')
             logging.info(user)
-
             user.save()
 
             logging.info("User saved.")
@@ -204,10 +201,9 @@ def create_or_update(data):
             user = User.select(User.id).where(User.id == user.id)
             return query_to_json(user)
 
-    except Exception as error:
-
-        logging.info(error)
-        return str(error)
+        except Exception as error:
+            logging.info(error)
+            return str(error)
 
 
 def get_user(id):
