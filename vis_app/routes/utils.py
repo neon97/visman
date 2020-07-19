@@ -18,7 +18,6 @@ def query_to_json(query):
 
 
 def query_to_json1(query):
-
     list = []
     for data in query:
         list.append(BaseModel.serialize(data))
@@ -50,3 +49,14 @@ def auth_user(user):
     session['user'] = user.first_name
     session['username'] = user.username
     logging.info('You are logged in as %s' % (user.username))
+
+def response(func, message):
+    status  = func.status # true or false
+    msg = message
+    response = func.response
+    j_responce = make_to_json(response)
+    jsn = {
+        "ststus": status,
+        "message": msg,
+        "response": j_responce
+    }

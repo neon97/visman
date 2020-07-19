@@ -35,6 +35,7 @@ bcrypt = Bcrypt()
 @user.route('/user/set/login_status', methods=['GET', 'POST'])
 @user.route('/user/set_user_login_status', methods=['GET', 'POST'])  # to be deprecated
 @user.route('/user/set/admin_status', methods=['GET', 'POST'])
+
 @user.route('/user/set_user_admin_status', methods=['GET', 'POST']) # to be deprecated 
 @user.route('/user/set/photo', methods=['GET', 'POST'])
 @user.route('/update_user_photo', methods=['GET', 'POST']) # to be deprecated 

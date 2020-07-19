@@ -67,8 +67,9 @@ def dashboard_visitor():
                 'staff_last_name'),
             Flat.flat_no, Flat.wing
         ).join(User,
-               on=(Visitor.user_id == User.id)).join(Flat,
-                                                     on=(Visitor.flat_id == Flat.id)).where(Visitor.society_id == society_id)
+               on=(Visitor.user_id == User.id)).join(Flat
+                                                     #,on=(Visitor.flat_id == Flat.id)
+                                                     ).where(Visitor.society_id == society_id)
         return query_to_json(query)
     except Exception as error:
         logging.info(error)
@@ -144,7 +145,7 @@ def set_visitor_status():
         success = True
 
     except Visitor.DoesNotExist:
-        return 'User does not exist'
+        return 'Visitor does not exist'
     except:
         success = False
     return jsonify(success)

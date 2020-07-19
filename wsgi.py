@@ -6,5 +6,5 @@ app = create_app()
 # load_blueprints(app)
 
 #bcrypt = Bcrypt(app)
-#app.run(debug=True)
-#app.run()
+app.run(debug=True)
+# app.run()

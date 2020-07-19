@@ -19,7 +19,7 @@ params = config_parser.config(
 queries = config_parser.config(
     filename='db_config/database.ini', section='queries')
 
-
+@society.route('/society/register', methods=['GET', 'POST'])
 @society.route('/society_register', methods=['GET', 'POST'])
 #@login_required
 def society_register():
