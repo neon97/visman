@@ -85,13 +85,14 @@ def login():
                 Society, JOIN.LEFT_OUTER
             ).where(User.id == user.id)
             auth_user(user)
-            return query_to_json(query)
+
+            return CustResponse.send("Successful", True, query_to_json(query))
 
         else:
-            return 'Login failed: Password does not mach'
+            return CustResponse.send("Login failed: Password does not mach", True, "")
 
-    except User.DoesNotExist:
-        return 'User does not exist'
+    except User.DoesNotExist as error:
+        return CustResponse.send("Successful:User Doesn't exist", True, str(error))
 
     except Exception as error:
         errors = {'error': error}
@@ -123,11 +124,10 @@ def dashboard_staff():
     society_id = request.form['society_id']
     try:
         query1 = User.select().where(User.society_id == society_id, User.user_entity == 2)
-        return query_to_json(query1)
 
+        return CustResponse.send("Succsessful", True, query_to_json(query1))
     except Exception as error:
-        errors = {'error': error}
-        return str(errors)
+        return CustResponse.send("dashboard_staff():Query UnSuccessful", False, str(error))
 
 
 @user.route('/dashboard_members', methods=['GET', 'POST'])
@@ -141,13 +141,10 @@ def dashboard_members():
             User.id, User.first_name, User.middle_name, User.last_name, User.email, User.user_entity, User.isadmin, User.flat_id, Flat.flat_no, Flat.wing
         ).join(Flat, JOIN.LEFT_OUTER).where(User.society_id == society_id, User.user_entity == user_status)
 
-        result = query_to_json(query)
-
-        return result
+        return CustResponse.send("Succsessful", True, query_to_json(query))
 
     except Exception as error:
-        errors = {'error': error}
-        return str(errors)
+        return CustResponse.send("dashboard_members():Query UnSuccessful", False, str(error))
 
 
 @user.route('/get_society_members_details', methods=['GET', 'POST'])
@@ -162,12 +159,12 @@ def get_society_members_details():
                             ).join(Flat).where(
             User.user_entity == 1, User.society_id == society_id
         )
-
-        return query_to_json(query)
+        return CustResponse.send("Succsessful", True, query_to_json(query))
+        # return query_to_json(query)
 
     except Exception as error:
-        errors = {'error': error}
-        return str(errors)
+
+        return CustResponse.send("get_society_members_details():Query UnSuccessful", False, str(error))
 
 
 def create_or_update(data):
@@ -182,7 +179,7 @@ def create_or_update(data):
             return CustResponse.send("Update Successful", True, "")
 
         except User.DoesNotExist as error:
-            return CustResponse.send("Update Query UnSuccessful for id :{}".format(user.id), False, str(error))
+            return CustResponse.send("Update Query UnSuccessful for id :{}".format(user.id), True, str(error))
             # return "User not found for id :{}".format(user.id)
 
         except Exception as error:
