@@ -4,17 +4,31 @@ import pandas as pd
 from vis_app.Models.BaseModel import BaseModel
 import logging
 from vis_app.Models import User
+import json
+from playhouse.shortcuts import model_to_dict
+
+
+class CustResponse:
+
+    def send(message, status, outParams):
+        logging.debug("In function send")
+        print(status, message, outParams)
+        response = {"Status": status, "Message": message, "Result": outParams}
+        return response
 
 
 def query_to_json(query):
+    try:
+        if query.count() == 0:
+            return "No results found"
+        else:
+            result = [model_to_dict(c) for c in query]
+            logging.info("returining result : %s", result)
+            # print(type(result) )
+            return result
 
-    if query.count() == 0:
-        return "No results found"
-    else:
-        df = pd.DataFrame.from_dict(query.dicts())
-        result = df.to_json(orient='records')
-        logging.info("returining result : %s", result)
-        return Response(result, mimetype='application/json')
+    except Exception as error:
+        CustResponse.send("query_to_json: UnSuccessful", False, error)
 
 
 def query_to_json1(query):
@@ -50,8 +64,9 @@ def auth_user(user):
     session['username'] = user.username
     logging.info('You are logged in as %s' % (user.username))
 
+
 def response(func, message):
-    status  = func.status # true or false
+    status = func.status  # true or false
     msg = message
     response = func.response
     j_responce = make_to_json(response)
