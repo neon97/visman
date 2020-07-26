@@ -23,12 +23,3 @@ query = Flat.insert_many(data)
 query.execute()
 
 
-
-# scoiety_feilds = [Society.regd_no, Society.society_name, Society.society_address, Society.total_flats, Society.total_buildings]
-# with db.atomic():
-#     Society.insert_many(scoiety_data, fields=scoiety_feilds).execute()
-
-# society = Society()
-# society.regd_no = 1
-# society.society_name = ''
-# society.save()
