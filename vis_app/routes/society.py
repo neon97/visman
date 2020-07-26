@@ -43,7 +43,7 @@ def get_society_id():
         return str(error)
 
 
-@society.route('/society_info', methods=['GET', 'POST'])
+@society.route('/society/get/all', methods=['GET', 'POST'])
 #@login_required
 def society_info():
     """ Gives the society id and society name for all registered society."""
