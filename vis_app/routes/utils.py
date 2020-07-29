@@ -13,22 +13,27 @@ class CustResponse:
     def send(message, status, outParams):
         logging.debug("In function send")
         print(status, message, outParams)
-        response = {"Status": status, "Message": message, "Result": outParams}
+        response = {"Message": message, "Status": status, "Result": outParams}
         return response
 
 
 def query_to_json(query):
+    logging.debug("In function query_to_json")
+    logging.debug("Running query : {}".format(query))
     try:
         if query.count() == 0:
-            return "No results found"
+            return CustResponse.send("No Records Found", False, None)
         else:
-            result = [model_to_dict(c) for c in query]
+            # result = [dict(model_to_dict(c)) for c in query]
+            df = pd.DataFrame.from_dict(query.dicts())
+            result = json.loads(df.to_json(orient='records'))
             logging.info("returining result : %s", result)
-            # print(type(result) )
-            return result
+            logging.debug("Returning result : {}".format(result))
+            return CustResponse.send(" Successful", True, result)
 
     except Exception as error:
-        CustResponse.send("query_to_json: UnSuccessful", False, error)
+        logging.info("Query Failed with error {}".format(error))
+        return CustResponse.send("UnSuccessful", False, str(error))
 
 
 def query_to_json1(query):

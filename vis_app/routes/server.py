@@ -23,7 +23,11 @@ server = Blueprint('server', __name__)
 
 @server.route('/', methods=['GET', 'POST'])
 def hello_world():
-    return render_template('about.html', title='Register')
+    # return render_template('about.html', title='Register')
+    return jsonify({'Company': 'Visitor Management',
+                    'Dev center': 'Team Foundation',
+                    'version': 'heroku test development'})
+
 
 
 @server.route('/about', methods=['GET', 'POST'])

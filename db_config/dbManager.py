@@ -66,6 +66,15 @@ class dbManager:
         self._connection.commit()
         return True
         logging.info('Update Commit done')
+    
+    def runSQL(self, query):
+        cur = self._connection.cursor()
+        logging.info('Connection to database established')
+        logging.info('Executing query %s', query)
+        cur.execute(query)
+        self._connection.commit()
+        return True
+        logging.info('Query ran Successfully')
 
     def truncateDB(self, tableName):
         print('Dropping table: ' + tableName)
@@ -104,12 +113,12 @@ class dbManager:
         try:
 
 
-            # self._connection = psycopg2.connect(user=self._user,
-            #                                     host=self._host,
-            #                                     database=self._nameOfDB,
-            #                                     password=config.DATABASE_CONFIG['password'],
-            #                                     port=self._port)
-            self._connection = psycopg2.connect(self._url, sslmode='require')
+            self._connection = psycopg2.connect(user=self._user,
+                                                host=self._host,
+                                                database=self._nameOfDB,
+                                                password=config.DATABASE_CONFIG['password'],
+                                                port=self._port)
+            # self._connection = psycopg2.connect(self._url, sslmode='require')
 
             logging.info('Connection to Database %s : %s : %s  Successfull', self._user, self._nameOfDB, self._port)
 
@@ -148,7 +157,7 @@ class dbManager:
 
     def __columnNamesOfSQLTable(self, tableName):
         cur = self._connection.cursor()
-        query = "select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = N'{}'".format(tableName)
+        query = "SELECT COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = N'{}'".format(tableName)
         cur.execute(query)
         rows = cur.fetchall()
         lstRowsInDbTable = []
@@ -180,10 +189,3 @@ class dbManager:
         rowstr = "(" + rowstr[:-1] + ")"
         return colnStr, rowstr
 
-# if __name__ == '__main__':
-# with dbManager() as manager:
-#     data = {'first_name': 'apna', 'last_name': 'apnae', 'contact_number': '21424152', 'entry_time': '"2011-10-02 23:42:15.560692"', 'flat_info': '205',
-#              'society_id':'2', 'staff_id': '2', 'visit_reason':'apna game', 'photo': 'asasf214f'}
-#       df = pd.DataFrame(data, index=[0])
-
-#        manager.commit(df, 'visitor_management_schema.visitor_table')

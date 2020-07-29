@@ -25,9 +25,11 @@ queries = config_parser.config(
 def society_register():
     """Register society"""
     data = request.form
+    logging.info('Recievied Society Data {}'.format(data))
     return create_or_update(data)
 
 
+@society.route('/society/get/id', methods=['GET', 'POST'])
 @society.route('/get_society_id', methods=['GET', 'POST'])
 # @login_required
 def get_society_id():
@@ -35,9 +37,7 @@ def get_society_id():
     try:
         regd_no = request.form['regd_no']
         query = Society.select(Society.id).where(Society.regd_no == regd_no)
-
-        return CustResponse.send("Succesful", True, query_to_json(query))
-
+        return query_to_json(query)
     except Exception as error:
         logging.info(error)
         return CustResponse.send("UnSuccesful", False, str(error))
@@ -47,24 +47,45 @@ def get_society_id():
 # @login_required
 def society_info():
     """ Gives the society id and society name for all registered society."""
-    try:
-        query = Society.select()
-        return CustResponse.send("Succesful", True, query_to_json(query))
-        # return query_to_json(query)
-    except Exception as error:
-        logging.info(error)
-        return CustResponse.send("UnSuccesful", False, str(error))
-
+    query = Society.select()
+    return  query_to_json(query)
 
 def create_or_update(data):
-    try:
-        society = Society(**data)
-        society.save()
-        return CustResponse.send("Succesful", True, str(society.id))
-        # return jsonify(society.id)
+    society = Society(**data)
+    if 'id' in data:
+        logging.info("Running update on Society :%s", society.id)
+        try:
+            logging.info("Getting Society info for id : {}".format(society.id))
+            Society.get(id=society.id)
+            society.save()
+            return CustResponse.send("Update Successful", True, [{"id":society.id}])
 
-    except Exception as error:
+        except Society.DoesNotExist as error:
+            return CustResponse.send("Update Failed for Society id :{}".format(society.id), False, str(error))
+            # return "User not found for id :{}".format(user.id)
 
-        logging.info(error)
-        return CustResponse.send("UnSuccesful", False, str(error))
-        # return str(error)
+        except Exception as error:
+            return CustResponse.send("Query UnSuccessful", False, str(error))
+            # return error
+    else:
+        logging.info("Creating New Society : %s", society)
+        try:
+            logging.info("Cheking if Society registered with Regd No: {} exists".format(society.regd_no))
+            society = Society.get(regd_no=society.regd_no)
+            return CustResponse.send("Society with Regd No : {}, is already Registered".format(society.regd_no), False, [{"id":society.id}])
+        except Society.DoesNotExist as error:
+            logging.info('Society Does No exists, Creating New Society')
+            logging.info(society)  
+            try:
+                society.save()
+                logging.info("Society saved.")
+            except Exception as error:
+                logging.info(error)
+                return CustResponse.send("UnSuccsessful", False, str(error))
+                
+            society = Society.select().where(Society.id == society.id)
+            return  query_to_json(society)
+
+        except Exception as error:
+            logging.info(error)
+            return CustResponse.send("UnSuccsessful", False, str(error))

@@ -5,7 +5,7 @@ import db_config.dbManager as dbm
 import logging
 import psycopg2
 import config_parser
-from vis_app.routes.utils import query_to_json
+from vis_app.routes.utils import query_to_json,CustResponse
 from .user import login_required
 
 from vis_app.Models.Flat import Flat
@@ -22,7 +22,7 @@ params = config_parser.config(
 queries = config_parser.config(
     filename='db_config/database.ini', section='queries')
 
-
+@flat.route('/flat/register', methods=['GET', 'POST'])
 @flat.route('/add_flat', methods=['GET', 'POST'])
 #@login_required
 def add_flat():
@@ -35,6 +35,7 @@ def add_flat():
         return str(error)
 
 
+@flat.route('/flat/get/id', methods=['GET', 'POST'])
 @flat.route('/get_flat_id', methods=['GET', 'POST'])
 #@login_required
 def get_flat_id():
@@ -54,7 +55,7 @@ def get_flat_id():
         errors = {'error': error}
         return str(errors)
 
-
+@flat.route('/society/get/wing/all', methods=['GET', 'POST'])
 @flat.route('/get_wing_list', methods=['GET', 'POST'])
 #@login_required
 def get_wing_list():
@@ -71,7 +72,7 @@ def get_wing_list():
         errors = {'error': error}
         return str(errors)
 
-
+@flat.route('/society/get/flat/all', methods=['GET', 'POST'])
 @flat.route('/get_flat_list', methods=['GET', 'POST'])
 #@login_required
 def get_flat_list():
@@ -90,12 +91,13 @@ def get_flat_list():
 
 
 def create_or_update(data):
+    flat = Flat(**data)
+    logging.info("Adding New Details  : %s", flat)
     try:
-        flat = Flat(**data)
-        flat.save()
-        return jsonify(flat.id)
-
+        flat.save_optimistic()
+        logging.info("Flat details saved SUccessfully")
+        new_flat = Flat.select(Flat.id).where(Flat.id == flat.id)
+        return query_to_json(new_flat)
     except Exception as error:
-
         logging.info(error)
-        return str(error)
+        return CustResponse.send("UnSuccsessful", False, str(error))

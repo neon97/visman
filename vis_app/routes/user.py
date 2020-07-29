@@ -175,7 +175,6 @@ def create_or_update(data):
             logging.info("Getting User for id : %s", user.id)
             User.get(id=user.id)
             user.save()
-            # return msg.send("",True,"Update Successfull")
             return CustResponse.send("Update Successful", True, "")
 
         except User.DoesNotExist as error:
@@ -188,30 +187,46 @@ def create_or_update(data):
     else:
         logging.info("Creating user : %s", user)
         user.username = user.email
-        logging.info("Settting username to user email :%s", user.username)
+        logging.info("Settting username as User Email :%s", user.username)
         try:
+            logging.info("Cheking if email {} exists".format(user.email))
             user = User.get(email=user.username)
-            return "Email already used"
+            return CustResponse.send("Email already used", False, str(user.email))
         except User.DoesNotExist as error:
-            logging.info('in except__')
+            logging.info('User Does No exists, Creating a New User')
             logging.info(user)
-            user.save()
-
-            logging.info("User saved.")
-
+            
+            try:
+                user.save()
+                logging.info("User saved.")
+            except Exception as error:
+                logging.info(error)
+                return CustResponse.send("UnSuccsessful", False, str(error))
+                
             user = User.select(User.id).where(User.id == user.id)
-            return CustResponse.send("Succsessful", True, query_to_json(user))
+            return query_to_json(user)
 
         except Exception as error:
             logging.info(error)
             return CustResponse.send("UnSuccsessful", False, str(error))
-            # return str(error)
+
 
 
 def get_user(id):
     try:
         query = User.select(
-            User.id, User.username, User.first_name, User.last_name, User.flat_id, User.society_id, User.isadmin, User.user_entity, User.photo, Society.society_name, Flat.id, Flat.flat_no, Flat.wing).join(Society, JOIN.LEFT_OUTER
+            User.id,
+            User.username, 
+            User.first_name,
+            User.last_name, 
+            User.flat_id,
+            User.society_id, 
+            User.isadmin, User.user_entity, 
+            User.photo, 
+            Society.society_name, 
+            Flat.id, Flat.flat_no, 
+            Flat.wing
+            ).join(Society, JOIN.LEFT_OUTER
                                                                                                                                                                                                              ).join(Flat, JOIN.LEFT_OUTER, on=(User.flat_id == Flat.id)
                                                                                                                                                                                                                     ).where(User.id == id)
         return CustResponse.send("Succsessful", True, query_to_json(query))
