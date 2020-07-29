@@ -12,7 +12,7 @@ class dbManager:
         
         self._user = config.DATABASE_CONFIG['user']
         self._host = config.DATABASE_CONFIG['host']
-        self._url = config.DATABASE_CONFIG['url']
+        #self._url = config.DATABASE_CONFIG['url']
         self._nameOfDB = None
         self._connection = None
         self._DFSQLmap = {}
