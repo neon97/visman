@@ -32,45 +32,56 @@ def add_flat():
         return create_or_update(data)
 
     except Exception as error:
-        return str(error)
+        return CustResponse.send("UnSuccsessful", False, str(error))
 
 
 @flat.route('/flat/get/id', methods=['GET', 'POST'])
 @flat.route('/get_flat_id', methods=['GET', 'POST'])
 #@login_required
 def get_flat_id():
+    logging.info("In function get_flat_id")
     """get flat id by giving the society and flat no and wing name"""
 
     try:
         society_id = request.form['society_id']
         wing_name = request.form['wing_name']
         flat_no = request.form['flat_no']
-
+        logging.info("Recieved params : society_id : {}, wing_name : {}, flat_no : {}".format(society_id,wing_name,flat_no) )
+    
         query = Flat.select().where(Flat.society_id == society_id,
                                     Flat.wing == wing_name, Flat.flat_no == flat_no)
+        logging.debug("Running query : {}".format(query))
         result = query_to_json(query)
+        logging.debug("Query Ran successfully")
+        logging.info("Result is :{} ".format(result))
         return result
 
     except Exception as error:
-        errors = {'error': error}
-        return str(errors)
+        logging.info("Failed run query, Recieved Error: ")
+        logging.info(error)
+        return CustResponse.send("UnSuccsessful", False, str(error))
 
 @flat.route('/society/get/wing/all', methods=['GET', 'POST'])
 @flat.route('/get_wing_list', methods=['GET', 'POST'])
 #@login_required
 def get_wing_list():
+    logging.info("In function get_wing_list")
     """get list of wings from a Society"""
     try:
         society_id = request.form['society_id']
-
+        logging.info("Recieved society_id : {}".format(society_id))
         query = Flat.select(Flat.wing).where(
             Flat.society_id == society_id).distinct()
+        logging.info("Running query: {}".format(query))
         result = query_to_json(query)
+        logging.debug("Query Ran successfully")
+        logging.info("Result is :{} ".format(result))
         return result
 
     except Exception as error:
-        errors = {'error': error}
-        return str(errors)
+        logging.info("Function get_wing_list Failed , Recieved Error: ")
+        logging.info(error)
+        return CustResponse.send("UnSuccsessful", False, str(error))
 
 @flat.route('/society/get/flat/all', methods=['GET', 'POST'])
 @flat.route('/get_flat_list', methods=['GET', 'POST'])
@@ -86,11 +97,13 @@ def get_flat_list():
         return result
 
     except Exception as error:
-        errors = {'error': error}
-        return str(errors)
+        logging.info("Function get_flat_list Failed , Recieved Error: ")
+        logging.info(error)
+        return CustResponse.send("UnSuccsessful", False, str(error))
 
 
 def create_or_update(data):
+    logging.info("In function create_or_update")
     flat = Flat(**data)
     logging.info("Adding New Details  : %s", flat)
     try:
@@ -99,5 +112,7 @@ def create_or_update(data):
         new_flat = Flat.select(Flat.id).where(Flat.id == flat.id)
         return query_to_json(new_flat)
     except Exception as error:
+        logging.info("Function create_or_update Failed , Recieved Error: ")
         logging.info(error)
         return CustResponse.send("UnSuccsessful", False, str(error))
+

@@ -41,6 +41,7 @@ bcrypt = Bcrypt()
 @user.route('/user/register/staff', methods=['GET', 'POST'])
 @user.route('/user/register', methods=['GET', 'POST'])
 def user_register():
+    logging.info("Infunction user_register")
     """Society Member Registration """
     data = request.form
     logging.info("Got the data %s", data)
@@ -86,17 +87,19 @@ def login():
             ).where(User.id == user.id)
             auth_user(user)
 
-            return CustResponse.send("Successful", True, query_to_json(query))
+            return  query_to_json(query)
 
         else:
             return CustResponse.send("Login failed: Password does not mach", True, "")
 
     except User.DoesNotExist as error:
+        logging.info("Function login Failed , User : {} Doesn't exist ".format(username))
         return CustResponse.send("Successful:User Doesn't exist", True, str(error))
 
     except Exception as error:
-        errors = {'error': error}
-        return str(errors)
+        logging.info("Function login Failed , Recieved Error: ")
+        logging.info(error)
+        return CustResponse.send("UnSuccessful:User Login Failed ", True, str(error))
 
 
 @user.route('/user/logout', methods=['GET', 'POST'])
@@ -125,7 +128,7 @@ def dashboard_staff():
     try:
         query1 = User.select().where(User.society_id == society_id, User.user_entity == 2)
 
-        return CustResponse.send("Succsessful", True, query_to_json(query1))
+        return query_to_json(query1)
     except Exception as error:
         return CustResponse.send("dashboard_staff():Query UnSuccessful", False, str(error))
 
@@ -141,7 +144,7 @@ def dashboard_members():
             User.id, User.first_name, User.middle_name, User.last_name, User.email, User.user_entity, User.isadmin, User.flat_id, Flat.flat_no, Flat.wing
         ).join(Flat, JOIN.LEFT_OUTER).where(User.society_id == society_id, User.user_entity == user_status)
 
-        return CustResponse.send("Succsessful", True, query_to_json(query))
+        return query_to_json(query)
 
     except Exception as error:
         return CustResponse.send("dashboard_members():Query UnSuccessful", False, str(error))
@@ -159,8 +162,7 @@ def get_society_members_details():
                             ).join(Flat).where(
             User.user_entity == 1, User.society_id == society_id
         )
-        return CustResponse.send("Succsessful", True, query_to_json(query))
-        # return query_to_json(query)
+        return query_to_json(query)
 
     except Exception as error:
 
@@ -175,7 +177,7 @@ def create_or_update(data):
             logging.info("Getting User for id : %s", user.id)
             User.get(id=user.id)
             user.save()
-            return CustResponse.send("Update Successful", True, "")
+            return CustResponse.send("Update Successful", True, { "id" : user.id})
 
         except User.DoesNotExist as error:
             return CustResponse.send("Update Query UnSuccessful for id :{}".format(user.id), True, str(error))
@@ -229,8 +231,9 @@ def get_user(id):
             ).join(Society, JOIN.LEFT_OUTER
                                                                                                                                                                                                              ).join(Flat, JOIN.LEFT_OUTER, on=(User.flat_id == Flat.id)
                                                                                                                                                                                                                     ).where(User.id == id)
-        return CustResponse.send("Succsessful", True, query_to_json(query))
+        return query_to_json(query)
 
     except Exception as error:
+        logging.info("Function get_user failed with error : {}".format(str(error)))
         return CustResponse.send("UnSuccsessful", False, str(error))
-        # return str(error)
+
