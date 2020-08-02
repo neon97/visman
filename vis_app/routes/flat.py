@@ -31,7 +31,7 @@ def add_flat():
         return create_or_update(data)
 
     except Exception as error:
-        return CustResponse.send("UnSuccsessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 @flat.route('/flat/get/id', methods=['GET', 'POST'])
@@ -57,7 +57,7 @@ def get_flat_id():
     except Exception as error:
         logging.info("Failed run query, Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("UnSuccsessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 @flat.route('/society/get/wing/all', methods=['GET', 'POST'])
 #@login_required
@@ -78,7 +78,7 @@ def get_wing_list():
     except Exception as error:
         logging.info("Function get_wing_list Failed , Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("UnSuccsessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 @flat.route('/society/get/flat/all', methods=['GET', 'POST'])
 #@login_required
@@ -95,7 +95,7 @@ def get_flat_list():
     except Exception as error:
         logging.info("Function get_flat_list Failed , Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("UnSuccsessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 def create_or_update(data):
@@ -110,5 +110,5 @@ def create_or_update(data):
     except Exception as error:
         logging.info("Function create_or_update Failed , Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("UnSuccsessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 

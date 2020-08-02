@@ -40,7 +40,7 @@ def get_society_id():
         return query_to_json(query)
     except Exception as error:
         logging.info(error)
-        return CustResponse.send("UnSuccesful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 @society.route('/society/get/all', methods=['GET', 'POST'])
@@ -61,11 +61,11 @@ def create_or_update(data):
             return CustResponse.send("Update Successful", True, [{"id":society.id}])
 
         except Society.DoesNotExist as error:
-            return CustResponse.send("Update Failed for Society id :{}".format(society.id), False, str(error))
+            return CustResponse.send("Society does Not Exist", False, [])
             # return "User not found for id :{}".format(user.id)
 
         except Exception as error:
-            return CustResponse.send("Query UnSuccessful", False, str(error))
+            return CustResponse.send("Error : {}".format(str(error)), False, [])
             # return error
     else:
         logging.info("Creating New Society : %s", society)
@@ -79,13 +79,12 @@ def create_or_update(data):
             try:
                 society.save()
                 logging.info("Society saved.")
+                society = Society.select().where(Society.id == society.id)
+                return  query_to_json(society)
             except Exception as error:
                 logging.info(error)
-                return CustResponse.send("UnSuccsessful", False, str(error))
+                return CustResponse.send("Error : {}".format(str(error)), False, [])
                 
-            society = Society.select().where(Society.id == society.id)
-            return  query_to_json(society)
-
         except Exception as error:
             logging.info(error)
-            return CustResponse.send("UnSuccsessful", False, str(error))
+            return CustResponse.send("Error : {}".format(str(error)), False, [])

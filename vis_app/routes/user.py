@@ -86,16 +86,16 @@ def login():
             return  query_to_json(query)
 
         else:
-            return CustResponse.send("Login failed: Password does not mach", True, "")
+            return CustResponse.send("Login failed: Password does not mach", False, [])
 
     except User.DoesNotExist as error:
         logging.info("Function login Failed , User : %s Does not exist ",username)
-        return CustResponse.send("Unsuccessfull :User Doesn't exist", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
     except Exception as error:
         logging.info("Function login Failed , Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("UnSuccessful:User Login Failed ", True, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 @user.route('/user/logout', methods=['GET', 'POST'])
@@ -126,7 +126,7 @@ def dashboard_staff():
 
         return query_to_json(query1)
     except Exception as error:
-        return CustResponse.send("dashboard_staff():Query UnSuccessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 @user.route('/dashboard_members', methods=['GET', 'POST'])
@@ -143,7 +143,7 @@ def dashboard_members():
         return query_to_json(query)
 
     except Exception as error:
-        return CustResponse.send("dashboard_members():Query UnSuccessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 @user.route('/get_society_members_details', methods=['GET', 'POST'])
@@ -162,7 +162,7 @@ def get_society_members_details():
 
     except Exception as error:
 
-        return CustResponse.send("get_society_members_details():Query UnSuccessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 def create_or_update(data):
@@ -176,14 +176,14 @@ def create_or_update(data):
             logging.info("Getting User for id : %s", user.id)
             User.get(id=user.id)
             user.save()
-            return CustResponse.send("Update Successful", True, { "id" : user.id})
+            return CustResponse.send("Update Successful", True, [{ "id" : user.id}])
 
         except User.DoesNotExist as error:
-            return CustResponse.send("Update Query UnSuccessful for id :{}".format(user.id), True, str(error))
+            return CustResponse.send("Error : {}".format(str(error)), False, [])
             # return "User not found for id :{}".format(user.id)
 
         except Exception as error:
-            return CustResponse.send("Query UnSuccessful", False, str(error))
+            return CustResponse.send("Error : {}".format(str(error)), False, [])
             # return error
     else:
         logging.info("Creating user : %s", user)
@@ -192,7 +192,7 @@ def create_or_update(data):
         try:
             logging.info("Cheking if email {} exists".format(user.email))
             user = User.get(email=user.email)
-            return CustResponse.send("Email already used", False, str(user.email))
+            return CustResponse.send("Email already used", False, [{"email:":user.email}])
         except User.DoesNotExist as error:
             logging.info('User Does No exists, Creating a New User')
             logging.info(user)
@@ -204,14 +204,14 @@ def create_or_update(data):
                 logging.info("User saved.")
             except Exception as error:
                 logging.info(error)
-                return CustResponse.send("UnSuccsessful", False, str(error))
+                return CustResponse.send("Error : {}".format(str(error)), False, [])
                 
             user = User.select(User.id).where(User.id == user.id)
             return query_to_json(user)
 
         except Exception as error:
             logging.info(error)
-            return CustResponse.send("UnSuccsessful", False, str(error))
+            return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 
@@ -236,5 +236,5 @@ def get_user(id):
 
     except Exception as error:
         logging.info("Function get_user failed with error : {}".format(str(error)))
-        return CustResponse.send("UnSuccsessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
