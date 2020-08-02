@@ -22,7 +22,7 @@ def query_to_json(query):
     logging.debug("Running query : {}".format(query))
     try:
         if query.count() == 0:
-            return CustResponse.send("No Records Found", False, None)
+            return CustResponse.send("No Records Found", False, [])
         else:
             # result = [dict(model_to_dict(c)) for c in query]
             df = pd.DataFrame.from_dict(query.dicts())
@@ -34,7 +34,6 @@ def query_to_json(query):
     except Exception as error:
         logging.info("Query Failed with error {}".format(error))
         return CustResponse.send("UnSuccessful", False, str(error))
-
 
 def query_to_json1(query):
     list = []
