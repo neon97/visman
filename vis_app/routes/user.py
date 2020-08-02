@@ -248,12 +248,6 @@ def get_user(id):
         return query_to_json(query)
 
     except Exception as error:
-<<<<<<< HEAD
         logging.info("Function get_user failed with error : {}".format(str(error)))
         return CustResponse.send("Error : {}".format(str(error)), False, [])
 
-=======
-        logging.info(
-            "Function get_user failed with error : {}".format(str(error)))
-        return CustResponse.send("UnSuccsessful", False, str(error))
->>>>>>> 4265d6dcce5cb528a08d5faa34560deac6246916
