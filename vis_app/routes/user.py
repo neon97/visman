@@ -86,20 +86,12 @@ def login():
             return query_to_json(query)
 
         else:
-<<<<<<< HEAD
+            logging.info("Function login Failed , Password does not mach, for User : %s",username)
             return CustResponse.send("Login failed: Password does not mach", False, [])
 
     except User.DoesNotExist as error:
         logging.info("Function login Failed , User : %s Does not exist ",username)
         return CustResponse.send("Error : {}".format(str(error)), False, [])
-=======
-            return CustResponse.send("Login failed: Password does not mach", False, "")
-
-    except User.DoesNotExist as error:
-        logging.info(
-            "Function login Failed , User : %s Does not exist ", username)
-        return CustResponse.send("Unsuccessfull :User Doesn't exist", False, [])
->>>>>>> 4265d6dcce5cb528a08d5faa34560deac6246916
 
     except Exception as error:
         logging.info("Function login Failed , Recieved Error: ")
@@ -185,11 +177,7 @@ def create_or_update(data):
             logging.info("Getting User for id : %s", user.id)
             User.get(id=user.id)
             user.save()
-<<<<<<< HEAD
             return CustResponse.send("Update Successful", True, [{ "id" : user.id}])
-=======
-            return CustResponse.send("Update Successful", True, {"id": user.id})
->>>>>>> 4265d6dcce5cb528a08d5faa34560deac6246916
 
         except User.DoesNotExist as error:
             return CustResponse.send("Error : {}".format(str(error)), False, [])
