@@ -12,6 +12,12 @@ import logging
 # visman prod database url
 DATABASE_URL = 'postgres://gawsmrxbzfvrmf:4e011cd366dd047014b1e42fa8992a6e4eeabc164f21053a37435a8b5ee4b289@ec2-54-227-251-33.compute-1.amazonaws.com:5432/d5267ba9erjt2u'
 
+#data loding and restarting
+# ALTER SEQUENCE visitor_management_schema.visitor_table_id_seq RESTART;
+# ALTER SEQUENCE visitor_management_schema.user_table_id_seq RESTART;
+# ALTER SEQUENCE visitor_management_schema.flat_details_id_seq RESTART;
+# ALTER SEQUENCE visitor_management_schema.society_table_id_seq RESTART;
+
 
 def db_connect():
     try:
@@ -22,3 +28,5 @@ def db_connect():
 
     except Exception as error:
         return str(error)
+
+
