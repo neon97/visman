@@ -12,3 +12,7 @@
 *.iml
 
 *.pyc
+*.pyc
+*.pyc
+vis_app/Models/__pycache__/db.cpython-37.pyc
+*.pyc
