@@ -45,8 +45,6 @@ def user_register():
 
     # hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-# require to make intelligence for each user ##import required
-
 
 def login_required(fn):
     @wraps(fn)
@@ -200,8 +198,8 @@ def create_or_update(data):
 
             try:
                 logging.info('Saving User details:')
-                logging.info("email: {}, firstname: {}, middlename: {}, lastname:{}, password: {}, society_id: {}, flat_id:{} , isadmin: {}, user_entity: {}".format(
-                    user.email, user.first_name, user.middle_name, user.last_name, user.password, user.society_id, user.flat_id, user.isadmin, user.user_entity))
+                logging.info("email: {}, firstname: {}, middlename: {}, lastname:{}, password: {}, isadmin: {}, user_entity: {}".format(
+                    user.email, user.first_name, user.middle_name, user.last_name, user.password, user.isadmin, user.user_entity))
                 user.save()
                 logging.info("User saved.")
             except Exception as error:
