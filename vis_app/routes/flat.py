@@ -23,7 +23,6 @@ queries = config_parser.config(
     filename='db_config/database.ini', section='queries')
 
 @flat.route('/flat/register', methods=['GET', 'POST'])
-@flat.route('/add_flat', methods=['GET', 'POST'])
 #@login_required
 def add_flat():
     """Add details of Flat if Flat not Present"""
@@ -36,7 +35,6 @@ def add_flat():
 
 
 @flat.route('/flat/get/id', methods=['GET', 'POST'])
-@flat.route('/get_flat_id', methods=['GET', 'POST'])
 #@login_required
 def get_flat_id():
     logging.info("In function get_flat_id")
@@ -62,7 +60,6 @@ def get_flat_id():
         return CustResponse.send("UnSuccsessful", False, str(error))
 
 @flat.route('/society/get/wing/all', methods=['GET', 'POST'])
-@flat.route('/get_wing_list', methods=['GET', 'POST'])
 #@login_required
 def get_wing_list():
     logging.info("In function get_wing_list")
@@ -84,7 +81,6 @@ def get_wing_list():
         return CustResponse.send("UnSuccsessful", False, str(error))
 
 @flat.route('/society/get/flat/all', methods=['GET', 'POST'])
-@flat.route('/get_flat_list', methods=['GET', 'POST'])
 #@login_required
 def get_flat_list():
     try:

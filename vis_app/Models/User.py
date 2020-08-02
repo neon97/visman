@@ -31,4 +31,5 @@ class User(BaseModel):
         return d
 
     def __str__(self):
-        return "Id : {}, UserName: {}, email: {} ".format(self.id, self.email, self.email)
+        return "Id : {}, UserName: {}, email: {}, firstname: {}, middlename: {}, lastname:{}, society_id: {}, flat_id:{} , isadmin: {}, user_entity: {}, identification_type: {}, identification_no : {}".format(
+            self.id, self.username, self.email, self.first_name, self.middle_name, self.last_name, self.society_id, self.flat_id, self.isadmin, self.user_entity, self.identification_type, self.identification_no)

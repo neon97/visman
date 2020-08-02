@@ -31,20 +31,16 @@ bcrypt = Bcrypt()
 
 
 @user.route('/user/set/login_status', methods=['GET', 'POST'])
-# to be deprecated
-@user.route('/user/set_user_login_status', methods=['GET', 'POST'])
 @user.route('/user/set/admin_status', methods=['GET', 'POST'])
-# to be deprecated
 @user.route('/user/set_user_admin_status', methods=['GET', 'POST'])
 @user.route('/user/set/photo', methods=['GET', 'POST'])
-@user.route('/update_user_photo', methods=['GET', 'POST'])  # to be deprecated
 @user.route('/user/register/staff', methods=['GET', 'POST'])
 @user.route('/user/register', methods=['GET', 'POST'])
 def user_register():
     logging.info("Infunction user_register")
     """Society Member Registration """
     data = request.form
-    logging.info("Got the data %s", data)
+    logging.info("Recieved data %s", data)
     return create_or_update(data)
 
     # hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -71,7 +67,7 @@ def login():
     password = request.form['password']
 
     try:
-        user = User.select().where(User.username == username).get()
+        user = User.select().where(User.email == username).get()
         logging.info("username id %s", user.username)
         logging.info("user password is %s", user.password)
         if user.password == password:
@@ -93,8 +89,8 @@ def login():
             return CustResponse.send("Login failed: Password does not mach", True, "")
 
     except User.DoesNotExist as error:
-        logging.info("Function login Failed , User : {} Doesn't exist ".format(username))
-        return CustResponse.send("Successful:User Doesn't exist", True, str(error))
+        logging.info("Function login Failed , User : %s Does not exist ",username)
+        return CustResponse.send("Unsuccessfull :User Doesn't exist", False, str(error))
 
     except Exception as error:
         logging.info("Function login Failed , Recieved Error: ")
@@ -170,7 +166,10 @@ def get_society_members_details():
 
 
 def create_or_update(data):
+    logging.info("In Function create_or_update()")
     user = User(**data)
+    logging.info("User : %s",user)
+    # print("User")
     if 'id' in data:
         logging.info("Running update on user :%s", user.id)
         try:
@@ -192,13 +191,15 @@ def create_or_update(data):
         logging.info("Settting username as User Email :%s", user.username)
         try:
             logging.info("Cheking if email {} exists".format(user.email))
-            user = User.get(email=user.username)
+            user = User.get(email=user.email)
             return CustResponse.send("Email already used", False, str(user.email))
         except User.DoesNotExist as error:
             logging.info('User Does No exists, Creating a New User')
             logging.info(user)
             
             try:
+                logging.info('Saving User details:')
+                logging.info("email: {}, firstname: {}, middlename: {}, lastname:{}, password: {}, society_id: {}, flat_id:{} , isadmin: {}, user_entity: {}".format(user.email, user.first_name, user.middle_name, user.last_name, user.password, user.society_id, user.flat_id, user.isadmin, user.user_entity))
                 user.save()
                 logging.info("User saved.")
             except Exception as error:

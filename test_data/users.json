@@ -1,6 +1,6 @@
 [
 {
-    "username":"mayurb",
+    "username":"mayur.bhadrige@gmail.com",
     "first_name":"mayur",
     "middle_name":"k",
     "last_name":"bhadrige",
@@ -15,7 +15,7 @@
     "photo":null
 },
 {
-    "username": "akshay",
+    "username": "ak.pd@gmail.com",
     "first_name":"akshay",
     "middle_name":"",
     "last_name":"pandey",
@@ -30,8 +30,8 @@
     "photo":null
 },
 {
-    "username":"raj",
-    "first_name":"raj@gmail.com",
+    "username":"raj@gmail.com",
+    "first_name":"raj",
     "middle_name":"",
     "last_name":"viskwakarma",
     "password":"123456",
@@ -45,14 +45,14 @@
     "photo":null
 },
 {
-    "username":"riya",
-    "first_name":"riya@gmail.com",
+    "username":"riya@gmail.com",
+    "first_name":"riya",
     "middle_name":"",
     "last_name":"viskwakarma",
     "password":"123456",
     "isadmin":true,
     "society_id":1,
-    "email":"raj@gmail.com",
+    "email":"riya@gmail.com",
     "flat_id":"2",
     "user_entity":"1",
     "identification_type":null,

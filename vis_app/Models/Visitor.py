@@ -22,7 +22,7 @@ class Visitor(BaseModel):
     photo = TextField()
     flat_id = ForeignKeyField(Flat,  null=False,deferrable=True)
     #whom_to_visit = ForeignKeyField(User, null=False, deferrable=True)
-    whom_to_visit = IntegerField()
+    visit_user_id = IntegerField()
     visitor_status = IntegerField()
     vehicle = CharField()
     people_count = IntegerField()

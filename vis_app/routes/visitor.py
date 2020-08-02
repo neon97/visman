@@ -12,8 +12,9 @@ from vis_app.Models.Flat import Flat
 from vis_app.Models.BaseModel import BaseModel
 from playhouse.shortcuts import model_to_dict
 from vis_app.routes.utils import query_to_json1
-from vis_app.routes.utils import query_to_json
+from vis_app.routes.utils import query_to_json,CustResponse
 from .user import login_required
+
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -30,7 +31,7 @@ queries = config_parser.config(
 
 """Columns in visitor table appended in  indicates column set to be None instead of string null"""
 visitor_col = ['userid', 'first_name', 'middle_name', 'last_name', 'contact_number', 'entry_time', 'people_count', 'society_id', 'flat_id',
-               'visit_reason', 'visitor_status', 'whom_to_visit', 'vehicle', 'photo']
+               'visit_reason', 'visitor_status', 'visit_user_id', 'vehicle', 'photo']
 
 verdict_visitor = {}
 
@@ -40,9 +41,8 @@ for each_column in visitor_col:
 
 
 # visitor entry from staff
-@visitor.route('/update_visitor_exit', methods=['GET', 'POST'])
-@visitor.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
 @visitor.route('/insertVisitor', methods=['GET', 'POST'])
+@visitor.route('/visitor/insert', methods=['GET', 'POST'])
 #@login_required
 def create_or_update_visitor():
     logging.debug("Running def create_or_update_visitor:")
@@ -75,13 +75,14 @@ def dashboard_visitor():
         logging.info(error)
         return str(error)
 
-
+@visitor.route('/flat/visitor/details', methods=['GET', 'POST'])
 @visitor.route('/get_flat_visitor_details', methods=['GET', 'POST'])
 #@login_required
 def get_flat_visitor_details():
+    logging.info("In Function get_flat_visitor_details().")
     society_id = request.form['society_id']
     flat_id = request.form['flat_id']
-
+    logging.info("Recieved params - society_id : {}, flat_id :{}".format(society_id, flat_id))
     try:
         query = Visitor.select(Visitor.id.alias('visitor_id'),
         Visitor.first_name.alias('visitor_first_name'),
@@ -90,7 +91,7 @@ def get_flat_visitor_details():
         Visitor.contact_number.alias('visitor_contact_number'),
         Visitor.photo.alias('visitor_photo'),
         Visitor.visit_reason,Visitor.society_id, Visitor.visitor_status, Visitor.user_id,
-        Visitor.entry_time, Visitor.exit_time, Visitor.flat_id, Visitor.whom_to_visit,
+        Visitor.entry_time, Visitor.exit_time, Visitor.flat_id, Visitor.visit_user_id,
         Visitor.people_count, Visitor.vehicle,
         Flat.wing, Flat.flat_no
         ).join(Flat).where(Visitor.society_id == society_id, Visitor.flat_id == flat_id)
@@ -107,13 +108,16 @@ def create_or_update(data):
         logging.info("With data: %s", data)
         visitor = Visitor(**data)
         visitor.save()
-        return jsonify(visitor.id)
+        visitor = Visitor.select(Visitor.id).where(Visitor.id == visitor.id)
+        return query_to_json(visitor)
+        # return CustResponse.send("UnSuccessful:Failed to register Visitor", True, str(visitor.id))
 
     except Exception as error:
         logging.info(error)
-        return str(error)
+        return CustResponse.send("UnSuccessful:Failed to register Visitor", True, str(error))
 
-
+@visitor.route('/vistter/set/visitor_exit', methods=['GET', 'POST'])
+@visitor.route('/update_visitor_exit', methods=['GET', 'POST'])
 def update_visitor_exit():
 
     visitor_id = request.form['id']
@@ -122,15 +126,19 @@ def update_visitor_exit():
         visitor = Visitor.get(Visitor.id == visitor_id)
         visitor.exit_time = exit_time
         visitor.save()
-        success = True
+        visitor = Visitor.select().where(Visitor.id == visitor.id)
+        return  query_to_json(visitor)
 
     except Visitor.DoesNotExist:
-        return 'User does not exist'
-    except:
-        success = False
-    return jsonify(success)
+        return CustResponse.send("UnSuccessful", False, str('Visitor does not exist'))
+        # return 'User does not exist'
+    except Exception as error :
+        return CustResponse.send("UnSuccessful", False, str(error))
+    
 
 
+@visitor.route('/visitor/set/visitor_status', methods=['GET', 'POST'])
+@visitor.route('/visitor/set_visitor_status', methods=['GET', 'POST'])
 def set_visitor_status():
     logging.info("Called set_visitor_status")
     visitor_id = request.form['visitor_id']
@@ -142,10 +150,12 @@ def set_visitor_status():
         visitor = Visitor.get(Visitor.id == visitor_id)
         visitor.visitor_status = visitor_status
         visitor.save()
-        success = True
+        visitor = Visitor.select().where(Visitor.id == visitor.id)
+        return  query_to_json(visitor)
 
-    except Visitor.DoesNotExist:
-        return 'Visitor does not exist'
-    except:
-        success = False
-    return jsonify(success)
+    except Visitor.DoesNotExist :
+        return CustResponse.send("UnSuccessful", False, str('Visitor does not exist'))
+        # return 'User does not exist'
+    except Exception as error :
+        return CustResponse.send("UnSuccessful", False, str(error))
+   
