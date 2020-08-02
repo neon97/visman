@@ -33,7 +33,8 @@ def query_to_json(query):
 
     except Exception as error:
         logging.info("Query Failed with error {}".format(error))
-        return CustResponse.send("UnSuccessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
+
 
 def query_to_json1(query):
     list = []

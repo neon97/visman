@@ -45,12 +45,12 @@ for each_column in visitor_col:
 @visitor.route('/visitor/insert', methods=['GET', 'POST'])
 #@login_required
 def create_or_update_visitor():
-    logging.debug("Running def create_or_update_visitor:")
+    logging.debug("Running function create_or_update_visitor:")
     try:
         data = request.form
         return create_or_update(data)
     except Exception as error:
-        return str(error)
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 @visitor.route('/dashboard_visitor', methods=['GET', 'POST'])
@@ -73,7 +73,7 @@ def dashboard_visitor():
         return query_to_json(query)
     except Exception as error:
         logging.info(error)
-        return str(error)
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 @visitor.route('/flat/visitor/details', methods=['GET', 'POST'])
 @visitor.route('/get_flat_visitor_details', methods=['GET', 'POST'])
@@ -100,7 +100,7 @@ def get_flat_visitor_details():
     except Exception as error:
         errors = {'error': error}
         logging.info(errors)
-        return str(errors)
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 
 def create_or_update(data):
@@ -114,7 +114,7 @@ def create_or_update(data):
 
     except Exception as error:
         logging.info(error)
-        return CustResponse.send("UnSuccessful:Failed to register Visitor", True, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 @visitor.route('/vistter/set/visitor_exit', methods=['GET', 'POST'])
 @visitor.route('/update_visitor_exit', methods=['GET', 'POST'])
@@ -130,10 +130,10 @@ def update_visitor_exit():
         return  query_to_json(visitor)
 
     except Visitor.DoesNotExist:
-        return CustResponse.send("UnSuccessful", False, str('Visitor does not exist'))
+        return CustResponse.send("Visitor does not exist", False, [])
         # return 'User does not exist'
     except Exception as error :
-        return CustResponse.send("UnSuccessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
     
 
 
@@ -154,8 +154,8 @@ def set_visitor_status():
         return  query_to_json(visitor)
 
     except Visitor.DoesNotExist :
-        return CustResponse.send("UnSuccessful", False, str('Visitor does not exist'))
+        return CustResponse.send("Visitor does not exist", False, [])
         # return 'User does not exist'
     except Exception as error :
-        return CustResponse.send("UnSuccessful", False, str(error))
+        return CustResponse.send("Error : {}".format(str(error)), False, [])
    
