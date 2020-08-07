@@ -59,7 +59,6 @@ def dashboard_visitor():
     society_id = request.form['society_id']
     try:
         # query = Visitor.select().where(Visitor.society_id  == society_id).dicts()
-        #
         query = Visitor.select(
             Visitor.id.alias('visitor_id'), Visitor.first_name.alias('visitor_first_name'), Visitor.last_name.alias('visitor_last_name'), Visitor.contact_number.alias(
                 'visitor_contact_number'), Visitor.user_id, Visitor.visit_reason, Visitor.photo.alias('visitor_photo'), Visitor.visit_reason, Visitor.visitor_status, Visitor.entry_time, Visitor.exit_time,
@@ -76,7 +75,6 @@ def dashboard_visitor():
         return CustResponse.send("Error : {}".format(str(error)), False, [])
 
 @visitor.route('/flat/visitor/details', methods=['GET', 'POST'])
-@visitor.route('/get_flat_visitor_details', methods=['GET', 'POST'])
 #@login_required
 def get_flat_visitor_details():
     logging.info("In Function get_flat_visitor_details().")
@@ -116,7 +114,7 @@ def create_or_update(data):
         logging.info(error)
         return CustResponse.send("Error : {}".format(str(error)), False, [])
 
-@visitor.route('/vistter/set/visitor_exit', methods=['GET', 'POST'])
+@visitor.route('/visitor/set/visitor_exit', methods=['GET', 'POST'])
 @visitor.route('/update_visitor_exit', methods=['GET', 'POST'])
 def update_visitor_exit():
 

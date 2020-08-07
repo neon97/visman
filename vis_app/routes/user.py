@@ -152,8 +152,8 @@ def get_society_members_details():
     try:
         society_id = request.form['society_id']
 
-        query = User.select(User.first_name.concat(" ").concat(User.last_name).alias('member'),
-                            Flat.id, Flat.flat_no, Flat.wing
+        query = User.select(User.id.alias('user_id'), User.first_name.concat(" ").concat(User.last_name).alias('member'),
+                            Flat.id.alias('flat_id'), Flat.flat_no, Flat.wing
                             ).join(Flat).where(
             User.user_entity == 1, User.society_id == society_id
         )
