@@ -168,7 +168,6 @@ def create_or_update(data):
     logging.info("In Function create_or_update()")
     user = User(**data)
     logging.info("User : %s", user)
-    # print("User")
     if 'id' in data:
         logging.info("Running update on user :%s", user.id)
         try:
@@ -198,15 +197,14 @@ def create_or_update(data):
 
             try:
                 logging.info('Saving User details:')
-                logging.info("email: {}, firstname: {}, middlename: {}, lastname:{}, password: {}, isadmin: {}, user_entity: {}".format(
+                logging.info("email: {}, firstname: {}, middlename: {}, lastname:{}, password: {}, isadmin:{}, user_entity: {}".format(
                     user.email, user.first_name, user.middle_name, user.last_name, user.password, user.isadmin, user.user_entity))
                 user.save()
                 logging.info("User saved.")
             except Exception as error:
                 logging.info(error)
                 return CustResponse.send("Error : {}".format(str(error)), False, [])
-                
-            user = User.select(User.id).where(User.id == user.id)
+            user = User.select(User.id, User.username, User.first_name, User.last_name, User.isadmin,).where(User.id == user.id)
             return query_to_json(user)
 
         except Exception as error:

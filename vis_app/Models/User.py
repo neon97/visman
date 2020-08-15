@@ -17,7 +17,7 @@ class User(BaseModel):
     password = CharField()
     society_id = ForeignKeyField(Society, null=False, deferrable=True)
     flat_id = ForeignKeyField(Flat, null=False, deferrable=True)
-    isadmin = BooleanField()
+    isadmin = CharField()
     user_entity = IntegerField()
     identification_type = CharField()
     identification_no = CharField()
@@ -32,4 +32,4 @@ class User(BaseModel):
 
     def __str__(self):
         return "Id : {}, UserName: {}, email: {}, firstname: {}, middlename: {}, lastname:{},  isadmin: {}, user_entity: {}, identification_type: {}, identification_no : {}".format(
-            self.id, self.username, self.email, self.first_name, self.middle_name, self.last_name, self.isadmin, self.user_entity, self.identification_type, self.identification_no)
+            self.id, self.username, self.email, self.first_name, self.middle_name, self.last_name, bool(self.isadmin), self.user_entity, self.identification_type, self.identification_no)
