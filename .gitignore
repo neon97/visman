@@ -16,3 +16,4 @@
 *.pyc
 vis_app/Models/__pycache__/db.cpython-37.pyc
 *.pyc
+.vscode/settings.json
