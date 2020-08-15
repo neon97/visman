@@ -39,7 +39,7 @@ bcrypt = Bcrypt()
 def user_register():
     logging.info("Infunction user_register")
     """Society Member Registration """
-    data = request.form
+    data = request.form.to_dict()
     logging.info("Recieved data %s", data)
     return create_or_update(data)
 
@@ -166,6 +166,7 @@ def get_society_members_details():
 
 def create_or_update(data):
     logging.info("In Function create_or_update()")
+
     user = User(**data)
     logging.info("User : %s", user)
     if 'id' in data:
