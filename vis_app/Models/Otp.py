@@ -9,6 +9,6 @@ class OTP(BaseModel):
     id = IdentityField()
     otp = IntegerField()
     created = DateTimeField()
-    expired = BooleanField()
+    expired = CharField()
     user_id = ForeignKeyField(User, lazy_load=True)
     visitor_id = ForeignKeyField(Visitor, lazy_load=True)
