@@ -1,4 +1,5 @@
-from peewee import *
+from peewee import IdentityField,IntegerField,DateTimeField,CharField,ForeignKeyField
+from vis_app.Models import User,Visitor
 from vis_app.Models.BaseModel import BaseModel
 
 

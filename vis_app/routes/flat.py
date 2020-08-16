@@ -5,7 +5,7 @@ import db_config.dbManager as dbm
 import logging
 import psycopg2
 import config_parser
-from vis_app.routes.utils import query_to_json,CustResponse
+from vis_app.routes.utils import result_to_json,CustResponseSend
 from .user import login_required
 
 from vis_app.Models.Flat import Flat
@@ -31,7 +31,7 @@ def add_flat():
         return create_or_update(data)
 
     except Exception as error:
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 @flat.route('/flat/get/id', methods=['GET', 'POST'])
@@ -49,7 +49,7 @@ def get_flat_id():
         query = Flat.select().where(Flat.society_id == society_id,
                                     Flat.wing == wing_name, Flat.flat_no == flat_no)
         logging.debug("Running query : {}".format(query))
-        result = query_to_json(query)
+        result = result_to_json(query)
         logging.debug("Query Ran successfully")
         logging.info("Result is :{} ".format(result))
         return result
@@ -57,7 +57,7 @@ def get_flat_id():
     except Exception as error:
         logging.info("Failed run query, Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 @flat.route('/society/get/wing/all', methods=['GET', 'POST'])
 #@login_required
@@ -70,7 +70,7 @@ def get_wing_list():
         query = Flat.select(Flat.wing).where(
             Flat.society_id == society_id).distinct()
         logging.info("Running query: {}".format(query))
-        result = query_to_json(query)
+        result = result_to_json(query)
         logging.debug("Query Ran successfully")
         logging.info("Result is :{} ".format(result))
         return result
@@ -78,7 +78,7 @@ def get_wing_list():
     except Exception as error:
         logging.info("Function get_wing_list Failed , Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 @flat.route('/society/get/flat/all', methods=['GET', 'POST'])
 #@login_required
@@ -89,13 +89,13 @@ def get_flat_list():
 
         query = Flat.select(Flat.flat_no).where(
             Flat.society_id == society_id, Flat.wing == wing_name)
-        result = query_to_json(query)
+        result = result_to_json(query)
         return result
 
     except Exception as error:
         logging.info("Function get_flat_list Failed , Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 def create_or_update(data):
@@ -106,9 +106,9 @@ def create_or_update(data):
         flat.save_optimistic()
         logging.info("Flat details saved SUccessfully")
         new_flat = Flat.select(Flat.id).where(Flat.id == flat.id)
-        return query_to_json(new_flat)
+        return result_to_json(new_flat)
     except Exception as error:
         logging.info("Function create_or_update Failed , Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 

@@ -53,7 +53,6 @@ class BaseModel(Model):
             raise ConflictDetectedException()
         else:
             # Increment local version to match what is now in the db.
-            self.version += 1
             return True
 
     EXCLUDE_FIELDS = []

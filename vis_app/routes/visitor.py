@@ -11,10 +11,8 @@ from vis_app.Models.User import User
 from vis_app.Models.Flat import Flat
 from vis_app.Models.BaseModel import BaseModel
 from playhouse.shortcuts import model_to_dict
-from vis_app.routes.utils import query_to_json1
-from vis_app.routes.utils import query_to_json,CustResponse
+from vis_app.routes.utils import result_to_json,CustResponseSend
 from .user import login_required
-
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -50,7 +48,7 @@ def create_or_update_visitor():
         data = request.form
         return create_or_update(data)
     except Exception as error:
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 @visitor.route('/dashboard_visitor', methods=['GET', 'POST'])
@@ -69,10 +67,10 @@ def dashboard_visitor():
                on=(Visitor.user_id == User.id)).join(Flat
                                                      #,on=(Visitor.flat_id == Flat.id)
                                                      ).where(Visitor.society_id == society_id)
-        return query_to_json(query)
+        return result_to_json(query)
     except Exception as error:
         logging.info(error)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 @visitor.route('/flat/visitor/details', methods=['GET', 'POST'])
 #@login_required
@@ -93,12 +91,12 @@ def get_flat_visitor_details():
         Visitor.people_count, Visitor.vehicle,
         Flat.wing, Flat.flat_no
         ).join(Flat).where(Visitor.society_id == society_id, Visitor.flat_id == flat_id)
-        return query_to_json(query)
+        return result_to_json(query)
 
     except Exception as error:
         errors = {'error': error}
         logging.info(errors)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 def create_or_update(data):
@@ -107,12 +105,12 @@ def create_or_update(data):
         visitor = Visitor(**data)
         visitor.save()
         visitor = Visitor.select(Visitor.id).where(Visitor.id == visitor.id)
-        return query_to_json(visitor)
-        # return CustResponse.send("UnSuccessful:Failed to register Visitor", True, str(visitor.id))
+        return result_to_json(visitor)
+        # return CustResponseSend("UnSuccessful:Failed to register Visitor", True, str(visitor.id))
 
     except Exception as error:
         logging.info(error)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 @visitor.route('/visitor/set/visitor_exit', methods=['GET', 'POST'])
 @visitor.route('/update_visitor_exit', methods=['GET', 'POST'])
@@ -125,13 +123,13 @@ def update_visitor_exit():
         visitor.exit_time = exit_time
         visitor.save()
         visitor = Visitor.select().where(Visitor.id == visitor.id)
-        return  query_to_json(visitor)
+        return  result_to_json(visitor)
 
     except Visitor.DoesNotExist:
-        return CustResponse.send("Visitor does not exist", False, [])
+        return CustResponseSend("Visitor does not exist", False, [])
         # return 'User does not exist'
     except Exception as error :
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
     
 
 
@@ -149,11 +147,11 @@ def set_visitor_status():
         visitor.visitor_status = visitor_status
         visitor.save()
         visitor = Visitor.select().where(Visitor.id == visitor.id)
-        return  query_to_json(visitor)
+        return  result_to_json(visitor)
 
     except Visitor.DoesNotExist :
-        return CustResponse.send("Visitor does not exist", False, [])
+        return CustResponseSend("Visitor does not exist", False, [])
         # return 'User does not exist'
     except Exception as error :
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
    

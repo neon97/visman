@@ -14,7 +14,7 @@ import logging
 import psycopg2
 import config_parser
 from peewee import IntegrityError, DoesNotExist, fn
-from vis_app.routes.utils import query_to_json, CustResponse
+from vis_app.routes.utils import result_to_json, CustResponseSend
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -81,20 +81,20 @@ def login():
             ).where(User.id == user.id)
             auth_user(user)
 
-            return query_to_json(query)
+            return result_to_json(query)
 
         else:
             logging.info("Function login Failed , Password does not mach, for User : %s",username)
-            return CustResponse.send("Login failed: Password does not mach", False, [])
+            return CustResponseSend("Login failed: Password does not mach", False, [])
 
     except User.DoesNotExist as error:
         logging.info("Function login Failed , User : %s Does not exist ",username)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
     except Exception as error:
         logging.info("Function login Failed , Recieved Error: ")
         logging.info(error)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 @user.route('/user/logout', methods=['GET', 'POST'])
@@ -123,9 +123,9 @@ def dashboard_staff():
     try:
         query1 = User.select().where(User.society_id == society_id, User.user_entity == 2)
 
-        return query_to_json(query1)
+        return result_to_json(query1)
     except Exception as error:
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 @user.route('/dashboard_members', methods=['GET', 'POST'])
@@ -139,10 +139,10 @@ def dashboard_members():
             User.id, User.first_name, User.middle_name, User.last_name, User.email, User.user_entity, User.isadmin, User.flat_id, Flat.flat_no, Flat.wing
         ).join(Flat, JOIN.LEFT_OUTER).where(User.society_id == society_id, User.user_entity == user_status)
 
-        return query_to_json(query)
+        return result_to_json(query)
 
     except Exception as error:
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 @user.route('/get_society_members_details', methods=['GET', 'POST'])
@@ -152,65 +152,68 @@ def get_society_members_details():
     try:
         society_id = request.form['society_id']
 
-        query = User.select(User.id.alias('user_id'), User.first_name.concat(" ").concat(User.last_name).alias('member'),
+        result = User.select(User.id.alias('user_id'), User.first_name.concat(" ").concat(User.last_name).alias('member'),
                             Flat.id.alias('flat_id'), Flat.flat_no, Flat.wing
                             ).join(Flat).where(
             User.user_entity == 1, User.society_id == society_id
         )
-        return query_to_json(query)
+        return result_to_json(result)
 
     except Exception as error:
 
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 def create_or_update(data):
     logging.info("In Function create_or_update()")
 
     user = User(**data)
-    logging.info("User : %s", user)
+
+    logging.info("After serializing model ** User with received data:")
+    logging.info(user)
+    
     if 'id' in data:
-        logging.info("Running update on user :%s", user.id)
         try:
             logging.info("Getting User for id : %s", user.id)
             User.get(id=user.id)
             user.save()
-            return CustResponse.send("Update Successful", True, [{ "id" : user.id}])
+            return CustResponseSend("Update Successful", True, [{ "id" : user.id}])
 
         except User.DoesNotExist as error:
-            return CustResponse.send("Error : {}".format(str(error)), False, [])
+            return CustResponseSend("Error : {}".format(str(error)), False, [])
             # return "User not found for id :{}".format(user.id)
 
         except Exception as error:
-            return CustResponse.send("Error : {}".format(str(error)), False, [])
+            return CustResponseSend("Error : {}".format(str(error)), False, [])
             # return error
     else:
-        logging.info("Creating user : %s", user)
+        logging.info("Creating user : ")
+        logging.info(user)
         user.username = user.email
         logging.info("Settting username as User Email :%s", user.username)
         try:
             logging.info("Cheking if email {} exists".format(user.email))
             user = User.get(email=user.email)
-            return CustResponse.send("Email already used", False, [{"email:":user.email}])
+            return CustResponseSend("Email already used", False, [{"email:":user.email}])
         except User.DoesNotExist as error:
             logging.info('User Does No exists, Creating a New User')
             logging.info(user)
 
             try:
-                logging.info('Saving User details:')
-                logging.info("email: {}, firstname: {}, middlename: {}, lastname:{}, password: {}, isadmin:{}, user_entity: {}".format(
-                    user.email, user.first_name, user.middle_name, user.last_name, user.password, user.isadmin, user.user_entity))
+                logging.info('Saving User details with username:{}'.format(user.username))
+                # logging.info("email: {}, firstname: {}, middlename: {}, lastname:{}, password: {}, isadmin:{}, user_entity: {}".format(
+                #     user.email, user.first_name, user.middle_name, user.last_name, user.password, user.isadmin, user.user_entity))
                 user.save()
                 logging.info("User saved.")
             except Exception as error:
                 logging.info(error)
-                return CustResponse.send("Error : {}".format(str(error)), False, [])
+                return CustResponseSend("Error : {}".format(str(error)), False, [])
             user = User.select(User.id, User.username, User.first_name, User.last_name, User.isadmin,).where(User.id == user.id)
-            return query_to_json(user)
+            return result_to_json(user)
 
         except Exception as error:
             logging.info(error)
-            return CustResponse.send("Error : {}".format(str(error)), False, [])
+            return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 def get_user(id):
@@ -230,9 +233,9 @@ def get_user(id):
         ).join(Society, JOIN.LEFT_OUTER
                ).join(Flat, JOIN.LEFT_OUTER, on=(User.flat_id == Flat.id)
                       ).where(User.id == id)
-        return query_to_json(query)
+        return result_to_json(query)
 
     except Exception as error:
         logging.info("Function get_user failed with error : {}".format(str(error)))
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 

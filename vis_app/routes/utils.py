@@ -8,32 +8,30 @@ import json
 from playhouse.shortcuts import model_to_dict
 
 
-class CustResponse:
 
-    def send(message, status, outParams):
-        logging.debug("In function send")
-        print(status, message, outParams)
-        response = {"Message": message, "Status": status, "Result": outParams}
-        return response
+def CustResponseSend(message, status, outParams):
+    logging.debug("In function send")
+    print(status, message, outParams)
+    response = {"Message": message, "Status": status, "Result": outParams}
+    return response
 
 
-def query_to_json(query):
-    logging.debug("In function query_to_json")
-    logging.debug("Running query : {}".format(query))
+def result_to_json(result):
+    logging.debug("In function result_to_json")
     try:
-        if query.count() == 0:
-            return CustResponse.send("No Records Found", False, [])
+        if result.count() == 0:
+            return CustResponseSend("No Records Found", False, [])
         else:
             # result = [dict(model_to_dict(c)) for c in query]
-            df = pd.DataFrame.from_dict(query.dicts())
+            df = pd.DataFrame.from_dict(result.dicts())
             result = json.loads(df.to_json(orient='records'))
-            logging.info("returining result : %s", result)
-            logging.debug("Returning result : {}".format(result))
-            return CustResponse.send(" Successful", True, result)
+            logging.info("Fetched result : %s", result)
+            logging.debug("Fetched result : {}".format(result))
+            return CustResponseSend(" Successful", True, result)
 
     except Exception as error:
-        logging.info("Query Failed with error {}".format(error))
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        logging.info("result_to_json():{} while fetching result".format(error))
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 def query_to_json1(query):
@@ -68,15 +66,3 @@ def auth_user(user):
     session['user'] = user.first_name
     session['username'] = user.username
     logging.info('You are logged in as %s' % (user.username))
-
-
-def response(func, message):
-    status = func.status  # true or false
-    msg = message
-    response = func.response
-    j_responce = make_to_json(response)
-    jsn = {
-        "ststus": status,
-        "message": msg,
-        "response": j_responce
-    }

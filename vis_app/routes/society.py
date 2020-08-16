@@ -4,7 +4,7 @@ import pandas as pd
 import db_config.dbManager as dbm
 import logging
 import config_parser
-from vis_app.routes.utils import query_to_json, CustResponse
+from vis_app.routes.utils import result_to_json, CustResponseSend
 from .user import login_required
 
 logging.basicConfig(level=logging.DEBUG)
@@ -37,10 +37,10 @@ def get_society_id():
     try:
         regd_no = request.form['regd_no']
         query = Society.select(Society.id).where(Society.regd_no == regd_no)
-        return query_to_json(query)
+        return result_to_json(query)
     except Exception as error:
         logging.info(error)
-        return CustResponse.send("Error : {}".format(str(error)), False, [])
+        return CustResponseSend("Error : {}".format(str(error)), False, [])
 
 
 @society.route('/society/get/all', methods=['GET', 'POST'])
@@ -48,7 +48,7 @@ def get_society_id():
 def society_info():
     """ Gives the society id and society name for all registered society."""
     query = Society.select()
-    return  query_to_json(query)
+    return  result_to_json(query)
 
 def create_or_update(data):
     society = Society(**data)
@@ -58,21 +58,21 @@ def create_or_update(data):
             logging.info("Getting Society info for id : {}".format(society.id))
             Society.get(id=society.id)
             society.save()
-            return CustResponse.send("Update Successful", True, [{"id":society.id}])
+            return CustResponseSend("Update Successful", True, [{"id":society.id}])
 
         except Society.DoesNotExist as error:
-            return CustResponse.send("Society does Not Exist", False, [])
+            return CustResponseSend("Society does Not Exist", False, [])
             # return "User not found for id :{}".format(user.id)
 
         except Exception as error:
-            return CustResponse.send("Error : {}".format(str(error)), False, [])
+            return CustResponseSend("Error : {}".format(str(error)), False, [])
             # return error
     else:
         logging.info("Creating New Society : %s", society)
         try:
             logging.info("Cheking if Society registered with Regd No: {} exists".format(society.regd_no))
             society = Society.get(regd_no=society.regd_no)
-            return CustResponse.send("Society with Regd No : {}, is already Registered".format(society.regd_no), False, [{"id":society.id}])
+            return CustResponseSend("Society with Regd No : {}, is already Registered".format(society.regd_no), False, [{"id":society.id}])
         except Society.DoesNotExist as error:
             logging.info('Society Does No exists, Creating New Society')
             logging.info(society)  
@@ -80,11 +80,11 @@ def create_or_update(data):
                 society.save()
                 logging.info("Society saved.")
                 society = Society.select().where(Society.id == society.id)
-                return  query_to_json(society)
+                return  result_to_json(society)
             except Exception as error:
                 logging.info(error)
-                return CustResponse.send("Error : {}".format(str(error)), False, [])
+                return CustResponseSend("Error : {}".format(str(error)), False, [])
                 
         except Exception as error:
             logging.info(error)
-            return CustResponse.send("Error : {}".format(str(error)), False, [])
+            return CustResponseSend("Error : {}".format(str(error)), False, [])
