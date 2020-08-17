@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_bcrypt import Bcrypt
 
+from flask_cors import CORS
+
 #from peewee import PostgresqlDatabase
 
 from flask_bcrypt import Bcrypt
@@ -25,6 +27,7 @@ def load_blueprints(app):
 """Create and return app."""
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
+CORS(app)
 load_blueprints(app)
 
 # db = PostgresqlDatabase(config.DATABASE_CONFIG['database'],
