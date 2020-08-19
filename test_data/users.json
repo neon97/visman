@@ -1,0 +1,62 @@
+[
+{
+    "username":"mayur.bhadrige@gmail.com",
+    "first_name":"mayur",
+    "middle_name":"k",
+    "last_name":"bhadrige",
+    "password":"123456",
+    "isadmin":true,
+    "society_id":1,
+    "email":"mayur.bhadrige@gmail.com",
+    "flat_id":1,
+    "user_entity":1,
+    "identification_type":null,
+    "identification_no": null,
+    "photo":null
+},
+{
+    "username": "ak.pd@gmail.com",
+    "first_name":"akshay",
+    "middle_name":"",
+    "last_name":"pandey",
+    "password":"123456",
+    "isadmin":false,
+    "society_id":1,
+    "email":"ak.pd@gmail.com",
+    "flat_id":null,
+    "user_entity":2,
+    "identification_type":null,
+    "identification_no":null,
+    "photo":null
+},
+{
+    "username":"raj@gmail.com",
+    "first_name":"raj",
+    "middle_name":"",
+    "last_name":"viskwakarma",
+    "password":"123456",
+    "isadmin":true,
+    "society_id":1,
+    "email":"raj@gmail.com",
+    "flat_id":"2",
+    "user_entity":"1",
+    "identification_type":null,
+    "identification_no":null,
+    "photo":null
+},
+{
+    "username":"riya@gmail.com",
+    "first_name":"riya",
+    "middle_name":"",
+    "last_name":"viskwakarma",
+    "password":"123456",
+    "isadmin":true,
+    "society_id":1,
+    "email":"riya@gmail.com",
+    "flat_id":"2",
+    "user_entity":"1",
+    "identification_type":null,
+    "identification_no":null,
+    "photo":null
+}
+]

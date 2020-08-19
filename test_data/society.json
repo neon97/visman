@@ -1,0 +1,18 @@
+[
+    {
+    "id": 1,
+    "regd_no" : "1",
+    "society_name":"swedit coop hsg",
+    "society_address":"shakti nagar, dahisar east",
+    "total_buildings":3,
+    "total_flats": 10
+    },
+{
+    "id": 2,
+    "regd_no" : "2",
+    "society_name":"kailesh coop hsg",
+    "society_address":"nalasopara east",
+    "total_buildings":2,
+    "total_flats": "16" 
+}
+]

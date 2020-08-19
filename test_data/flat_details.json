@@ -1,0 +1,14 @@
+[
+    {   
+        "id":1,
+        "flat_no":101,
+        "wing":"A",
+        "society_id":1
+    },
+    {   
+        "id":2,
+        "flat_no":101,
+        "wing":"A",
+        "society_id":2
+    }
+]
